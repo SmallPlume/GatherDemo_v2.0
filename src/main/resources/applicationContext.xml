@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<beans xmlns="http://www.springframework.org/schema/beans"    
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   
+    xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:aop="http://www.springframework.org/schema/aop"   
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:jee="http://www.springframework.org/schema/jee"  
+    xmlns:tx="http://www.springframework.org/schema/tx"  
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="    
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd  
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd  
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd  
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+	
+	  <context:annotation-config />
+	  <!-- 使用注解的包，包括子集 -->
+	  <context:component-scan base-package="com.modules.*.svc" />
+	
+	  <!-- 获取数据库连接信息 -->
+	  <context:property-placeholder location="classpath:database.properties" />
+	  
+	  <!-- 定义数据源 -->
+	  <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	    <property name="driverClassName" value="${jdbc.driverClassName}"></property>
+	    <property name="url" value="${jdbc.url}"></property>
+	    <property name="username" value="${jdbc.username}"></property>
+	    <property name="password" value="${jdbc.password}"></property>
+	  </bean>
+	  
+	  <!-- 配置mybatis的sqlSessionFactory -->
+	  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	  	<property name="dataSource" ref="dataSource" />
+		<!-- 自动扫描mappers.xml文件 -->
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:org/mapper/**/*.xml</value>
+			</list>
+		</property>
+		<!-- mybatis配置文件 -->
+		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+	  </bean>
+	  
+	  <!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+	  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.modules.*.dao" />
+	  </bean>
+	  
+	  <!-- 通用mapper配置 -->
+	  <!-- 自动扫描Mapper接口生成代理类，这里和上面搜索dao不冲突 -->
+	  <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
+	  	<property name="basePackage" value="com.modules.*.dao" />
+	  	<!-- 只有继承了NetStarDao的接口才自动生成代理类，其它的还需要手工编写实现类 -->
+	  	<property name="markerInterface" value="com.modules.sys.util.NetStarDao" />
+	  	<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	  	<property name="properties">
+	  		<value>
+	  			mappers=com.modules.sys.util.NetStarDao
+	  			INDENTITY=MYSQL
+	  		</value>
+	  	</property>
+	  </bean>
+	  <!-- 通用mapper配置 -->
+	  
+	  <!-- (事务管理)transaction manager, use JtaTransactionManager for gl  obal tx -->
+	  <!-- 事务注解方式 -->
+	  <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+	  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	  </bean>
+	  
+	  <!-- 会话Cookie模板  sessionIdCookie：maxAge=-1表示浏览器关闭时失效此Cookie ; rememberMeCookie：即记住我的Cookie，保存时长30天； -->
+	  <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+	    <constructor-arg value="sid"/>
+	    <property name="httpOnly" value="true"/>
+	    <property name="maxAge" value="-1"/>
+	  </bean>
+	  <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+	    <constructor-arg value="rememberMe"/>
+	    <property name="httpOnly" value="true"/>
+	    <property name="maxAge" value="2592000"/><!-- 30天 -->
+ 	  </bean>
+ 	  
+ 	  <!-- 会话ID生成器 -->
+      <bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
+
+      <!-- 会话DAO -->
+      <bean id="sessionDAO"
+          class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+        <!-- 这个属性设置Session列表在Cache中的ID，对应这个ID就可以在cache中查找出所有的Session -->
+        <property name="activeSessionsCacheName" value="shiro-activeSessionCache"/>
+        <!-- <property name="sessionIdGenerator" ref="sessionIdGenerator"></property> -->
+      </bean>
+
+      <!-- 会话验证调度器 -->
+      <bean id="sessionValidationScheduler" class="org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler">
+        <property name="interval" value="1500000"/>
+        <!-- 设置调度时间间隔，单位毫秒，默认就是1小时 -->
+        <property name="sessionManager" ref="sessionManager"/>
+      </bean>
+
+      <!-- Session 管理器 -->
+      <bean id="sessionManager"
+          class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <!-- 设置全局会话超时时间，默认30分钟，即如果30分钟内没有访问会话将过期 -->
+        <property name="globalSessionTimeout" value="1200000"/>
+        <!-- 删除失效的session -->
+        <property name="deleteInvalidSessions" value="true"/>
+        <property name="sessionValidationSchedulerEnabled" value="true"/>
+        <property name="sessionValidationScheduler" ref="sessionValidationScheduler"/>
+        <property name="sessionIdCookieEnabled" value="true"/>
+        <property name="sessionIdCookie" ref="sessionIdCookie"/>
+        <property name="sessionDAO" ref="sessionDAO"/>
+      </bean>
+
+	  <!-- rememberMe管理器 -->
+	  <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+	  	<property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}"/>
+	  	<property name="cookie" ref="rememberMeCookie"/>
+	  </bean>
+	  
+	  <!-- 缓存管理器 使用Ehcache实现 -->
+      <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <!-- <property name="cacheManagerConfigFile" value="classpath:ehcache.xml" /> -->
+      </bean>
+	  
+	  <!-- 自定义Realm -->
+	  <bean id="myRealm" class="com.modules.sys.realm.MyRealm" />
+	  
+	  <!-- 安全管理器 -->
+	  <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+  	  	<property name="realm" ref="myRealm"/>
+  	  	<property name="rememberMeManager" ref="rememberMeManager"/>
+  	  	<!-- Ehcache 缓存 -->
+        <property name="cacheManager" ref="cacheManager"/>
+	  </bean>
+	  
+	  <!--自定义的Roles Filter 修改权限的 And问题，将And关系改为Or  -->
+	  <bean id="anyRoles" class="com.modules.sys.realm.CustomRolesAuthorizationFilter" />
+	
+	  <!-- Shiro过滤器 -->
+	  <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+	    <!-- Shiro的核心安全接口,这个属性是必须的 -->  
+	    <property name="securityManager" ref="securityManager"/>
+	    <!-- 身份认证失败，则跳转到登录页面的配置 -->  
+	    <property name="loginUrl" value="/index.do"/>
+	    <!-- 权限认证失败，则跳转到指定页面 -->  
+	    <property name="unauthorizedUrl" value="/unauthor.do"/>  
+	    <!-- 自定义Roles Filter -->
+	    <property name="filters">  
+            <map>  
+                <entry key="anyRoles" value-ref="anyRoles"/>  
+            </map>  
+        </property>
+	    <!-- Shiro连接约束配置,即过滤链的定义 -->  
+	    <property name="filterChainDefinitions">  
+	        <value>
+	        	<!-- index不需要验证 -->
+	        	/index=anon
+	        	<!-- /login=anon -->
+	        	/css/**=anon
+	        	/js/**=anon
+	        	/ico/**=anon
+	        	/images/**=anon
+	        	/sys/**=anyRoles[admin,employee]
+	        	/user/**=roles[admin]
+	        	/user=perms["user:view"]
+	        	<!-- 所有的都需要验证 -->
+	        	/**=authc
+	        </value>  
+	    </property>
+	</bean>
+	  
+	  <!-- 保证实现了Shiro内部lifecycle函数的bean执行 也就是shiro的生命周期
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>  -->  
+	<!-- Shiro生命周期处理器 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+	
+	<!-- 开启Shiro注解 -->
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>  
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">  
+	  	<property name="securityManager" ref="securityManager"/>  
+    </bean>  
+	
+	 <!-- 配置事务通知属性 -->  
+     <tx:advice id="txAdvice" transaction-manager="transactionManager">  
+        <!-- 定义事务传播属性 -->  
+        <tx:attributes>  
+            <tx:method name="insert*" propagation="REQUIRED" />  
+            <tx:method name="update*" propagation="REQUIRED" />  
+            <tx:method name="edit*" propagation="REQUIRED" />  
+            <tx:method name="save*" propagation="REQUIRED" />  
+            <tx:method name="add*" propagation="REQUIRED" />  
+            <tx:method name="new*" propagation="REQUIRED" />  
+            <tx:method name="set*" propagation="REQUIRED" />  
+            <tx:method name="remove*" propagation="REQUIRED" />  
+            <tx:method name="delete*" propagation="REQUIRED" />  
+            <tx:method name="change*" propagation="REQUIRED" />  
+            <tx:method name="check*" propagation="REQUIRED" />  
+            <tx:method name="get*" propagation="REQUIRED" read-only="true" />  
+            <tx:method name="find*" propagation="REQUIRED" read-only="true" />  
+            <tx:method name="load*" propagation="REQUIRED" read-only="true" />  
+            <tx:method name="*" propagation="REQUIRED" read-only="true" />  
+        </tx:attributes>  
+     </tx:advice>  
+  
+     <!-- 配置事务切面 -->
+     <aop:config expose-proxy="true">  
+        <aop:pointcut id="serviceOperation"  
+            expression="execution(* com.modules.*.svc.*(..))" />  
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperation" />  
+     </aop:config>
+     
+    <!-- 服务实现 
+	<bean id="app" class="com.web.core.CorpApp" />-->
+	
+	<!-- file上传文件bean -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- set the max upload size100MB -->
+		<property name="maxUploadSize">
+			<value>104857600</value>
+		</property>
+		<property name="maxInMemorySize">
+			<value>4096</value>
+		</property>
+	</bean>
+	
+</beans>
