@@ -81,7 +81,7 @@ function ifExist(){
 }
 
 function submitForm(){
-	alert("10086");
+	//alert("10086");
 	var params = $('#form').serializeArray();
 	$.post("<%=$root %>/sys/saveUser.do", params,function(r){
 		
