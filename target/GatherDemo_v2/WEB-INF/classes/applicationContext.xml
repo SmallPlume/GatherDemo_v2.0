@@ -71,9 +71,6 @@
 		<property name="dataSource" ref="dataSource" />
 	  </bean>
 	  
-	  <!-- 自定义Realm -->
-	  <bean id="myRealm" class="com.modules.sys.realm.MyRealm"/>
-	
 	  <!-- 会话Cookie模板  sessionIdCookie：maxAge=-1表示浏览器关闭时失效此Cookie ; rememberMeCookie：即记住我的Cookie，保存时长30天； -->
 	  <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
 	    <constructor-arg value="sid"/>
@@ -107,8 +104,9 @@
       <!-- Session 管理器 -->
       <bean id="sessionManager"
           class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-        <property name="globalSessionTimeout" value="1200000"/>
         <!-- 设置全局会话超时时间，默认30分钟，即如果30分钟内没有访问会话将过期 -->
+        <property name="globalSessionTimeout" value="1200000"/>
+        <!-- 删除失效的session -->
         <property name="deleteInvalidSessions" value="true"/>
         <property name="sessionValidationSchedulerEnabled" value="true"/>
         <property name="sessionValidationScheduler" ref="sessionValidationScheduler"/>
@@ -125,8 +123,11 @@
 	  
 	  <!-- 缓存管理器 使用Ehcache实现 -->
       <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
-        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml" />
+        <!-- <property name="cacheManagerConfigFile" value="classpath:ehcache.xml" /> -->
       </bean>
+	  
+	  <!-- 自定义Realm -->
+	  <bean id="myRealm" class="com.modules.sys.realm.MyRealm" />
 	  
 	  <!-- 安全管理器 -->
 	  <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
@@ -172,7 +173,7 @@
 	    </property>
 	</bean>
 	  
-	  <!-- 保证实现了Shiro内部lifecycle函数的bean执行 
+	  <!-- 保证实现了Shiro内部lifecycle函数的bean执行 也就是shiro的生命周期
 	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>  -->  
 	<!-- Shiro生命周期处理器 -->
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />

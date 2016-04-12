@@ -123,7 +123,7 @@
 	  
 	  <!-- 缓存管理器 使用Ehcache实现 -->
       <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
-        <!-- <property name="cacheManagerConfigFile" value="classpath:ehcache.xml" /> -->
+        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml" />
       </bean>
 	  
 	  <!-- 自定义Realm -->
@@ -145,7 +145,7 @@
 	    <!-- Shiro的核心安全接口,这个属性是必须的 -->  
 	    <property name="securityManager" ref="securityManager"/>
 	    <!-- 身份认证失败，则跳转到登录页面的配置 -->  
-	    <property name="loginUrl" value="/index.do"/>
+	    <property name="loginUrl" value="/login.do"/>
 	    <!-- 权限认证失败，则跳转到指定页面 -->  
 	    <property name="unauthorizedUrl" value="/unauthor.do"/>  
 	    <!-- 自定义Roles Filter -->

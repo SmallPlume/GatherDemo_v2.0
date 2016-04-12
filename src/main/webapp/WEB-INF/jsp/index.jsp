@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@page import="java.text.SimpleDateFormat"%>  
+<%@page import="java.util.Date"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -55,6 +57,12 @@
           <li>所有弹出框均显示在顶级父窗口</li>
           <li>修改easyui window拖动，移动时显示窗口而不显示虚线框，并限制拖动范围</li>
         </ul>
+      <p>测试EhCache页面缓存</p>    
+      <%    
+	    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+	    out.print(format.format(new Date()));    
+	    System.out.println(System.currentTimeMillis());    
+	  %>
     </div>
   </div>
 </div>

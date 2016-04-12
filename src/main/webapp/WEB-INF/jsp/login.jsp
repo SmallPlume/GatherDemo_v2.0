@@ -40,20 +40,36 @@
 	
 	//登陆
 	function submitForm(){
+		/* alert("123");
+		$.submit('#form', {
+			ok : function(data) {
+				location.href = "index.do";
+			},
+			fail: function(data) {
+				$("#msg").html("帐号或密码错误！");
+			}
+		}); */
+		
+		
 		//$("#form").submit();
 		var params = $('#form').serializeArray();
 		$.ajax({
-			url: '<%=$root %>/index.do',
+			url: '<%=$root %>/login.do',
 			type: 'POST',
 			data: params,
 			success:function(data){
 				if(data){
-					location="<%=$root %>/index.do";
+					location.href="index.do";
 				}else{
 					$("#msg").html("帐号或密码错误！");
 				}
 			},error:function(msg){
-				
+				$.messager.show({
+		               title: "系统提示",
+		               msg: msg,
+		               showType: 'slide',
+		               timeout: 2000
+		           });
 			}
 		});
 	}
@@ -68,7 +84,7 @@
 		<div class="easyui-tabs" style="width:500px; height:350px;">
 	        <div title="登陆" style="padding:10px;">
 	        	<div style="padding:10px 60px 20px 60px">
-			        <form id="form" action="<%=$root %>/index.do" method="POST">
+			        <form id="form" action="login.do" method="POST">
 			            <table cellpadding="5" style="width:100%; font-size:13px;">
 			            	<tr>
 			            		<td colspan="2" style="text-align:center;"><span id="msg" style="color:red;"></span></td>

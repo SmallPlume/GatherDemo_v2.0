@@ -1,9 +1,7 @@
 package com.modules.sys.ctrl;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -17,16 +15,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageHelper;
-import com.modules.base.orm.Page;
-import com.modules.base.orm.Result;
 import com.modules.base.orm.User;
 import com.modules.sys.orm.Role;
 import com.modules.sys.orm.Subscriber;
 import com.modules.sys.svc.RoleSVC;
-import com.modules.sys.svc.SubscriberSVC;
 
 @Controller
-@RequestMapping("/")
 public class CoreCTRL {
 
 	@Autowired
@@ -38,7 +32,7 @@ public class CoreCTRL {
 	 * Ê×Ò³
 	 * @return
 	 */
-	@RequestMapping(value="index",method=RequestMethod.GET)
+	@RequestMapping(value="/index",method=RequestMethod.GET)
 	public String Index(Model model){
 		Subject subject = SecurityUtils.getSubject();
 		if(subject.isAuthenticated()==true){
@@ -55,7 +49,7 @@ public class CoreCTRL {
 	 * µÇÂ½Ò³
 	 * @return
 	 */
-	@RequestMapping(value="login",method=RequestMethod.GET)
+	@RequestMapping(value="/login",method=RequestMethod.GET)
 	public String gotoLogin(){
 		return "/login";
 	}
@@ -67,7 +61,7 @@ public class CoreCTRL {
 	 * @return
 	 * @throws IOException 
 	 */
-	@RequestMapping(value="index",method=RequestMethod.POST)
+	@RequestMapping(value="/login",method=RequestMethod.POST)
 	public @ResponseBody Boolean login(Subscriber sub) throws IOException{
 		Subject subject=SecurityUtils.getSubject();
 		
@@ -86,7 +80,7 @@ public class CoreCTRL {
 	 * ÍË³öµÇÂ¼
 	 * @return
 	 */
-	@RequestMapping(value="loginout",method=RequestMethod.GET)
+	@RequestMapping(value="/loginout",method=RequestMethod.GET)
 	public String loginOut(){
 		Subject subject=SecurityUtils.getSubject();
 		subject.logout();
@@ -104,7 +98,7 @@ public class CoreCTRL {
 	}
 	
 	
-	@RequestMapping(value="user/index",method=RequestMethod.GET)
+	@RequestMapping(value="/user/index",method=RequestMethod.GET)
 	public String userPage(User user,Model model){
 		
 		//ï¿½ï¿½Ò³
