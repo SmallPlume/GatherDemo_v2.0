@@ -27,10 +27,10 @@ var setting = {
 
 var zNodes =[
 	{ id:1, pId:0, name:"系统管理", open:true,iconOpen:"images/setting.png", iconClose:"images/user.png"},
-	{ id:11, pId:1, name:"用户管理", file:"http://localhost:8080/GatherDemo_v2/sys/userIndex.do",icon:"images/user.png"},
+	{ id:11, pId:1, name:"用户管理", file:$root+"/sys/userIndex.do",icon:"images/user.png"},
 	{ id:12, pId:1, name:"数据备份", file:"backup.html",icon:"images/database.png"},
 	{ id:13, pId:1, name:"权限管理", file:"authority.html"},
-	{ id:14, pId:1, name:"角色管理", file:"http://localhost:8080/GatherDemo_v2/sys/role/index.do"},
+	{ id:14, pId:1, name:"角色管理", file:$root+"/sys/role/index.do"},
 	{ id:2, pId:0, name:"父节点", open:false},
 	{ id:21, pId:2, name:"子节点21", file:""},
 	{ id:22, pId:2, name:"子节点22", file:""},
