@@ -43,10 +43,10 @@
 		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
 	  </bean>
 	  
-	  <!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+	  <!-- DAO接口所在包名，Spring会自动查找其下的类 
 	  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="com.modules.*.dao" />
-	  </bean>
+	  </bean>-->
 	  
 	  <!-- 通用mapper配置 -->
 	  <!-- 自动扫描Mapper接口生成代理类，这里和上面搜索dao不冲突 -->
