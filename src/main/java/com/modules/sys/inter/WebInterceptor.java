@@ -24,7 +24,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 	}
 
 	/**
-	 * 获取登录用户
+	 * 鑾峰彇鐧诲綍鐢ㄦ埛
 	 * @param request
 	 * @return
 	 */
