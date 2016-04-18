@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.github.pagehelper.PageHelper;
 import com.modules.base.orm.Page;
 import com.modules.base.orm.Result;
+import com.modules.base.orm.TreeNode;
 import com.modules.base.orm.User;
+import com.modules.sys.orm.Module;
 import com.modules.sys.orm.Role;
 import com.modules.sys.orm.Subscriber;
+import com.modules.sys.svc.ModuleSVC;
 import com.modules.sys.svc.RoleSVC;
 import com.modules.sys.svc.SubscriberSVC;
 
@@ -28,7 +31,10 @@ public class SysCTRL {
 	private SubscriberSVC userSVC;
 	
 	@Autowired
-	private RoleSVC roleSVC; 
+	private RoleSVC roleSVC;
+	
+	@Autowired
+	private ModuleSVC moduleSVC;
 	
 	/**
 	 * 
@@ -119,7 +125,7 @@ public class SysCTRL {
 	}
 	
 	
-	/**=====================================角色管理=====================================**/
+	/**================================角色管理==================================**/
 
 	/**
 	 * 跳转到角色首页
@@ -149,6 +155,48 @@ public class SysCTRL {
 		pages.setPageSize(pg.getPageSize());
 		pages.setTotal(pg.getTotal());
 		return pages;
+	}
+	
+	/**==============================菜单目录================================**/
+	
+	/**
+	 * 跳转到权限目录index
+	 * @return
+	 */
+	@RequestMapping(value="perms/permsIndex",method = RequestMethod.GET)
+	public String gotoPermission(){
+		return "/sys/pers/PermissionIndex";
+	}
+	
+	/**
+	 * 获取目录树
+	 * @return
+	 */
+	@RequestMapping(value="perms/menuTree",method = RequestMethod.POST)
+	public @ResponseBody List<TreeNode> getMenu(){
+		return moduleSVC.getMenuTrees();
+	}
+	
+	/**
+	 * 保存、更新
+	 * @param mod
+	 * @return
+	 */
+	@RequestMapping(value="perms/saveModule",method = RequestMethod.POST)
+	public @ResponseBody Result saveModule(Module mod){
+		Result r = moduleSVC.saveModule(mod);
+		return r;
+	}
+	
+	/**
+	 * 删除
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="perms/deltModule",method = RequestMethod.POST)
+	public @ResponseBody Result deltModule(String id){
+		Result r = moduleSVC.deleteModule(id);
+		return r;
 	}
 	
 	

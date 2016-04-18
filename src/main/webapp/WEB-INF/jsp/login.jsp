@@ -40,18 +40,6 @@
 	
 	//登陆
 	function submitForm(){
-		/* alert("123");
-		$.submit('#form', {
-			ok : function(data) {
-				location.href = "index.do";
-			},
-			fail: function(data) {
-				$("#msg").html("帐号或密码错误！");
-			}
-		}); */
-		
-		
-		//$("#form").submit();
 		var params = $('#form').serializeArray();
 		$.ajax({
 			url: '<%=$root %>/login.do',
@@ -74,6 +62,12 @@
 		});
 	}
 	
+	$(document).keyup(function(event){
+		  if(event.keyCode ==13){
+			  submitForm();
+		  }
+	});
+	
 	//清空
 	function clearForm(){
         $('#form').form('clear');
@@ -91,11 +85,11 @@
 			            	</tr>
 			                <tr>
 			                    <td>账号:</td>
-			                    <td><input class="easyui-textbox" type="text" name="username" style="padding-left:10px; height:30px; width:90%;"/></td>
+			                    <td><input class="easyui-textbox" type="text" name="username" style="padding-left:10px; height:30px; width:90%;" value="admin"/></td>
 			                </tr>
 			                <tr>
 			                    <td>密码:</td>
-			                    <td><input class="easyui-textbox" type="password" name="password" style="padding-left:10px; height:30px; width:90%;"/></td>
+			                    <td><input class="easyui-textbox" type="password" name="password" style="padding-left:10px; height:30px; width:90%;" value="12345"/></td>
 			                </tr>
 			                <tr>
 			                    <td>记住我</td>
@@ -104,7 +98,7 @@
 			            </table>
 			        </form>
 			        <div style="text-align:center;padding:5px">
-			            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px;">登录</a>
+			            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px; margin-right: 20px;">登录</a>
 			            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px;">清空</a>
 			        </div>
 		        </div>

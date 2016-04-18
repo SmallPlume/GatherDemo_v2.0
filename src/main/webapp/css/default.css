@@ -164,6 +164,20 @@ a:hover {
 	overflow:hidden;
 }
 
+.form-text {
+	line-height:16px;
+	font-size: 14px;
+	color: #333333;
+	padding: 2px 4px;
+	background-color: #fff;
+	/* border: 1px solid #D4D4D4; */ /* bootstrap */
+	border: 1px solid #95B8E7; /* default*/
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-khtml-border-radius: 5px;
+}
+
 /**-------------------tab----------------------**/
 #tab{
 	width:100%;
@@ -180,4 +194,24 @@ a:hover {
 #tab tr td>input{
 	width:60%;
 	margin-left: 20px;
+}
+/**------------------È¨ÏÞµÄtab-------------------**/
+#perm_tab{
+	margin-top: 20px;
+	width:100%;
+}
+#perm_tab tr th{
+	width:15%;
+	text-align:right;
+}
+#perm_tab tr td{
+	width:35%;
+}
+
+/**-----------------toolbar------------------**/
+div.toolbar {
+	height: 28px;
+	padding: 3px 5px;
+	background: #F4F4F4;
+	border-bottom: 1px solid #ddd;
 }

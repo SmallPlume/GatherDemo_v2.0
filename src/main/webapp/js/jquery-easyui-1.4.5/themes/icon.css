@@ -73,6 +73,9 @@
 .icon-app{
 	background:url('icons/app.png') no-repeat center center;
 }
+.icon-role{
+	background:url('icon/role.png') no-repeat center center;
+}
 
 .icon-mini-add{
 	background:url('icons/mini_add.png') no-repeat center center;

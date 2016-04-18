@@ -26,7 +26,7 @@ var setting = {
 };
 
 var zNodes =[
-	{ id:1, pId:0, name:"系统管理", open:true,iconOpen:"images/setting.png", iconClose:"images/user.png"},
+	{ id:1, pId:0, name:"系统管理", open:true,icon:"images/setting.png"},
 	{ id:11, pId:1, name:"用户管理", file:$root+"/sys/userIndex.do",icon:"images/user.png"},
 	{ id:12, pId:1, name:"数据备份", file:"backup.html",icon:"images/database.png"},
 	{ id:13, pId:1, name:"权限管理", file:"authority.html"},

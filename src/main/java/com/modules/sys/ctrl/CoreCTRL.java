@@ -3,6 +3,8 @@ package com.modules.sys.ctrl;
 import java.io.IOException;
 import java.util.List;
 
+import net.sf.json.JSONArray;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
@@ -28,6 +30,8 @@ public class CoreCTRL {
 	
 	public final static String SESSION_KEY = "SESSION_USER";
 	
+	public final static String SESSION_MODULE = "SESSION_MODULE";
+	
 	/**
 	 * Ê×Ò³
 	 * @return
@@ -39,7 +43,9 @@ public class CoreCTRL {
 			Subject currentUser = SecurityUtils.getSubject();
 			Session session = currentUser.getSession();
 			Subscriber sub = (Subscriber) session.getAttribute(SESSION_KEY);
+			JSONArray module = (JSONArray) session.getAttribute(SESSION_MODULE);
 			model.addAttribute("user", sub);
+			model.addAttribute("module", module.toString());
 			return "/index";
 		}
 		return "/login";

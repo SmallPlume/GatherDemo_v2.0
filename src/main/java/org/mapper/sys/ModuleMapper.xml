@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.modules.sys.dao.ModuleDao">
+	
+	<!-- 查询父节点 -->
+	<select id="getRoot" resultType="com.modules.sys.orm.Module">
+		select id,pid,name,url,ifopen,icon,dir,menu,valid,rank,permitno,permitmark from s_module where ISNULL(pid)
+	</select>
+	
+	<!-- 根据父类id获取信息 -->
+	<select id="getByPid" parameterType="String" resultType="com.modules.sys.orm.Module">
+		select id,pid,name,url,ifopen,icon,dir,menu,valid,rank,permitno,permitmark 
+		from s_module where pid = #{pid} order by rank
+	</select>
+</mapper>

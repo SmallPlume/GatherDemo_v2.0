@@ -129,8 +129,8 @@ function viewDetail(id){
   <div id="tt_btn">
       <a href="javascript:void(0)" id="add" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增</a>
       <a href="javascript:void(0)" id="update" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
-      <a href="javascript:void(0)" id="allot" class="easyui-linkbutton" iconCls="icon-app" plain="true">分配权限</a>
       <a href="javascript:void(0)" id="delete" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
+      <a href="javascript:void(0)" id="allot" class="easyui-linkbutton" iconCls="icon-app" plain="true">分配权限</a>
    </div>
 </div>
 </body>

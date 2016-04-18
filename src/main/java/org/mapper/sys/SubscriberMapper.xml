@@ -4,17 +4,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.modules.sys.dao.SubscriberDao">
 	
+	<!-- 根据用户帐号获取信息 -->
 	<select id="getByUserName" parameterType="String" resultType="com.modules.sys.orm.Subscriber">
 		select * from s_user where username=#{userName}
 	</select>
 	
+	<!-- 根据用户帐号获取相关的角色信息 -->
 	<select id="getRoles" parameterType="String" resultType="String">
 		select r.roleNo from s_user u,s_role r where u.roleId=r.id and u.username=#{userName}
 	</select>
 	
+	<!-- 根据用户帐号获取权限信息  -->
 	<select id="getPermissions" parameterType="String" resultType="String">
-		select p.permitNo from s_user u,s_role r,s_permission p where u.roleid=r.id and p.roleId=r.id and u.username=#{userName}
+		select 
+		m.permitno 
+		from s_user u,s_role r,s_permission p,s_module m 
+		where m.id=p.moduleid 
+		and u.roleid=r.id 
+		and p.roleid=r.id 
+		and u.username=#{userName}
 	</select>
+	
 	
 	<select id="queryList" parameterType="java.util.Map" resultType="com.modules.sys.orm.Subscriber">
 		select u.*,r.rolename as roleName from s_user u left join s_role r on u.roleid=r.id
@@ -24,6 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</where>
 	</select>
 	
+	<!-- 修改用户状态 -->
 	<update id="editActivity" parameterType="java.util.Map">
 		update s_user u
 		set 
