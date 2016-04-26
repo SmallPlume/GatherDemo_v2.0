@@ -8,14 +8,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import tk.mybatis.mapper.entity.Example;
-
 import com.modules.base.orm.Result;
 import com.modules.base.orm.TreeNode;
 import com.modules.sys.dao.ModuleDao;
 import com.modules.sys.dao.PermissionDao;
 import com.modules.sys.orm.Module;
-import com.modules.sys.orm.Permission;
 import com.util.ReflectUtils;
 
 @Service("moduleSVC")

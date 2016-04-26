@@ -15,7 +15,6 @@ function submitForm(){
 		return top.$window.close(window,1);
 	}, "json");
 }
-
 </script>
 </head>
 
@@ -35,8 +34,17 @@ function submitForm(){
                 <td><input class="easyui-textbox" type="text" name="subject" data-options="required:true"></input></td>
             </tr>
             <tr>
+            	<th>头像:</th>
+				<td>
+					<input type="button" class="easyui-linkbutton" value="选择文件" id="browse" style="width:80px; height:25px;" />
+					<ul id="file-list"></ul>
+				</td>
+			</tr>
+            <tr>
                 <th>Message:</th>
-                <td><input class="easyui-textbox" name="message" data-options="multiline:true" style="height:60px"></input></td>
+                <td>
+                	<input class="easyui-textbox" name="message" data-options="multiline:true" style="height:60px"></input>
+                </td>
             </tr>
         </table>
     </form>

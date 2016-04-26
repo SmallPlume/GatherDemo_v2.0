@@ -37,7 +37,7 @@ public class PluploadUtil {
 	 */
 	public static void upload(Plupload plupload, File dir,FileInfo fileInfo) throws IllegalStateException, IOException {
 		//生成唯一的文件名
-		String filename = "" + System.currentTimeMillis()+plupload.getName();
+		String filename = plupload.getName();
 		System.out.println("自动生产的名称=============="+filename);
 		System.out.println("文件原名=============="+plupload.getName());
 		upload(plupload, dir, filename,fileInfo);
@@ -77,7 +77,8 @@ public class PluploadUtil {
 			    	//创建新目标文件
 			    	File targetFile = new File(dir.getPath()+ "/" + filename);
 			    	System.out.println("新目标文件======="+targetFile.getPath());
-			    	
+			    	fileInfo.setContentType(multipartFile.getContentType()); //文件类型
+			    	fileInfo.setLength(multipartFile.getSize());
 			    	//当chunks>1则说明当前传的文件为一块碎片，需要合并
 			    	if (chunks > 1) {
 			    		//需要创建临时文件名，最后再更改名称
@@ -93,10 +94,8 @@ public class PluploadUtil {
 			    	} else {
 			    		//否则直接将文件内容拷贝至新文件
 			    		multipartFile.transferTo(targetFile);
-			    		
-			    		fileInfo.setId("这是自己写的id：10086");
-			    		fileInfo.setName(plupload.getName());
 			    	}
+			    	
 		    	}
 	        }
 	    }
