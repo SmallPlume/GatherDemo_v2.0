@@ -18,7 +18,7 @@ public class PermissionSVC {
 	private PermissionDao dao;
 	
 	/**
-	 * 获取全部菜单
+	 * 鑾峰彇鍏ㄩ儴鑿滃崟
 	 * @return
 	 */
 	public JSONArray queryList(String username,String menu){
