@@ -116,25 +116,18 @@
 			</value>
 		</property>
 	</bean>
-
+	
+	<!-- shiro 权限注解 抛出异常 -->
+	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.apache.shiro.authz.UnauthorizedException">/unauthor</prop>
+                <prop key="org.apache.shiro.authz.UnauthenticatedException">/unauthor</prop>
+            </props>
+        </property>
+    </bean>
+	
 	<!-- Shiro生命周期处理器 -->
 	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
 
-	<!-- 开启Shiro注解 -->
-	<!-- 启用aop,shiro使用注解实现权限校验需要用到 -->
-	<!-- <aop:aspectj-autoproxy />
-	
-	<bean
-		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
-		depends-on="lifecycleBeanPostProcessor" />
-	<bean
-		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-		<property name="securityManager" ref="securityManager" />
-	</bean>
-	
-	Enable annotation-based controllers using @Controller annotations
-    <bean id="annotationUrlMapping"  class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-    </bean>
-    <bean id="annotationMethodHandlerAdapter"
-          class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/> -->
 </beans>

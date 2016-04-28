@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,6 +52,7 @@ public class SysCTRL {
 	 * @param model
 	 * @return
 	 */
+	@RequiresPermissions("Q8")
 	@RequestMapping(value="addUser",method = RequestMethod.GET)
 	public String addUser(String id,Model model){
 		if(id != null){
@@ -82,8 +82,6 @@ public class SysCTRL {
 	 * @param user
 	 * @return
 	 */
-
-	@RequiresPermissions("Q8")
 	@RequestMapping(value="saveUser",method = RequestMethod.POST)
 	public @ResponseBody Result saveUser(Subscriber sub,User user){
 		sub.setRoleid("2");
