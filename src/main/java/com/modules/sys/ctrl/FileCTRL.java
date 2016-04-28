@@ -62,7 +62,7 @@ public class FileCTRL {
         	e.printStackTrace();
         }
         fileSVC.save(fileInfo);
-        System.out.println("fileID================================"+fileInfo.getId());
+        //System.out.println("fileID================================"+fileInfo.getId());
         return Result.data(fileInfo);
 	}
 
