@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -80,9 +82,11 @@ public class SysCTRL {
 	 * @param user
 	 * @return
 	 */
+
+	@RequiresPermissions("Q8")
 	@RequestMapping(value="saveUser",method = RequestMethod.POST)
 	public @ResponseBody Result saveUser(Subscriber sub,User user){
-		sub.setRoleid("1");
+		sub.setRoleid("2");
 		Result r = userSVC.save(sub);
 		return r;
 	}

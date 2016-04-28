@@ -1,20 +1,3 @@
-/*(function($){
-	$.fn.extend({
-		"upload":function(options){
-			return this.each(function(){
-				var $this = $(this);
-				var html = '<div class="btn-wraper">'+
-							'<input type="button" class="easyui-linkbutton l-btn l-btn-small" value="选择文件..." id="browse"></input>'+
-							'<input type="button" class="easyui-linkbutton l-btn l-btn-small" value="开始上传" id="upload-btn"></input>'+
-							'</div>'+
-							'<ul id="file-list"></ul>';
-				$this.html(html);
-			});
-		}
-	});
-	
-})(window.jQuery);*/
-
 $(function(){
 	var uploader = new plupload.Uploader({ //实例化一个plupload上传对象
 	browse_button : 'browse',
@@ -22,17 +5,25 @@ $(function(){
 	flash_swf_url : $root+'/js/plupload/Moxie.swf',
 	silverlight_xap_url : $root+'/js/plupload/Moxie.xap',
 	multipart:true,
+	filters:{
+		mime_types:[ //只允许上传图片和zip文件
+				{ title : "Image files", extensions : "jpg,gif,png" }/*,
+				{ title : "Zip files", extensions : "zip" }*/
+			],
+			max_file_size : '400kb', //最大只能上传400kb的文件
+			prevent_duplicates : true //不允许选取重复文件
+		},
 	init:{
 		FilesAdded:function(uploader,files){
-			for(var i = 0, len = files.length; i<len; i++){
+			/*for(var i = 0, len = files.length; i<len; i++){
 				var file_name = files[i].name; //文件名
 				var file_size = files[i].size; //文件大小
 				//构造html来更新UI
-				/*var html = '<li id="file-' + files[i].id +'"><p class="file-name">' + file_name 
+				var html = '<li id="file-' + files[i].id +'"><p class="file-name">' + file_name 
 				+'&nbsp;|&nbsp;'+plupload.formatSize(file_size)
 				+'&nbsp;|&nbsp;fileId===='+files[i].id+'</p><p class="progress"></p></li>';
-				$(html).appendTo('#file-list');*/
-			}
+				$(html).appendTo('#file-list');
+			}*/
 			uploader.start(); //开始上传
 		},
 		UploadProgress:function(uploader,file){

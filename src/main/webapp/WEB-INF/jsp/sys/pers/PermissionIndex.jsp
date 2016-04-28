@@ -236,7 +236,7 @@ function toClean(){
 					</td>
 				</tr>
 				<tr>
-					<th>是否目录:</th>
+					<th>是否功能模块:</th>
 					<td><input class="easyui-switchbutton" name="dir" id="dir" onText="开" offText="关" checked></td>
 					<th>排序:</th>
 					<td><input type="text" class="form-text" name="rank" id="rank" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"/></td>

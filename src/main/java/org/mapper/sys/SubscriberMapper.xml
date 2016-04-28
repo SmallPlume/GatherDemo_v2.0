@@ -22,6 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where m.id=p.moduleid 
 		and u.roleid=r.id 
 		and p.roleid=r.id 
+		and m.permitno IS NOT NULL 
 		and u.username=#{userName}
 	</select>
 	

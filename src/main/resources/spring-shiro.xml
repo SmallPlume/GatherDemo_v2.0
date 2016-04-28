@@ -108,7 +108,7 @@
 				/js/**=anon
 				/ico/**=anon
 				/images/**=anon
-				/sys/**=anyRoles[admin,employee]
+				<!-- /sys/**=anyRoles[admin,employee]  -->
 				/user/**=roles[admin]
 				/user=perms["user:view"]
 				<!-- 所有的都需要验证 -->
@@ -117,12 +117,13 @@
 		</property>
 	</bean>
 
-	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 也就是shiro的生命周期 <bean id="lifecycleBeanPostProcessor" 
-		class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/> -->
 	<!-- Shiro生命周期处理器 -->
 	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
 
 	<!-- 开启Shiro注解 -->
+	<!-- 启用aop,shiro使用注解实现权限校验需要用到 -->
+	<!-- <aop:aspectj-autoproxy />
+	
 	<bean
 		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
 		depends-on="lifecycleBeanPostProcessor" />
@@ -130,6 +131,10 @@
 		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
 		<property name="securityManager" ref="securityManager" />
 	</bean>
+	
+	Enable annotation-based controllers using @Controller annotations
+    <bean id="annotationUrlMapping"  class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+    </bean>
+    <bean id="annotationMethodHandlerAdapter"
+          class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/> -->
 </beans>
-	
-	

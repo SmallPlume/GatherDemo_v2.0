@@ -45,8 +45,8 @@ public class MyRealm extends AuthorizingRealm{
 		//获取帐号角色
 		authorizationInfo.setRoles(userSVC.getRoles(userName));
 		//获取帐号权限
-		Set<String> u = userSVC.getPermissions(userName);
-		authorizationInfo.setStringPermissions(userSVC.getPermissions(userName));
+		Set<String> permis = userSVC.getPermissions(userName);
+		authorizationInfo.setStringPermissions(permis);
 		return authorizationInfo;
 	}
 
@@ -63,7 +63,7 @@ public class MyRealm extends AuthorizingRealm{
 		//菜单
 		JSONArray module = new JSONArray();
 		if("admin".equals(userName)){
-			module = permissionSVC.queryList(null, null);
+			module = permissionSVC.queryList(null, ModuleType.menu.type);
 		}else{
 			module = permissionSVC.queryList(userName.trim().toString(), ModuleType.menu.type);
 		}

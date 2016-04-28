@@ -21,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</where>
 		)
 		<if test="menu != null">and m.menu = #{menu}</if>
-		group by(m.permitno) 
+		group by(m.name)
 		order by m.rank
 	</select>
 	
