@@ -22,7 +22,6 @@ public class FileInfoSVC {
 		try{
 			if(file != null){
 				dao.insertFile(file);
-				System.out.println("file_id=============================="+file.getId());
 				//dao.insertFile(file);
 			}
 			return Result.ok();
