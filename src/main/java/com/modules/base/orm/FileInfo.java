@@ -1,6 +1,7 @@
 package com.modules.base.orm;
 
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -9,7 +10,7 @@ public class FileInfo {
 	
 	/** id **/
 	@Id
-	@GeneratedValue(generator = "UUID")
+	@GeneratedValue(generator = "UUID",strategy = GenerationType.IDENTITY)
 	private String id;
 	
 	/** ÎÄ¼şÃû³Æ **/

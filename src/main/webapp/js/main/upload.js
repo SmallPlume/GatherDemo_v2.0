@@ -36,7 +36,7 @@ $(function(){
 				+'&nbsp;|&nbsp;'+obj.data.length
 				+'&nbsp;|&nbsp;fileId===='+obj.data.id+'</p><p class="progress"></p></li>';
 				$(html).appendTo('#file-list');
-			//alert("obj.data.id===================="+obj.data.id);
+			alert("obj.data.id===================="+obj.data.id);
 		}
 	}
 });
