@@ -12,8 +12,16 @@
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
+	<context:annotation-config />
 	<!-- 使用注解的包，包括子集 -->
-	<context:component-scan base-package="com.modules.*.ctrl" />
+	<!-- <context:component-scan base-package="com.modules.*.svc" />
+	<context:component-scan base-package="com.modules.*.ctrl" /> -->
+	
+	<!-- 扫描所有的controller 但是不扫描service-->
+	<context:component-scan base-package="com.modules.*.ctrl">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
 	
 	<!-- 开启Shiro注解 -->
 	<!-- Required for security annotations to work in this servlet -->

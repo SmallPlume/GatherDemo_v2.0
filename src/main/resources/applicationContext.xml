@@ -12,10 +12,11 @@
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
-	<context:annotation-config />
-	<!-- 使用注解的包，包括子集 -->
-	<context:component-scan base-package="com.modules.*.svc" />
-
+	<!-- 自动扫描组件，这里要把controler下面的 controller去除，他们是在spring3-servlet.xml中配置的，如果不去除会影响事务管理的。   -->  
+	<context:component-scan base-package="com.modules.*.svc">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+    
 	<!-- 获取数据库连接信息 -->
 	<context:property-placeholder location="classpath:database.properties" />
 
@@ -56,7 +57,6 @@
 		</property>
 	</bean>
 
-	<!-- (事务管理)transaction manager, use JtaTransactionManager for gl obal tx -->
 	<!-- 事务注解方式 -->
 	<tx:annotation-driven transaction-manager="transactionManager"
 		proxy-target-class="true" />
@@ -65,37 +65,25 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
-	<!-- 存放shiro的位置 -->
-
+	<!-- 配置事务切面 -->
+	<aop:config expose-proxy="true">
+		<aop:pointcut expression="execution(* com.modules.*.svc.*(..))" id="fooServiceMethods"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="fooServiceMethods" />
+	</aop:config>
+	
 	<!-- 配置事务通知属性 -->
 	<tx:advice id="txAdvice" transaction-manager="transactionManager">
 		<!-- 定义事务传播属性 -->
 		<tx:attributes>
-			<tx:method name="insert*" propagation="REQUIRED" />
+			<tx:method name="save*" read-only="true"/>
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="*" rollback-for="CustomException"/>
+			<!-- <tx:method name="insert*" propagation="REQUIRED" />
 			<tx:method name="update*" propagation="REQUIRED" />
-			<tx:method name="edit*" propagation="REQUIRED" />
-			<tx:method name="save*" propagation="REQUIRED" />
-			<tx:method name="add*" propagation="REQUIRED" />
-			<tx:method name="new*" propagation="REQUIRED" />
-			<tx:method name="set*" propagation="REQUIRED" />
-			<tx:method name="remove*" propagation="REQUIRED" />
-			<tx:method name="delete*" propagation="REQUIRED" />
-			<tx:method name="change*" propagation="REQUIRED" />
-			<tx:method name="check*" propagation="REQUIRED" />
-			<tx:method name="get*" propagation="REQUIRED" read-only="true" />
-			<tx:method name="find*" propagation="REQUIRED" read-only="true" />
-			<tx:method name="load*" propagation="REQUIRED" read-only="true" />
-			<tx:method name="*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="*" propagation="REQUIRED" read-only="true" /> -->
 		</tx:attributes>
 	</tx:advice>
-
-	<!-- 配置事务切面 -->
-	<aop:config expose-proxy="true">
-		<aop:pointcut id="serviceOperation" expression="execution(* com.modules.*.svc.*(..))" />
-		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOperation" />
-	</aop:config>
-
-	<!-- 服务实现 <bean id="app" class="com.web.core.CorpApp" /> -->
 
 	<!-- file上传文件bean -->
 	<bean id="multipartResolver"

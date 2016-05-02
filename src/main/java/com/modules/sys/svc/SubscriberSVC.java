@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import tk.mybatis.mapper.entity.Example;
 
@@ -80,6 +81,11 @@ public class SubscriberSVC {
 			sub.setPassword("12345");  //一开始时密码
 			sub.setPassword(CryptUtils.encode(sub.getPassword()));  //密码加密
 			subDao.insert(sub);
+			
+			Subscriber sub2 = new Subscriber();
+			sub2.setId(null);
+			subDao.insert(sub2);
+			
 			return Result.ok();
 		}
 		return Result.error("系统新增时报错！");
@@ -158,7 +164,7 @@ public class SubscriberSVC {
 		map.put("id", id);
 		map.put("ifactivate", ifactivate);
 		map.put("ifspeak", ifspeak);
-		try{
+		try{ 
 			subDao.editActivity(map);
 			return Result.ok();
 		}catch(Exception e){
