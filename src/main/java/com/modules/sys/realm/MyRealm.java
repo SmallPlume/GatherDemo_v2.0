@@ -27,9 +27,6 @@ public class MyRealm extends AuthorizingRealm{
 	@Autowired
 	private SubscriberSVC userSVC;
 	
-	//@Autowired
-	//private ModuleSVC moduleSVC;
-	
 	@Autowired
 	private PermissionSVC permissionSVC;
 	
@@ -37,6 +34,14 @@ public class MyRealm extends AuthorizingRealm{
 	
 	public final static String SESSION_MODULE = "SESSION_MODULE";
 	
+	public void setUserSVC(SubscriberSVC userSVC) {
+		this.userSVC = userSVC;
+	}
+
+	public void setPermissionSVC(PermissionSVC permissionSVC) {
+		this.permissionSVC = permissionSVC;
+	}
+
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		//ªÒ»°’ ∫≈

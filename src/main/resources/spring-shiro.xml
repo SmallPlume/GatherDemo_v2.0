@@ -12,7 +12,8 @@
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 	
-	<!-- 会话Cookie模板 sessionIdCookie：maxAge=-1表示浏览器关闭时失效此Cookie ; rememberMeCookie：即记住我的Cookie，保存时长30天； -->
+	<!-- 会话Cookie模板 sessionIdCookie:maxAge=-1表示浏览器关闭时失效此Cookie ; 
+		rememberMeCookie:即记住我的Cookie,保存时长30天; -->
 	<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
 		<constructor-arg value="sid" />
 		<property name="httpOnly" value="true" />
@@ -21,7 +22,8 @@
 	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
 		<constructor-arg value="rememberMe" />
 		<property name="httpOnly" value="true" />
-		<property name="maxAge" value="2592000" /><!-- 30天 -->
+		<!-- 30天 -->
+		<property name="maxAge" value="2592000" />
 	</bean>
 
 	<!-- 会话ID生成器 -->
@@ -57,14 +59,14 @@
 		<property name="sessionIdCookie" ref="sessionIdCookie" />
 		<property name="sessionDAO" ref="sessionDAO" />
 	</bean>
-
+	
 	<!-- rememberMe管理器 -->
 	<bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
 		<property name="cipherKey"
 			value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}" />
 		<property name="cookie" ref="rememberMeCookie" />
 	</bean>
-
+	
 	<!-- 缓存管理器 使用Ehcache实现 -->
 	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
 		<property name="cacheManagerConfigFile" value="classpath:ehcache.xml" />
@@ -73,7 +75,7 @@
 	<!-- 自定义Realm -->
 	<bean id="myRealm" class="com.modules.sys.realm.MyRealm" />
 
-	<!-- 安全管理器 -->
+	<!-- ==========================================安全管理器========================================== -->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<property name="realm" ref="myRealm" />
 		<property name="rememberMeManager" ref="rememberMeManager" />
@@ -84,7 +86,11 @@
 	<!--自定义的Roles Filter 修改权限的 And问题，将And关系改为Or -->
 	<bean id="anyRoles" class="com.modules.sys.realm.CustomRolesAuthorizationFilter" />
 
-	<!-- Shiro过滤器 -->
+	<!-- Shiro生命周期处理器 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+	
+	<!-- ==========================================web相关========================================== -->
+	<!-- Shiro过滤器 id要跟web.xml一致 -->
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<!-- Shiro的核心安全接口,这个属性是必须的 -->
 		<property name="securityManager" ref="securityManager" />
@@ -103,7 +109,6 @@
 			<value>
 				<!-- index不需要验证 -->
 				/index=anon
-				<!-- /login=anon -->
 				/css/**=anon
 				/js/**=anon
 				/ico/**=anon
@@ -117,7 +122,7 @@
 		</property>
 	</bean>
 	
-	<!-- shiro 权限注解 抛出异常 -->
+	<!-- shiro 权限注解 抛出异常 指定跳转的页面(unauthor.jsp) -->
 	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
         <property name="exceptionMappings">
             <props>
@@ -127,7 +132,4 @@
         </property>
     </bean>
 	
-	<!-- Shiro生命周期处理器 -->
-	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
-
 </beans>

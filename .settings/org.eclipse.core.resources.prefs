@@ -1,7 +1,7 @@
 eclipse.preferences.version=1
 encoding//src/main/java/com/modules/sys/inter/WebInterceptor.java=UTF-8
-encoding//src/main/java/com/modules/sys/svc/PermissionSVC.java=UTF-8
+encoding//src/main/java/com/modules/sys/svc/impl/PermissionSVCImpl.java=UTF-8
 encoding//src/main/webapp/js=UTF-8
 encoding//src/main/webapp/js/index.js=UTF-8
 encoding//src/main/webapp/js/main=UTF-8
-encoding//src/main/webapp/js/plupload/plupload.full.min.js=UTF-8
+encoding/README.md=UTF-8
