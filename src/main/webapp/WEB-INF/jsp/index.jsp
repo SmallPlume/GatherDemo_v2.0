@@ -148,6 +148,10 @@ function submitForm(){
 	$.post("<%=$root %>/sys/saveUser.do", params,function(r){
 	}, "json");
 }
+
+function abc(id){
+	alert("id======"+id);
+}
 </script>
 
 </body>

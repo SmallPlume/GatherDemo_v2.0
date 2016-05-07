@@ -104,20 +104,28 @@
 				<entry key="anyRoles" value-ref="anyRoles" />
 			</map>
 		</property>
+		
+		<!-- shiro连接约束配置,在这里使用自定义的 从数据库中动态获取资源 -->
+		<property name="filterChainDefinitionMap" ref="chainDefinitionSectionMetaSource" />
+	</bean>
+	
+	<!-- 动态拦截url,在系统修改的时候需要重启才生效 -->
+	<bean id="chainDefinitionSectionMetaSource" class="com.modules.sys.realm.ChainDefinitionSectionMetaSource">
 		<!-- Shiro连接约束配置,即过滤链的定义 -->
 		<property name="filterChainDefinitions">
 			<value>
-				<!-- index不需要验证 -->
-				/index=anon
+				<!-- 静态资源 -->
 				/css/**=anon
 				/js/**=anon
 				/ico/**=anon
 				/images/**=anon
+				<!-- index不需要验证 -->
+				/index=anon
 				<!-- /sys/**=anyRoles[admin,employee]  -->
-				/user/**=roles[admin]
-				/user=perms["user:view"]
+				<!-- /user/**=roles[admin]
+				/user=perms["user:view"] -->
 				<!-- 所有的都需要验证 -->
-				/**=authc
+				<!-- /**=authc -->
 			</value>
 		</property>
 	</bean>

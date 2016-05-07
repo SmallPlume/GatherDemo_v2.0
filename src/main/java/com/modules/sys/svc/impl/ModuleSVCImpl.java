@@ -60,7 +60,6 @@ public class ModuleSVCImpl implements ModuleSVC {
 		mod.setDir("on".equals(mod.getDir())?"1":"0");
 		mod.setMenu("on".equals(mod.getMenu())?"1":"0");
 		mod.setIfopen("on".equals(mod.getIfopen())?"1":null);
-		mod.setValid(0);
 		return mod;
 	}
 	

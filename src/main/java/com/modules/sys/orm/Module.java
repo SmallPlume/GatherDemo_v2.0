@@ -38,8 +38,8 @@ public class Module {
 	/** 是否菜单('0':表示否,'1':表示是) **/
 	private String menu;
 	
-	/** 是否公开 **/
-	private Integer valid;
+	/** 对应的权限值 **/
+	private String value;
 	
 	/** 排序 **/
 	private Integer rank;
@@ -106,10 +106,6 @@ public class Module {
 		this.dir = dir;
 	}
 
-	public void setValid(Integer valid) {
-		this.valid = valid;
-	}
-
 	public String getMenu() {
 		return menu;
 	}
@@ -142,8 +138,12 @@ public class Module {
 		this.permitmark = permitmark;
 	}
 
-	public Integer getValid() {
-		return valid;
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
 	}
 	
 }
