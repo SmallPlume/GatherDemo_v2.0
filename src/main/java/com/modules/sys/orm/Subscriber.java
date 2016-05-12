@@ -29,6 +29,9 @@ public class Subscriber implements Serializable {
 	/** √‹¬Î **/
 	private String password;
 	
+	/** —Œ **/
+	private String salt;
+	
 	/** Í«≥∆ **/
 	private String nickname;
 	
@@ -209,16 +212,31 @@ public class Subscriber implements Serializable {
 	public void setCookie(String cookie) {
 		this.cookie = cookie;
 	}
+	
+	public String getSalt() {
+		return salt;
+	}
+	
+	public String getCredentialsSalt() {
+        return username + salt;
+    }
 
-	public Subscriber(String id, String username, String password,
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	
+
+	public Subscriber(String id, String username, String password, String salt,
 			String nickname, int sex, String age, String email,
 			String phonenum, String roleid, String icon, String ifactivate,
 			String ifspeak, Date lastlogintime, String logindevice,
-			String loginorg) {
+			String loginorg, String cookie, String roleName) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
+		this.salt = salt;
 		this.nickname = nickname;
 		this.sex = sex;
 		this.age = age;
@@ -231,6 +249,8 @@ public class Subscriber implements Serializable {
 		this.lastlogintime = lastlogintime;
 		this.logindevice = logindevice;
 		this.loginorg = loginorg;
+		this.cookie = cookie;
+		this.roleName = roleName;
 	}
 
 	public Subscriber() {

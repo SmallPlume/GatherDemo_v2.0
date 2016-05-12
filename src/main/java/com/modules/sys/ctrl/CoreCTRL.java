@@ -6,6 +6,8 @@ import java.util.List;
 import net.sf.json.JSONArray;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageHelper;
+import com.modules.base.orm.Result;
 import com.modules.base.orm.User;
 import com.modules.sys.orm.Role;
 import com.modules.sys.orm.Subscriber;
@@ -68,18 +71,21 @@ public class CoreCTRL {
 	 * @throws IOException 
 	 */
 	@RequestMapping(value="/login",method=RequestMethod.POST)
-	public @ResponseBody Boolean login(Subscriber sub) throws IOException{
+	public @ResponseBody Result login(Subscriber sub){
 		Subject subject=SecurityUtils.getSubject();
-		
+		String error = null;
 		UsernamePasswordToken token=new UsernamePasswordToken(sub.getUsername().trim().toString(),sub.getPassword().trim().toString());
 		token.setRememberMe(true);
 		try{
 			subject.login(token);
-			return true;
-		}catch(Exception e){
-			e.printStackTrace();
-			return false;
-		}
+			return Result.ok("验证成功！");
+		}catch (IncorrectCredentialsException e) {  
+            error = "用户名/密码错误";
+            return Result.error(error);
+        }catch (AuthenticationException e) {  
+        	error = "用户名/密码错误";
+            return Result.error(error);
+        }
 	}
 	
 	/**

@@ -16,6 +16,14 @@ import java.util.regex.Pattern;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
 
+/**
+ * <p>
+ * 字符串工具类
+ * </p>
+ * <p>
+ * create: 2010-12-21 上午10:25:28
+ * </p>
+ */
 public class StringUtils {
 	
 	/**
@@ -656,7 +664,6 @@ public class StringUtils {
 	 * 转换成拼音
 	 * </p>
 	 * <p>
-	 * author 许德建【Email：xudejian_dev@126.com；QQ：66018777】
 	 * </p>
 	 * 
 	 * @param str
@@ -689,7 +696,6 @@ public class StringUtils {
 	 * 转换汉字首字母
 	 * </p>
 	 * <p>
-	 * author 许德建【Email：xudejian_dev@126.com；QQ：66018777】
 	 * </p>
 	 * 
 	 * @param str
@@ -724,7 +730,6 @@ public class StringUtils {
 	 * 字节数据转16进制
 	 * </p>
 	 * <p>
-	 * author 许德建【xudejian_dev@126.com，QQ:66018777】
 	 * </p>
 	 * 
 	 * @param src
@@ -751,7 +756,6 @@ public class StringUtils {
 	 * 16进制转字节数组
 	 * </p>
 	 * <p>
-	 * author 许德建【xudejian_dev@126.com，QQ:66018777】
 	 * </p>
 	 * 
 	 * @param hex
@@ -770,5 +774,4 @@ public class StringUtils {
 		}
 		return d;
 	}
-
 }

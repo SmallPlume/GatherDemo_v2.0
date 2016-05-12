@@ -14,6 +14,7 @@ import com.modules.base.orm.Result;
 import com.modules.sys.dao.SubscriberDao;
 import com.modules.sys.orm.Subscriber;
 import com.modules.sys.svc.SubscriberSVC;
+import com.modules.sys.util.PasswordHelper;
 import com.util.CryptUtils;
 import com.util.ReflectUtils;
 
@@ -81,14 +82,15 @@ public class SubscriberSVCImpl implements SubscriberSVC{
 	 */
 	@Override
 	public Result save(Subscriber sub){
+		PasswordHelper passwordHelper = new PasswordHelper();
 		if(sub != null){
 			sub.setPassword("12345");  //一开始时密码
-			sub.setPassword(CryptUtils.encode(sub.getPassword()));  //密码加密
+			passwordHelper.encryptPassword(sub);
 			subDao.insert(sub);
 			
-			Subscriber sub2 = new Subscriber();
+			/*Subscriber sub2 = new Subscriber();
 			sub2.setId(null);
-			subDao.insert(sub2);
+			subDao.insert(sub2);*/
 			
 			return Result.ok();
 		}

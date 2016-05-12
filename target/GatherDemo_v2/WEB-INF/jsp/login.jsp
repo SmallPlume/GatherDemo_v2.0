@@ -54,7 +54,7 @@
 			},error:function(msg){
 				$.messager.show({
 		               title: "系统提示",
-		               msg: msg,
+		               msg: "系统错误："+msg,
 		               showType: 'slide',
 		               timeout: 2000
 		           });

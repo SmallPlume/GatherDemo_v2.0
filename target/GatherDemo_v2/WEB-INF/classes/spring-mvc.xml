@@ -12,34 +12,35 @@
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
-	<context:annotation-config />
-	<!-- 使用注解的包，包括子集 -->
-	<!-- <context:component-scan base-package="com.modules.*.svc" />
-	<context:component-scan base-package="com.modules.*.ctrl" /> -->
+	<!--==========================================静态资源==========================================-->
+    <mvc:resources mapping="/js/**" location="/js/"></mvc:resources>
+    <mvc:resources mapping="/images/**" location="/images/"></mvc:resources>
+    <mvc:resources mapping="/css/**" location="/css/"></mvc:resources>
 	
-	<!-- 扫描所有的controller 但是不扫描service-->
-	<context:component-scan base-package="com.modules">
-		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
-		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />
-	</context:component-scan>
-	
+	<!-- ==========================================shiro注解========================================== -->
 	<!-- 开启Shiro注解 -->
 	<!-- Required for security annotations to work in this servlet -->
     <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
-    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor"/>
+    <!-- 开启shiro注解支持 -->
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager" />
+    </bean>
 
     <!-- Enable annotation-based controllers using @Controller annotations -->
-    <bean id="annotationUrlMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-    </bean>
+    <bean id="annotationUrlMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"></bean>
 
     <bean id="annotationMethodHandlerAdapter"
           class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
 
-	<!-- 服务实现 <bean id="corpApp" class="com.web.core.CorpApp" /> -->
+	<!-- ==========================================扫描controller组件========================================== -->
+	<!-- 扫描所有的controller 但是不扫描service-->
+	<context:component-scan base-package="com.modules.*.ctrl">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+	
 	<!-- 系统上下文 -->
-	<bean id="sessionContext" class="com.modules.sys.svc.SessionContext">
-		<!-- 系统应用 <property name="app" ref="corpApp" /> -->
-	</bean>
+	<bean id="sessionContext" class="com.modules.sys.svc.SessionContext"></bean>
 
 	<!-- Web请求拦截器 -->
 	<mvc:interceptors>
@@ -66,7 +67,7 @@
 		</property>
 	</bean>
 
-	<!-- 拦截器 -->
+	<!-- Spring拦截器 -->
 	<mvc:annotation-driven>
 		<mvc:argument-resolvers>
 			<bean class="com.modules.sys.inter.ArgumentResolver" />
@@ -90,11 +91,11 @@
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 
-	<!-- 视图解析器 -->
+	<!-- ==========================================视图解析器========================================== -->
 	<!-- 对模型视图名称的解析，在请求时模型视图名称添加前后缀 -->
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
-		p:prefix="/WEB-INF/jsp/" p:suffix=".jsp">
+		p:prefix="/WEB-INF/jsp" p:suffix=".jsp">
 		<property name="viewClass"
 			value="org.springframework.web.servlet.view.JstlView" />
 	</bean>

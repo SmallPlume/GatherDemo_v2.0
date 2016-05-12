@@ -46,18 +46,18 @@
 			type: 'POST',
 			data: params,
 			success:function(data){
-				if(data){
-					location.href="index.do";
+				if(data.code=='-1'){
+					$("#msg").html(data.msg);
 				}else{
-					$("#msg").html("帐号或密码错误！");
+					location.href="index.do";
 				}
-			},error:function(msg){
+			},error:function(data){
 				$.messager.show({
-		               title: "系统提示",
-		               msg: "系统错误："+msg,
-		               showType: 'slide',
-		               timeout: 2000
-		           });
+	               title: "系统提示",
+	               msg: "系统错误："+msg,
+	               showType: 'slide',
+	               timeout: 2000
+	        	});
 			}
 		});
 	}

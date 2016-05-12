@@ -23,6 +23,7 @@ import com.modules.sys.orm.Subscriber;
 import com.modules.sys.svc.ModuleSVC;
 import com.modules.sys.svc.RoleSVC;
 import com.modules.sys.svc.SubscriberSVC;
+import com.modules.sys.util.RedisUtil;
 
 @Controller
 @RequestMapping("sys/")
@@ -37,12 +38,18 @@ public class SysCTRL {
 	@Autowired
 	private ModuleSVC moduleSVC;
 	
+	@Autowired
+	private RedisUtil redis;
+	
 	/**
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "userIndex", method = RequestMethod.GET)
 	public String userIndex(){
+		//redis»º´æ
+		redis.set("abc", "ÖÐ¹úÒÆ¶¯10086");
+		
 		return "/sys/user/UserIndex";
 	}
 	
@@ -72,6 +79,9 @@ public class SysCTRL {
 	public String viewUser(String id,Model model){
 		if(id==null) return null;
 		Subscriber sub = userSVC.findOne(id);
+		
+		String abc = (String) redis.get("abc");
+		
 		model.addAttribute("user", sub);
 		return "/sys/user/ViewUser";
 	}

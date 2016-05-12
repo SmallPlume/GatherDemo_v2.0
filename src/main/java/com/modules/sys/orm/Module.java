@@ -38,8 +38,8 @@ public class Module {
 	/** 是否菜单('0':表示否,'1':表示是) **/
 	private String menu;
 	
-	/** 对应的权限值 **/
-	private String value;
+	/** 是否有效 **/
+	private String volid;
 	
 	/** 排序 **/
 	private Integer rank;
@@ -138,12 +138,12 @@ public class Module {
 		this.permitmark = permitmark;
 	}
 
-	public String getValue() {
-		return value;
+	public String getVolid() {
+		return volid;
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public void setVolid(String volid) {
+		this.volid = volid;
 	}
-	
+
 }

@@ -11,33 +11,19 @@
         http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd  
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
-	
-	<!-- 会话Cookie模板 sessionIdCookie:maxAge=-1表示浏览器关闭时失效此Cookie ; 
-		rememberMeCookie:即记住我的Cookie,保存时长30天; -->
-	<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-		<constructor-arg value="sid" />
-		<property name="httpOnly" value="true" />
-		<property name="maxAge" value="-1" />
-	</bean>
-	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-		<constructor-arg value="rememberMe" />
-		<property name="httpOnly" value="true" />
-		<!-- 30天 -->
-		<property name="maxAge" value="2592000" />
-	</bean>
 
+	<!-- ========================================== 会话管理 ========================================== -->
 	<!-- 会话ID生成器 -->
-	<bean id="sessionIdGenerator"
-		class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator" />
-
+	<bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator" />
+	
 	<!-- 会话DAO -->
 	<bean id="sessionDAO"
 		class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
 		<!-- 这个属性设置Session列表在Cache中的ID，对应这个ID就可以在cache中查找出所有的Session -->
 		<property name="activeSessionsCacheName" value="shiro-activeSessionCache" />
-		<!-- <property name="sessionIdGenerator" ref="sessionIdGenerator"></property> -->
+		<property name="sessionIdGenerator" ref="sessionIdGenerator"></property>
 	</bean>
-
+	
 	<!-- 会话验证调度器 -->
 	<bean id="sessionValidationScheduler"
 		class="org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler">
@@ -45,7 +31,7 @@
 		<!-- 设置调度时间间隔，单位毫秒，默认就是1小时 -->
 		<property name="sessionManager" ref="sessionManager" />
 	</bean>
-
+	
 	<!-- Session 管理器 -->
 	<bean id="sessionManager"
 		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
@@ -56,8 +42,22 @@
 		<property name="sessionValidationSchedulerEnabled" value="true" />
 		<property name="sessionValidationScheduler" ref="sessionValidationScheduler" />
 		<property name="sessionIdCookieEnabled" value="true" />
-		<property name="sessionIdCookie" ref="sessionIdCookie" />
+		<!-- <property name="sessionIdCookie" ref="sessionIdCookie" /> -->
 		<property name="sessionDAO" ref="sessionDAO" />
+	</bean>
+	
+	<!-- 会话Cookie模板会话Cookie模板,sessionIdCookie:maxAge=-1表示浏览器关闭时失效此Cookie ; rememberMeCookie:即记住我的Cookie,保存时长30天 -->
+    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="sid"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="-1"/>
+    </bean>
+    
+	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+		<constructor-arg value="rememberMe" />
+		<property name="httpOnly" value="true" />
+		<!-- 30天 -->
+		<property name="maxAge" value="2592000" />
 	</bean>
 	
 	<!-- rememberMe管理器 -->
@@ -67,18 +67,34 @@
 		<property name="cookie" ref="rememberMeCookie" />
 	</bean>
 	
+	<!-- ========================================== 缓存、加密  ========================================== -->
 	<!-- 缓存管理器 使用Ehcache实现 -->
 	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
 		<property name="cacheManagerConfigFile" value="classpath:ehcache.xml" />
 	</bean>
+	
+	<!-- 凭证匹配器 -->  
+	<bean id="credentialsMatcher" class="com.modules.sys.realm.RetryLimitHashedCredentialsMatcher">
+	    <constructor-arg ref="cacheManager"/>
+	    <property name="hashAlgorithmName" value="md5"/>
+	    <property name="hashIterations" value="2"/>
+	    <property name="storedCredentialsHexEncoded" value="true"/>
+	</bean>
 
 	<!-- 自定义Realm -->
-	<bean id="myRealm" class="com.modules.sys.realm.MyRealm" />
+	<bean id="myRealm" class="com.modules.sys.realm.MyRealm">
+		<property name="credentialsMatcher" ref="credentialsMatcher"/>
+        <property name="cachingEnabled" value="true"/>
+        <property name="authenticationCachingEnabled" value="true"/>
+        <property name="authenticationCacheName" value="authenticationCache"/>
+        <property name="authorizationCachingEnabled" value="true"/>
+        <property name="authorizationCacheName" value="authorizationCache"/>
+	</bean>
 
 	<!-- ==========================================安全管理器========================================== -->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<property name="realm" ref="myRealm" />
-		<property name="rememberMeManager" ref="rememberMeManager" />
+		<property name="sessionManager" ref="sessionManager" />
 		<!-- Ehcache 缓存 -->
 		<property name="cacheManager" ref="cacheManager" />
 	</bean>
@@ -106,11 +122,11 @@
 		</property>
 		
 		<!-- shiro连接约束配置,在这里使用自定义的 从数据库中动态获取资源 -->
-		<property name="filterChainDefinitionMap" ref="chainDefinitionSectionMetaSource" />
+		<property name="filterChainDefinitionMap" ref="DynamicUrls" />
 	</bean>
 	
 	<!-- 动态拦截url,在系统修改的时候需要重启才生效 -->
-	<bean id="chainDefinitionSectionMetaSource" class="com.modules.sys.realm.ChainDefinitionSectionMetaSource">
+	<bean id="DynamicUrls" class="com.modules.sys.realm.DynamicUrls">
 		<!-- Shiro连接约束配置,即过滤链的定义 -->
 		<property name="filterChainDefinitions">
 			<value>
@@ -135,7 +151,7 @@
         <property name="exceptionMappings">
             <props>
                 <prop key="org.apache.shiro.authz.UnauthorizedException">/unauthor</prop>
-                <prop key="org.apache.shiro.authz.UnauthenticatedException">/unauthor</prop>
+                <prop key="org.apache.shiro.authz.UnauthenticatedException">/login</prop>
             </props>
         </property>
     </bean>

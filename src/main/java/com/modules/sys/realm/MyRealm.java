@@ -15,6 +15,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.modules.sys.constant.ModuleType;
@@ -59,7 +60,10 @@ public class MyRealm extends AuthorizingRealm{
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 		String userName = (String)token.getPrincipal();
 		Subscriber sub = userSVC.getUserByName(userName);
-		AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(sub.getUsername(),sub.getPassword(),getName());
+		SimpleAuthenticationInfo authcInfo = new SimpleAuthenticationInfo(sub.getUsername()
+				,sub.getPassword()
+				,ByteSource.Util.bytes(sub.getCredentialsSalt())
+				,getName());
 		
 		//shiroµÄsession
 		Subject currentUser = SecurityUtils.getSubject();
@@ -72,8 +76,8 @@ public class MyRealm extends AuthorizingRealm{
 		}else{
 			module = permissionSVC.queryList(userName.trim().toString(), ModuleType.menu.type);
 		}
-		
 		session.setAttribute(SESSION_MODULE, module);
+		
 		return authcInfo;
 	}
 
