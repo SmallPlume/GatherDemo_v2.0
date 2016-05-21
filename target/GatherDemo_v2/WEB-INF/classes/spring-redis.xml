@@ -13,23 +13,38 @@
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 	
 	<!-- 读取配置文件信息-->
-	<context:property-placeholder location="classpath:redis.properties" />
+	<context:property-placeholder location="classpath:redis.properties" ignore-unresolvable="true"/>
 	
+	<!-- 连接池的配置信息 -->
 	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
-		<property name="maxIdle" value="${redis.maxIdle}" />  
-	    <property name="maxActive" value="${redis.maxActive}" />  
-	    <property name="maxWait" value="${redis.maxWait}" />  
+		<!-- 最大Idle-->
+		<property name="maxIdle" value="${redis.maxIdle}" />
+		<!-- 说明一个pool可以有多少个Jedis实例 -->
+	    <property name="maxTotal" value="${redis.maxActive}" /> <!-- maxActive为低级版本，maxTotal为最新版本 -->
+	    <!--最大等待wait时间-->
+	    <property name="maxWaitMillis" value="${redis.maxWait}" /> <!-- maxWait为低级版本，maxWaitMillis为最新版本 -->
+	    <!-- return 一个jedis实例给pool时，是否检查连接可用性（ping()） -->
 	    <property name="testOnBorrow" value="${redis.testOnBorrow}" />
 	</bean>
 	
-	<bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"  
-	    p:host-name="${redis.host}" 
-	    p:port="${redis.port}" 
-	    p:password="${redis.pass}"  
-	    p:pool-config-ref="poolConfig"/>
+	<bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+		  p:host-name="${redis.host}"
+		  p:port="${redis.port}"
+		  p:password="${redis.pass}"
+		  p:pool-config-ref="poolConfig"/>
 	
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="keySerializer" >
+			<bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+        </property>
+        <property name="valueSerializer">
+        	<bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+        </property>
+	</bean>
 	
-	
-	
+    <bean id="redisUtil" class="com.modules.sys.util.RedisUtil" >
+          <property name="redisTemplate" ref="redisTemplate" />
+    </bean >
 	
 </beans>

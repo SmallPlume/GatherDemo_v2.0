@@ -17,6 +17,7 @@ import com.modules.base.orm.Page;
 import com.modules.base.orm.Result;
 import com.modules.base.orm.TreeNode;
 import com.modules.base.orm.User;
+import com.modules.sys.helper.ActivityUserHelper;
 import com.modules.sys.orm.Module;
 import com.modules.sys.orm.Role;
 import com.modules.sys.orm.Subscriber;
@@ -26,7 +27,7 @@ import com.modules.sys.svc.SubscriberSVC;
 import com.modules.sys.util.RedisUtil;
 
 @Controller
-@RequestMapping("sys/")
+@RequestMapping("/sys/")
 public class SysCTRL {
 	
 	@Autowired
@@ -41,6 +42,9 @@ public class SysCTRL {
 	@Autowired
 	private RedisUtil redis;
 	
+	@Autowired
+	private ActivityUserHelper activity;
+	
 	/**
 	 * 
 	 * @return
@@ -48,7 +52,7 @@ public class SysCTRL {
 	@RequestMapping(value = "userIndex", method = RequestMethod.GET)
 	public String userIndex(){
 		//redis缓存
-		redis.set("abc", "中国移动10086");
+		//redis.set("abc", "中国移动10086");
 		
 		return "/sys/user/UserIndex";
 	}
@@ -70,6 +74,17 @@ public class SysCTRL {
 	}
 	
 	/**
+	 * 跳转到修改页面
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="editUser",method = RequestMethod.GET)
+	public String editUser(String id,Module model){
+		return "/sys/user/EditUser";
+	}
+	
+	/**
 	 * 查看用户信息
 	 * @param id
 	 * @param model
@@ -80,7 +95,7 @@ public class SysCTRL {
 		if(id==null) return null;
 		Subscriber sub = userSVC.findOne(id);
 		
-		String abc = (String) redis.get("abc");
+		//String abc = (String) redis.get("abc");
 		
 		model.addAttribute("user", sub);
 		return "/sys/user/ViewUser";
@@ -113,7 +128,9 @@ public class SysCTRL {
 		map.put("username", "".equals(sub.getUsername())?null:sub.getUsername());
 		map.put("nickname", "".equals(sub.getNickname())?null:sub.getNickname());
 		List<Subscriber> list = userSVC.queryListByXml(map);
-		
+		for (Subscriber subscriber : list) {
+			subscriber.setActivity(activity.getActivityUser(subscriber.getUsername()));
+		}
 		Page<Subscriber> pages = new Page<Subscriber>();
 		pages.setRows(list);
 		
@@ -136,6 +153,17 @@ public class SysCTRL {
 		return r;
 	}
 	
+	/**
+	 * 踢出登录用户
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="UserloginOut",method = RequestMethod.POST)
+	public @ResponseBody Result loginout(String id){
+		Subscriber sub = userSVC.findOne(id);
+		Result r = activity.forceQuit(sub.getUsername());
+		return r;
+	}
 	
 	/**================================角色管理==================================**/
 

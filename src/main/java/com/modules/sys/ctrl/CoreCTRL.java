@@ -9,7 +9,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.github.pagehelper.PageHelper;
 import com.modules.base.orm.Result;
 import com.modules.base.orm.User;
+import com.modules.sys.constant.ModuleType;
 import com.modules.sys.orm.Role;
 import com.modules.sys.orm.Subscriber;
+import com.modules.sys.svc.PermissionSVC;
 import com.modules.sys.svc.RoleSVC;
 
 @Controller
@@ -30,6 +32,12 @@ public class CoreCTRL {
 
 	@Autowired
 	private RoleSVC roleSVC;
+	
+	@Autowired
+	private PermissionSVC permissionSVC;
+	
+	@Autowired
+	private SessionDAO sessionDAO;
 	
 	public final static String SESSION_KEY = "SESSION_USER";
 	
@@ -43,11 +51,14 @@ public class CoreCTRL {
 	public String Index(Model model){
 		Subject subject = SecurityUtils.getSubject();
 		if(subject.isAuthenticated()==true){
-			Subject currentUser = SecurityUtils.getSubject();
-			Session session = currentUser.getSession();
-			Subscriber sub = (Subscriber) session.getAttribute(SESSION_KEY);
-			JSONArray module = (JSONArray) session.getAttribute(SESSION_MODULE);
-			model.addAttribute("user", sub);
+			//菜单
+			JSONArray module = new JSONArray();
+			if("admin".equals(subject.getPrincipal().toString())){
+				module = permissionSVC.queryList(null, ModuleType.menu.type);
+			}else{
+				module = permissionSVC.queryList(subject.getPrincipal().toString(), ModuleType.menu.type);
+			}
+			//model.addAttribute("user", sub);
 			model.addAttribute("module", module.toString());
 			return "/index";
 		}
@@ -74,6 +85,15 @@ public class CoreCTRL {
 	public @ResponseBody Result login(Subscriber sub){
 		Subject subject=SecurityUtils.getSubject();
 		String error = null;
+		
+		//shiro的session
+		/*Collection<Session> sessions = sessionDAO.getActiveSessions();
+		for(Session session:sessions){
+			if(null != session && StringUtils.equals(String.valueOf(session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY)), sub.getUsername().trim().toString())){  
+				session.setTimeout(0);//设置session立即失效，即将其踢出系统
+            }  
+		}*/
+		
 		UsernamePasswordToken token=new UsernamePasswordToken(sub.getUsername().trim().toString(),sub.getPassword().trim().toString());
 		token.setRememberMe(true);
 		try{

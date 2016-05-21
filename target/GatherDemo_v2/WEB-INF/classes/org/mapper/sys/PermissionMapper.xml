@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.modules.sys.dao.PermissionDao">
+	
+	<!-- 根据角色查询分配的菜单(distinct为了去掉重复菜单) -->
+	<select id="getMenu" parameterType="java.lang.String" resultType="com.modules.sys.orm.Permission">
+		select 
+		m.id as id,
+		m.permitno as permitno,
+		m.name as permitname,
+		m.pid as pid,
+		m.url as url,
+		m.ifopen as ifopen,
+		m.icon as icon 
+		from s_permission p left join s_module m on p.moduleid = m.id
+		where p.roleid in (select r.id from s_role r left join s_user u on u.roleid = r.id 
+		<where>
+			<if test="username != null">u.username = #{username}</if>
+		</where>
+		)
+		<if test="menu != null">and m.menu = #{menu}</if>
+		and m.valid = '0'
+		group by(m.name)
+		order by m.rank
+	</select>
+	
+	<!-- 根据moduleid删除信息 -->
+	<delete id="delByModuleid" parameterType="java.lang.String">
+		delete from s_permission where moduleid = #{moduleid}
+	</delete>
+</mapper>

@@ -15,8 +15,6 @@ import com.modules.sys.dao.SubscriberDao;
 import com.modules.sys.orm.Subscriber;
 import com.modules.sys.svc.SubscriberSVC;
 import com.modules.sys.util.PasswordHelper;
-import com.util.CryptUtils;
-import com.util.ReflectUtils;
 
 @Service("subscriberSVC")
 public class SubscriberSVCImpl implements SubscriberSVC{
@@ -152,21 +150,6 @@ public class SubscriberSVCImpl implements SubscriberSVC{
 	public void delete(String id){
 		if(id != null || !"".equals(id)){
 			subDao.delete(id);
-		}
-	}
-	
-	/**
-	 * 更新数据
-	 * @param sub
-	 */
-	@Override
-	public void update(Subscriber sub){
-		if(sub != null){
-			Subscriber O_sub = subDao.selectByPrimaryKey(sub.getId());
-			if(O_sub != null){
-				ReflectUtils.copy(O_sub, sub, true);
-				subDao.update(O_sub);
-			}
 		}
 	}
 	

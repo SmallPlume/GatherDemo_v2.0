@@ -15,7 +15,7 @@
 	<!-- 开启注解支持 -->
 	<context:annotation-config />
 	<!-- 自动扫描组件   -->
-	<context:component-scan base-package="com.modules.*.svc">
+	<context:component-scan base-package="com.modules">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
     
@@ -73,6 +73,7 @@
 			<tx:method name="save*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
 			<tx:method name="insert*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
 			<tx:method name="update*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+			<tx:method name="edit*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
 			<!-- 以下方法都是可能设计修改的方法，就无法设置为只读 -->
 			<tx:method name="*" propagation="REQUIRED" read-only="true" />
 		</tx:attributes>
@@ -101,6 +102,7 @@
 			<value>4096</value>
 		</property>
 	</bean>
-
+	
+	<import resource="spring-shiro.xml"/>
 	<import resource="spring-redis.xml"/>
 </beans>

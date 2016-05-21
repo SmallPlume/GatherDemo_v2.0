@@ -18,7 +18,7 @@
 	<a href="javascript:void(0)"><span class="northTitle">EasyUI框架</span></a>
     <div class="loginInfo">
 		<span>登录用户:</span>
-		<a class="easyui-menubutton" data-options="menu:'#mm',iconCls:'icon-user'" href="javascript:void(0);">${user.username }</a>
+		<a class="easyui-menubutton" data-options="menu:'#mm',iconCls:'icon-user'" href="javascript:void(0);"><shiro:principal/></a>
 		<a href="#" class="easyui-menubutton" data-options="menu:'#mm1',iconCls:'icon-help'" href="javascript:void(0);" onclick="addTabs('menu1','user.do','icon-save');">Help</a>
 		<a href="#" class="easyui-linkbutton" data-options="plain:true" onclick="ifExist();">安全退出</a>
 	</div>
@@ -96,7 +96,7 @@ callback: {
 };
 
 $(function() {
-	var zNodes = ${module };
+	var zNodes = ${module};
 	$.fn.zTree.init($("#menuTree"), setting, zNodes);
 	var zTree = $.fn.zTree.getZTreeObj("menuTree");
 

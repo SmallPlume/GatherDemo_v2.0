@@ -25,7 +25,7 @@ public interface SubscriberSVC {
 	
 	public void delete(String id);
 	
-	public void update(Subscriber sub);
+	/*public void update(Subscriber sub);*/
 	
 	public Result editActivity(String id,String ifactivate,String ifspeak);
 	

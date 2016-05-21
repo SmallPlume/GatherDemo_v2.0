@@ -74,8 +74,13 @@ public class Subscriber implements Serializable {
 	@Transient
 	private String cookie;
 	
+	/** 角色名称 **/
 	@Transient
 	private String roleName;
+	
+	/** 是否在线 **/
+	@Transient
+	private String activity;
 	
 	public String getId() {
 		return id;
@@ -225,7 +230,13 @@ public class Subscriber implements Serializable {
 		this.salt = salt;
 	}
 
-	
+	public String getActivity() {
+		return activity;
+	}
+
+	public void setActivity(String activity) {
+		this.activity = activity;
+	}
 
 	public Subscriber(String id, String username, String password, String salt,
 			String nickname, int sex, String age, String email,

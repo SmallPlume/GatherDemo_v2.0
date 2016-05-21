@@ -20,7 +20,7 @@
     </context:component-scan>
     
 	<!-- 获取数据库连接信息 -->
-	<context:property-placeholder location="classpath:database.properties" />
+	<context:property-placeholder location="classpath:database.properties" ignore-unresolvable="true"/>
 
 	<!-- 定义数据源 -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -85,8 +85,10 @@
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut" />
 	</aop:config>
 	
-	<!-- 开启aop，对类代理 -->
-    <aop:config proxy-target-class="true" />
+	<!-- 当proxy-target-class为false时使用JDK动态代理 -->
+	<!-- 为true时使用cglib -->
+	<!-- cglib无法拦截接口方法 -->
+	<aop:aspectj-autoproxy proxy-target-class="false" />
 	
 	<!-- file上传文件bean -->
 	<bean id="multipartResolver"

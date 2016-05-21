@@ -81,7 +81,7 @@
 			        <form id="form" action="login.do" method="POST">
 			            <table cellpadding="5" style="width:100%; font-size:13px;">
 			            	<tr>
-			            		<td colspan="2" style="text-align:center;"><span id="msg" style="color:red;"></span></td>
+			            		<td colspan="2" style="text-align:center;"><span id="msg" style="color:red;"><c:if test="${not empty param.kickout}">您被踢出登录！</c:if>${error }</span></td>
 			            	</tr>
 			                <tr>
 			                    <td>账号:</td>

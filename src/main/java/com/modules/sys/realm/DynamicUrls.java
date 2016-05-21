@@ -34,7 +34,7 @@ public class DynamicUrls implements FactoryBean<Ini.Section> {
 		/user=perms["user:view"] 
 		**/
 		
-		section.put("/**", "authc");
+		/*section.put("/**", "authc");*/
 		section.put("/sys/**", "anyRoles[admin,employee]");
 		section.put("/user/**", "roles[employee]");
 		section.put("/user", "perms['user:view']");

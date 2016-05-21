@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.modules.base.dao.FileInfoDao">
+	
+	<insert id="insertFile" parameterType="com.modules.base.orm.FileInfo">
+		<selectKey resultType="java.lang.String" keyProperty="id" order="BEFORE">
+			select uuid()
+		</selectKey>
+		insert into app_files(id,name,length,content_type,ext_name,path,status) values(#{id},#{name},#{length},#{contentType},#{extName},#{path},#{status})
+	</insert>
+	
+</mapper>

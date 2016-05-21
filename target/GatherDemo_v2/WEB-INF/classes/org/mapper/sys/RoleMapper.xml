@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.modules.sys.dao.RoleDao">
+	
+	<!-- 查询 
+	<select id="findOne" parameterType="String" resultType="com.web.core.orm.Role">
+		select id,roleNo,roleName,roleRemark from s_role where id = #{id}
+	</select>-->
+	
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.modules.sys.orm.Role">
+		<selectKey resultType="java.lang.String" keyProperty="id" order="BEFORE">
+			select uuid()
+		</selectKey>
+		insert into s_role(id,roleno,rolename) values(#{id},#{roleno},#{rolename})
+	</insert>
+	
+	<!-- 更新 
+	<update id="update" parameterType="com.web.core.orm.Role">
+		update s_role 
+		set id=#{id},roleNo=#{roleNo},roleName=#{roleName},roleRemark=#{roleRemark} where id=#{id}
+	</update>-->
+	
+	<!-- 删除 
+	<delete id="delete" parameterType="String">
+		delete from s_role where id = #{id}
+	</delete>-->
+	
+	
+</mapper> 

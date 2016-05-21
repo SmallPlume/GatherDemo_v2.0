@@ -34,7 +34,7 @@ public interface SubscriberDao extends NetStarDao<Subscriber>{
 	 * 更新用户信息
 	 * @param sub
 	 */
-	public void update(Subscriber sub);
+	/*public void update(Subscriber sub);*/
 	
 	/**
 	 * 删除用户信息

@@ -31,12 +31,15 @@ $(function(){
 				return (v=="0"?"男":"女");
 			}},
 			{field:'lastlogintime',title:'最后登陆时间',width:120,align:'left'},
-			{field:'ifactivate',title:'是否激活',align:'center',formatter:function(v){
-				return v=='0'?'是':'否';
+			{field:'activity',title:'是否在线',width:35,align:'left',formatter:function(v,r,i){
+				return (v=='0'?'离线':'在线:<a href="javascript:void(0);" onclick="changeActivity(\''+r.id+'\')"><span style="color:red">【踢出】</span></a>');
 			}},
-			{field:'ifspeak',title:'是否禁言',align:'center',formatter:function(v){
-				return v=='0'?'否':'<span style="color:red">是<span>';
+			{field:'ifactivate',title:'是否激活',width:35,align:'left',formatter:function(v,r,i){
+				return v=='0'?'是:<a href="javascript:void(0);" onclick="editShutup(\''+r.id+'\',1,\''+r.ifspeak+'\')"><span style="color:red">【禁止】</span></a>':'否:<a href="javascript:void(0);" onclick="editShutup(\''+r.id+'\',0,\''+r.ifspeak+'\')">【激活】</a>';
 			}},
+			{field:'ifspeak',title:'是否禁言',width:35,align:'left',formatter:function(v,r,i){
+				return v=='0'?'否:<a href="javascript:void(0);" onclick="editShutup(\''+r.id+'\',\''+r.ifactivate+'\',1)"><span style="color:red">【禁言】</span></a>':'是:<a href="javascript:void(0);" onclick="editShutup(\''+r.id+'\',\''+r.ifactivate+'\',0)">【开启】</a>';
+			}}
 			/* {field:'cz',title:'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操作',width:150,align:'left',formatter:function(v,r,l){
                 var btn = '';
 				if(r.ifactivate=='0'){
@@ -74,8 +77,13 @@ $(function(){
 	
 	//修改
 	$("#update").on("click", function(){
-		$parent.messager.alert("提示","update", "info");
+		show({uri:'<%=$root %>/sys/editUser.do',title:'修改用户',iconCls:'icon-edit',width:600,height:400,options:{
+			success:function(){
+				$('#grid').datagrid('reload');
+			}
+		}});
 	});
+	
 	//删除
 	$("#delete").on("click", function(){
 		$parent.messager.alert("提示","delete", "info");
@@ -83,27 +91,23 @@ $(function(){
 	
 });
 
-//是否禁用或启用
-function editValid(id,type){
-	$.post("<%=$root %>/sys/editActivity.do", { "id": id,"ifactivate":type},function(r){
-	       if(r.code<0) return $.messager.alert("操作提示", r.msg,"error");
-	       
-	       $.messager.show({
-               title: "操作提示",
-               msg: "操作成功！",
-               showType: 'slide',
-               timeout: 2000
-           });
-		   $('#grid').datagrid('reload');
-	}, "json");
+//是否禁言
+function editShutup(id,ifactivate,ifspeak){
+	if(id!=null){
+		$.post("<%=$root %>/sys/editActivity.do",{"id":id,"ifactivate":ifactivate,"ifspeak":ifspeak},function(r){
+			if(r.code<0) return $.messager.alert("操作提示", r.msg,"error");
+		});
+		$('#grid').datagrid('reload');
+	}
 }
 
-//是否禁言
-function editShutup(id,privilege,type){
-	if(privilege=='0'){
-		$.post("<%=$root %>/sys/editActivity.do", { "id": id,"ifactivate":privilege,"ifspeak":type},function(r){
+//强制踢出
+function changeActivity(id){
+	if(id!=null){
+		$.post("<%=$root %>/sys/UserloginOut.do",{"id":id},function(r){
 			if(r.code<0) return $.messager.alert("操作提示", r.msg,"error");
-		}, "json");
+		});
+		$('#grid').datagrid('reload');
 	}
 }
 
@@ -130,18 +134,6 @@ function viewDetail(id){
 		}
 	}});
 }
-
-//监听窗口大小变化
-/* window.onresize = function(){
-	setTimeout(domresize,300);
-}; */
-//改变表格宽高
-/* function domresize(){
-	$('#tt').datagrid('resize',{  
-		height:$("#body").height()-$('#search_area').height()-5,
-		width:$("#body").width()
-	});
-} */
 </script>
 </head>
 <body class="easyui-layout">
