@@ -37,7 +37,7 @@ public interface Context {
 	 * @param request
 	 * @return User
 	 */
-	User getUser(HttpServletRequest request);
+	User getUser();
 
 	/**
 	 * <p>

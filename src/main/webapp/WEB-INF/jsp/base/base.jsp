@@ -18,10 +18,10 @@ var $root = "<%=$root %>";
 <link rel="stylesheet" type="text/css" href="<%=$root %>/js/jquery-easyui-1.4.5/themes/default/textbox.css"></link>
 <link rel="stylesheet" type="text/css" href="<%=$root %>/js/jquery-easyui-1.4.5/themes/icon.css"></link>
 
-<script type="text/javascript" src="<%=$root %>/js/jquery/jquery-2.1.4.min.js"></script>
+<%-- <script type="text/javascript" src="<%=$root %>/js/jquery/jquery-2.1.4.min.js"></script> --%>
 
 <!-- EasyUI JS -->
-<%-- <script type="text/javascript" src="<%=$root %>/js/jquery-easyui-1.4.5/jquery.min.js"></script> --%>
+<script type="text/javascript" src="<%=$root %>/js/jquery-easyui-1.4.5/jquery.min.js"></script>
 <script type="text/javascript" src="<%=$root %>/js/jquery-easyui-1.4.5/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="<%=$root %>/js/jquery-easyui-1.4.5/locale/easyui-lang-zh_CN.js"></script>
 

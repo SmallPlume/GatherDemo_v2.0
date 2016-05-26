@@ -36,7 +36,7 @@ public class SessionContext implements Context {
 	}
 	
 	@Override
-	public User getUser(HttpServletRequest request) {
+	public User getUser() {
 		Subject currentUser = SecurityUtils.getSubject();
 		Session session = currentUser.getSession();
 		Subscriber sub = (Subscriber) session.getAttribute(SESSION_KEY);

@@ -8,10 +8,12 @@ public interface RoleSVC{
 
 	public Role select(Role role);
 	
-	public List<Role> queryList(Role role);
+	public List<Role> queryRole(Role role);
 	
-	public void save(Role role);
+	public List<Role> queryRoles();
 	
-	public void update(Role role);
+	public void saveRole(Role role);
+	
+	public void editRole(Role role);
 	
 }

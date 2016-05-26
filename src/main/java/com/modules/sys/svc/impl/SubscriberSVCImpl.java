@@ -1,9 +1,12 @@
 package com.modules.sys.svc.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import net.sf.json.JSONArray;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,10 +14,12 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import com.modules.base.orm.Result;
+import com.modules.base.orm.User;
 import com.modules.sys.dao.SubscriberDao;
 import com.modules.sys.orm.Subscriber;
 import com.modules.sys.svc.SubscriberSVC;
 import com.modules.sys.util.PasswordHelper;
+import com.util.ReflectUtils;
 
 @Service("subscriberSVC")
 public class SubscriberSVCImpl implements SubscriberSVC{
@@ -79,20 +84,39 @@ public class SubscriberSVCImpl implements SubscriberSVC{
 	 * @return 
 	 */
 	@Override
-	public Result save(Subscriber sub){
+	public Result saveUser(Subscriber sub){
 		PasswordHelper passwordHelper = new PasswordHelper();
-		if(sub != null){
+		try{
+			sub.setAge(sub.getAge()==""?"0":sub.getAge());
+			sub.setId(null);
 			sub.setPassword("12345");  //一开始时密码
 			passwordHelper.encryptPassword(sub);
+			sub.setIfactivate("0");  //默认激活
+			sub.setIfspeak("0");  //默认可以开言
 			subDao.insert(sub);
-			
-			/*Subscriber sub2 = new Subscriber();
-			sub2.setId(null);
-			subDao.insert(sub2);*/
-			
 			return Result.ok();
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 		return Result.error("系统新增时报错！");
+	}
+	
+	/**
+	 * 
+	 * @param sub
+	 * @return
+	 */
+	@Override
+	public Result editUser(Subscriber sub){
+		if(sub != null){
+			Subscriber o_sub = subDao.selectByPrimaryKey(sub.getId());
+			ReflectUtils.copy(o_sub, sub, true);
+			Example example = new Example(Subscriber.class);
+			example.createCriteria().andEqualTo("id",o_sub.getId());
+			subDao.updateByExample(o_sub, example);
+			return Result.ok();
+		}
+		return Result.error("更新失败！");
 	}
 	
 	/**
@@ -115,7 +139,7 @@ public class SubscriberSVCImpl implements SubscriberSVC{
 	 * @return
 	 */
 	@Override
-	public List<Subscriber> queryList(Subscriber sub){
+	public List<Subscriber> queryUser(Subscriber sub){
 		if(sub != null){
 			Example example = new Example(Subscriber.class);
 			/*if(sub == null){
@@ -137,7 +161,7 @@ public class SubscriberSVCImpl implements SubscriberSVC{
 	 * @return
 	 */
 	@Override
-	public List<Subscriber> queryListByXml(Map<String,String> map){
+	public List<Subscriber> queryUserByXml(Map<String,String> map){
 		List<Subscriber> subList = subDao.queryList(map);
 		return subList;
 	}
@@ -147,7 +171,7 @@ public class SubscriberSVCImpl implements SubscriberSVC{
 	 * @param id
 	 */
 	@Override
-	public void delete(String id){
+	public void deltUser(String id){
 		if(id != null || !"".equals(id)){
 			subDao.delete(id);
 		}
@@ -166,6 +190,68 @@ public class SubscriberSVCImpl implements SubscriberSVC{
 			e.printStackTrace();
 			return Result.error("操作错误！");
 		}
+	}
+
+	@Override
+	public Result editUserRole(String id,String roleid) {
+		if(id!=null){
+			Subscriber sub = subDao.selectByPrimaryKey(id);
+			if(sub!=null){
+				sub.setRoleid(roleid);
+				Example example = new Example(Subscriber.class);
+				example.createCriteria().andEqualTo("id", id);
+				subDao.updateByExample(sub, example);
+				return Result.ok();
+			}
+		}
+		return Result.error("分配角色失败！");
+	}
+
+	@Override
+	public Result savePass(String userids) {
+		PasswordHelper passwordHelper = new PasswordHelper();
+		if(userids != null){
+			JSONArray ids = JSONArray.fromObject(userids);
+			for (int i=0;i<ids.size();i++) {
+				Subscriber sub = subDao.selectByPrimaryKey(ids.get(i));
+				if(sub != null){
+					sub.setPassword("12345");  //初始化密码
+					passwordHelper.encryptPassword(sub);
+					Example example = new Example(Subscriber.class);
+					example.createCriteria().andEqualTo("id",ids.get(i));
+					subDao.updateByExample(sub, example);
+				}
+			}
+			return Result.ok();
+		}
+		return Result.error("初始化密码失败！");
+	}
+
+	
+	@Override
+	public Result deltUsers(String ids,User user) {
+		List<String> ListIds = new ArrayList<String>();
+		try{
+			if(ids != null){
+				JSONArray userids = JSONArray.fromObject(ids);
+				for(int i=0; i<userids.size(); i++){
+					//不能删除自己的
+					if(!user.getId().equals(userids.get(i).toString())){
+						ListIds.add(userids.get(i).toString());
+					}
+				}
+			}
+			//当只选自己删除时，不能删除
+			if(ListIds.size()>0){
+				subDao.deleteUser(ListIds);
+			}else{
+				return Result.error("操作错误或者不能删除自己！");
+			}
+			return Result.ok();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return Result.error("删除失败！");
 	}
 
 }

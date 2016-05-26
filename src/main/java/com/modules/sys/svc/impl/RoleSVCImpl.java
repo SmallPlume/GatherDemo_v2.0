@@ -42,7 +42,7 @@ public class RoleSVCImpl implements RoleSVC{
 	 * @return
 	 */
 	@Override
-	public List<Role> queryList(Role role){
+	public List<Role> queryRole(Role role){
 		Example example = new Example(Role.class);
 		Criteria criteria = example.createCriteria();
 		if(role.getRoleno()!=null){
@@ -63,7 +63,7 @@ public class RoleSVCImpl implements RoleSVC{
 	 * @param role
 	 */
 	@Override
-	public void save(Role role){
+	public void saveRole(Role role){
 		if(role != null){
 			//dao.insert(role);
 			dao.save(role);
@@ -75,7 +75,7 @@ public class RoleSVCImpl implements RoleSVC{
 	 * @param role
 	 */
 	@Override
-	public void update(Role role){
+	public void editRole(Role role){
 		if(role != null){
 			Role o_role = dao.selectByPrimaryKey(role.getId());
 			ReflectUtils.copy(o_role, role, true);
@@ -84,6 +84,11 @@ public class RoleSVCImpl implements RoleSVC{
 			
 			dao.updateByExample(o_role, example);
 		}
+	}
+
+	@Override
+	public List<Role> queryRoles() {
+		return dao.selectAll();
 	}
 	
 }

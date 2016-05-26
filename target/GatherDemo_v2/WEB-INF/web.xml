@@ -27,7 +27,7 @@
 	<!-- Spring配置文件 -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:/applicationContext.xml,classpath:/spring-mvc.xml,classpath:/spring-shiro.xml</param-value>
+		<param-value>classpath:/applicationContext.xml</param-value>
 	</context-param>
 
 	<!-- Spring监听器 -->
@@ -47,7 +47,7 @@
 		<init-param>
 			<param-name>patterns</param-name>-->
 			<!-- 配置需要缓存的url -->
-			<param-value>login.do</param-value>
+			<param-value></param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>

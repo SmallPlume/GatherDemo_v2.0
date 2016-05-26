@@ -30,12 +30,13 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 	 */
 	protected User getUser(HttpServletRequest request) {
 		//context.refresh(request);
-		return context.getUser(request);
+		return context.getUser();
 	}
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
+		System.out.println("===========================11111=========================");
 		User user = getUser(request);
 		if (user != null) {
 			context.registCurrentUser(user);
@@ -48,6 +49,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 			HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 		// TODO Auto-generated method stub
+		System.out.println("===========================22222=========================");
 		super.postHandle(request, response, handler, modelAndView);
 	}
 
@@ -55,6 +57,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 	public void afterCompletion(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
+		System.out.println("===========================33333=========================");
 		context.releaseCurrentUser();
 		super.afterCompletion(request, response, handler, ex);
 	}
@@ -63,6 +66,7 @@ public class WebInterceptor extends HandlerInterceptorAdapter {
 	public void afterConcurrentHandlingStarted(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
 		// TODO Auto-generated method stub
+		System.out.println("===========================44444=========================");
 		super.afterConcurrentHandlingStarted(request, response, handler);
 	}
 

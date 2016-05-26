@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.modules.sys.dao.LogDao">
+	
+	<!-- 新增 -->
+	<insert id="saveLog" parameterType="com.modules.sys.orm.Log">
+		<selectKey resultType="java.lang.String" keyProperty="id" order="BEFORE">
+			select uuid()
+		</selectKey>
+		insert into s_log(id,userid,username,createdate,handle,url,method,parameter,ip) 
+		values(#{id},#{userid},#{username},#{createdate},#{handle},#{url},#{method},#{parameter},#{ip})
+	</insert>
+	
+	<!-- 批量删除 -->
+	<delete id="deltLog" parameterType = "java.util.List">
+		delete from s_log where id in
+		<foreach item="ids" collection="list" open="(" separator="," close=")">#{ids}</foreach>
+	</delete>
+	
+	<!-- 查看列表 -->
+	<select id="queryLog" parameterType="java.util.Map" resultType="com.modules.sys.orm.Log">
+		select id,userid,username,createdate,handle,url,method,parameter,ip from s_log
+		<where>
+			<if test="username != null">and username = #{username}</if> <!-- 账号 -->
+			<if test="beginDate!=null">and and DATE_FORMAT(createdate,'%Y-%m-%d') &gt;= DATE_FORMAT(#{beginDate},'%Y-%m-%d')</if> <!-- 开始时间 -->
+			<if test="endDate!=null">and DATE_FORMAT(createdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{endDate},'%Y-%m-%d')</if> <!-- 结束时间-->
+			<if test="method != null">and method = #{method}</if> <!-- 方法 -->
+		</where>
+		order by createdate desc
+	</select>
+</mapper>

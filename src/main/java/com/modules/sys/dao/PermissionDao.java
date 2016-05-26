@@ -12,7 +12,7 @@ public interface PermissionDao extends NetStarDao<Permission>{
 	/**
 	 * 保存权限信息
 	 */
-	public void save(Permission pers);
+	/*public void save(Permission pers);*/
 
 	/**
 	 * 获取目录
@@ -25,4 +25,9 @@ public interface PermissionDao extends NetStarDao<Permission>{
 	 * @param moduleid
 	 */
 	public void delByModuleid(@Param(value="moduleid")String moduleid);
+	
+	/**
+	 * 保存权限信息
+	 */
+	public void savePermit(List<Permission> list);
 }

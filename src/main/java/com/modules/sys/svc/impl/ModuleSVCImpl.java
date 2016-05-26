@@ -60,7 +60,7 @@ public class ModuleSVCImpl implements ModuleSVC {
 		mod.setDir("on".equals(mod.getDir())?"1":"0");
 		mod.setMenu("on".equals(mod.getMenu())?"1":"0");
 		mod.setIfopen("on".equals(mod.getIfopen())?"1":null);
-		mod.setVolid("0");
+		mod.setValid("0");  //'0'表示有效的
 		return mod;
 	}
 	
@@ -70,7 +70,7 @@ public class ModuleSVCImpl implements ModuleSVC {
 	 * @return
 	 */
 	@Override
-	public Result deleteModule(String id){
+	public Result deltModule(String id){
 		try{
 			dao.deleteByPrimaryKey(id);
 			

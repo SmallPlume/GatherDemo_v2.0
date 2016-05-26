@@ -26,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		and u.username=#{userName}
 	</select>
 	
-	
+	<!-- 模糊查询 -->
 	<select id="queryList" parameterType="java.util.Map" resultType="com.modules.sys.orm.Subscriber">
 		select u.*,r.rolename as roleName from s_user u left join s_role r on u.roleid=r.id
 		<where>
@@ -43,5 +43,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="ifspeak != null">,u.ifspeak = #{ifspeak}</if>
 		where u.id = #{id}
 	</update>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteUser" parameterType = "java.util.List">
+		delete from s_user where id in 
+		<foreach item="ids" collection="list" open="(" separator="," close=")">#{ids}</foreach>
+	</delete>
+	
 	
 </mapper> 

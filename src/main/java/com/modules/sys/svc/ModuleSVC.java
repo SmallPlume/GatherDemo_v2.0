@@ -10,7 +10,7 @@ public interface ModuleSVC {
 
 	public Result saveModule(Module mod);
 	
-	public Result deleteModule(String id);
+	public Result deltModule(String id);
 	
 	public List<TreeNode> getMenuTrees();
 }

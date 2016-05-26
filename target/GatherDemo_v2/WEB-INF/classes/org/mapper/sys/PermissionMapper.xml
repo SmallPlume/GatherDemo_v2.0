@@ -26,6 +26,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		order by m.rank
 	</select>
 	
+	<!-- 批量插入 -->
+	<insert id="savePermit" parameterType="java.util.List">
+		insert into s_permission(id,roleid,moduleid)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.id},#{item.roleid},#{item.moduleid})
+		</foreach>
+	</insert>
+	
+	
 	<!-- 根据moduleid删除信息 -->
 	<delete id="delByModuleid" parameterType="java.lang.String">
 		delete from s_permission where moduleid = #{moduleid}

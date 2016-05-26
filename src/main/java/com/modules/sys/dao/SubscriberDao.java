@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.json.JSONArray;
+
 import com.modules.sys.orm.Subscriber;
 import com.modules.sys.util.NetStarDao;
 
@@ -60,4 +62,9 @@ public interface SubscriberDao extends NetStarDao<Subscriber>{
 	 */
 	public void editActivity(Map<String,String> map);
 	
+	/**
+	 * ÅúÁ¿É¾³ý
+	 * @param ids
+	 */
+	public void deleteUser(List<String> ids);
 }

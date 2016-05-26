@@ -11,11 +11,6 @@
         http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd  
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
-
-	<!--==========================================静态资源==========================================-->
-    <!-- <mvc:resources mapping="/js/**" location="/js/"></mvc:resources>
-    <mvc:resources mapping="/images/**" location="/images/"></mvc:resources>
-    <mvc:resources mapping="/css/**" location="/css/"></mvc:resources> -->
 	
 	<!-- ==========================================shiro注解========================================== -->
 	<!-- 开启Shiro注解 -->
@@ -31,7 +26,7 @@
 
     <bean id="annotationMethodHandlerAdapter"
           class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
-
+          
 	<!-- ==========================================扫描controller组件========================================== -->
 	<!-- 扫描所有的controller 但是不扫描service-->
 	<context:component-scan base-package="com.modules.*.ctrl">
@@ -43,7 +38,7 @@
 	<bean id="sessionContext" class="com.modules.sys.svc.SessionContext"></bean>
 
 	<!-- Web请求拦截器 -->
-	<mvc:interceptors>
+	<!-- <mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
 			<mvc:exclude-mapping path="/login.do" />
@@ -51,11 +46,11 @@
 			<mvc:exclude-mapping path="/verifycode.do" />
 			<mvc:exclude-mapping path="/logout.do" />
 			<bean class="com.modules.sys.inter.WebInterceptor">
-				<!-- 系统上下文 -->
+				系统上下文
 				<property name="context" ref="sessionContext" />
 			</bean>
 		</mvc:interceptor>
-	</mvc:interceptors>
+	</mvc:interceptors> -->
 
 	<!-- 后台返回json数据中包含时间的json格式，通过此解析 -->
 	<bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">
@@ -70,7 +65,10 @@
 	<!-- Spring拦截器 -->
 	<mvc:annotation-driven>
 		<mvc:argument-resolvers>
-			<bean class="com.modules.sys.inter.ArgumentResolver" />
+			<bean class="com.modules.sys.inter.ArgumentResolver">
+				<!-- 系统上下文 -->
+				<property name="context" ref="sessionContext" />
+			</bean>
 		</mvc:argument-resolvers>
 		<mvc:message-converters register-defaults="true">
 			<!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->

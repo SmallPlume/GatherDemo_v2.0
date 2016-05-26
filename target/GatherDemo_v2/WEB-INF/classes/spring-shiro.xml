@@ -42,7 +42,7 @@
 		<property name="sessionValidationSchedulerEnabled" value="true" />
 		<property name="sessionValidationScheduler" ref="sessionValidationScheduler" />
 		<property name="sessionIdCookieEnabled" value="true" />
-		<property name="sessionIdCookie" ref="sessionIdCookie" />
+		<!-- <property name="sessionIdCookie" ref="sessionIdCookie" /> -->
 		<property name="sessionDAO" ref="sessionDAO" />
 	</bean>
 	
@@ -71,6 +71,17 @@
 	<!-- 缓存管理器 使用Ehcache实现 -->
 	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
 		<property name="cacheManagerConfigFile" value="classpath:ehcache.xml" />
+	</bean>
+	
+	<!-- 并发登录控制 -->
+	<bean id="kickoutSessionControlFilter"
+		class="com.modules.sys.realm.KickoutSessionControlFilter">
+		<property name="cacheManager" ref="cacheManager"/>  
+	    <property name="sessionManager" ref="sessionManager"/>  
+	  
+	    <property name="kickoutAfter" value="false"/>  
+	    <property name="maxSession" value="1"/>  
+	    <property name="kickoutUrl" value="/login.do?kickout=1"/>
 	</bean>
 	
 	<!-- 凭证匹配器 -->  
@@ -117,7 +128,8 @@
 		<!-- 自定义Roles Filter -->
 		<property name="filters">
 			<map>
-				<entry key="anyRoles" value-ref="anyRoles" />
+				<entry key="anyRoles" value-ref="anyRoles"/>
+				<entry key="kickout" value-ref="kickoutSessionControlFilter"/>
 			</map>
 		</property>
 		
@@ -137,6 +149,9 @@
 				/images/**=anon
 				<!-- index不需要验证 -->
 				/index=anon
+				/login = anon
+                /logout = logout
+                /**=kickout,authc
 				<!-- /sys/**=anyRoles[admin,employee]  -->
 				<!-- /user/**=roles[admin]
 				/user=perms["user:view"] -->

@@ -54,9 +54,9 @@ public class CoreCTRL {
 			//²Ëµ¥
 			JSONArray module = new JSONArray();
 			if("admin".equals(subject.getPrincipal().toString())){
-				module = permissionSVC.queryList(null, ModuleType.menu.type);
+				module = permissionSVC.queryPermit(null, ModuleType.menu.type);
 			}else{
-				module = permissionSVC.queryList(subject.getPrincipal().toString(), ModuleType.menu.type);
+				module = permissionSVC.queryPermit(subject.getPrincipal().toString(), ModuleType.menu.type);
 			}
 			//model.addAttribute("user", sub);
 			model.addAttribute("module", module.toString());
@@ -135,7 +135,7 @@ public class CoreCTRL {
 		
 		//ï¿½ï¿½Ò³
 		PageHelper.startPage(1, 10);
-		List<Role> list = roleSVC.queryList(new Role());
+		List<Role> list = roleSVC.queryRole(new Role());
 		for (Role role : list) {
 			System.out.println("---------------------"+role.getRolename()+"--------------------");
 		}

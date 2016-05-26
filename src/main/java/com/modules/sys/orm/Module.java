@@ -39,7 +39,7 @@ public class Module {
 	private String menu;
 	
 	/**  «∑Ò”––ß **/
-	private String volid;
+	private String valid;
 	
 	/** ≈≈–Ú **/
 	private Integer rank;
@@ -138,12 +138,12 @@ public class Module {
 		this.permitmark = permitmark;
 	}
 
-	public String getVolid() {
-		return volid;
+	public String getValid() {
+		return valid;
 	}
 
-	public void setVolid(String volid) {
-		this.volid = volid;
+	public void setValid(String valid) {
+		this.valid = valid;
 	}
 
 }

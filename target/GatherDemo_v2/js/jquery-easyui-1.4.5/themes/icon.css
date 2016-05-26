@@ -74,8 +74,30 @@
 	background:url('icons/app.png') no-repeat center center;
 }
 .icon-role{
-	background:url('icon/role.png') no-repeat center center;
+	background:url('icons/role.png') no-repeat center center;
 }
+.icon-code{
+	background:url('icons/code.png') no-repeat center center;
+}
+.icon-log{
+	background:url('icons/log.png') no-repeat center center;
+}
+.icon-chk0{
+	background:url('icons/chk0.png') no-repeat center center;
+}
+.icon-chk1{
+	background:url('icons/chk1.png') no-repeat center center;
+}
+.icon-refresh{
+	background:url('icons/refresh.png') no-repeat center center;
+}
+.icon-pswd{
+	background:url('icons/pswd.png') no-repeat center center;
+}
+.icon-view{
+	background:url('icons/view.png') no-repeat center center;
+}
+
 
 .icon-mini-add{
 	background:url('icons/mini_add.png') no-repeat center center;

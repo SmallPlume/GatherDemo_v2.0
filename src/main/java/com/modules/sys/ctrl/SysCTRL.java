@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sf.json.JSONArray;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,10 +20,13 @@ import com.modules.base.orm.Result;
 import com.modules.base.orm.TreeNode;
 import com.modules.base.orm.User;
 import com.modules.sys.helper.ActivityUserHelper;
+import com.modules.sys.orm.Log;
 import com.modules.sys.orm.Module;
 import com.modules.sys.orm.Role;
 import com.modules.sys.orm.Subscriber;
+import com.modules.sys.svc.LogSVC;
 import com.modules.sys.svc.ModuleSVC;
+import com.modules.sys.svc.PermissionSVC;
 import com.modules.sys.svc.RoleSVC;
 import com.modules.sys.svc.SubscriberSVC;
 import com.modules.sys.util.RedisUtil;
@@ -40,10 +45,16 @@ public class SysCTRL {
 	private ModuleSVC moduleSVC;
 	
 	@Autowired
+	private PermissionSVC permitSVC;
+	
+	@Autowired
 	private RedisUtil redis;
 	
 	@Autowired
 	private ActivityUserHelper activity;
+	
+	@Autowired
+	private LogSVC logSVC;
 	
 	/**
 	 * 
@@ -109,11 +120,52 @@ public class SysCTRL {
 	 */
 	@RequestMapping(value="saveUser",method = RequestMethod.POST)
 	public @ResponseBody Result saveUser(Subscriber sub,User user){
-		sub.setRoleid("2");
-		Result r = userSVC.save(sub);
+		Result r = null;
+		if(sub.getId()==null || "".equals(sub.getId())){
+			r = userSVC.saveUser(sub);
+		}else{
+			r = userSVC.editUser(sub);
+		}
 		return r;
 	}
 	
+	/**
+	 * 初始化密码
+	 * @param userid
+	 * @return
+	 */
+	@RequestMapping(value="user/resetPass",method = RequestMethod.POST)
+	public @ResponseBody Result resetPass(String userids){
+		Result r = userSVC.savePass(userids);
+		return r;
+	}
+	
+	/**
+	 * 跳转到分配角色页面
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="user/allotRole",method = RequestMethod.GET)
+	public String allotRole(String id,Model model){
+		Subscriber sub = userSVC.findOne(id);
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("allotUserid", sub.getId());
+		map.put("roleid", sub.getRoleid());
+		model.addAttribute("AllotMap", map);
+		return "/sys/user/AllotRole";
+	}
+	
+	/**
+	 * 分配角色
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="user/allotRole",method = RequestMethod.POST)
+	public @ResponseBody Result allotRole(String id, String roleid){
+		Result r = userSVC.editUserRole(id, roleid);
+		return r;
+	}
 	
 	/**
 	 * 
@@ -127,7 +179,8 @@ public class SysCTRL {
 		Map<String,String> map = new HashMap<String,String>();
 		map.put("username", "".equals(sub.getUsername())?null:sub.getUsername());
 		map.put("nickname", "".equals(sub.getNickname())?null:sub.getNickname());
-		List<Subscriber> list = userSVC.queryListByXml(map);
+		List<Subscriber> list = userSVC.queryUserByXml(map);
+		//是否在线
 		for (Subscriber subscriber : list) {
 			subscriber.setActivity(activity.getActivityUser(subscriber.getUsername()));
 		}
@@ -165,6 +218,17 @@ public class SysCTRL {
 		return r;
 	}
 	
+	/**
+	 * 删除用户
+	 * @param ids
+	 * @param user
+	 * @return
+	 */
+	@RequestMapping(value="user/delt",method = RequestMethod.POST)
+	public @ResponseBody Result deltUsers(String ids,User user){
+		return userSVC.deltUsers(ids, user);
+	}
+	
 	/**================================角色管理==================================**/
 
 	/**
@@ -186,7 +250,7 @@ public class SysCTRL {
 	@RequestMapping(value="role/roleList",method=RequestMethod.POST)
 	public @ResponseBody Page<Role> queryList(Role role,int page,int rows){		
 		com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page,rows);
-		List<Role> list = roleSVC.queryList(role);
+		List<Role> list = roleSVC.queryRole(role);
 
 		Page<Role> pages = new Page<Role>();
 		pages.setRows(list);
@@ -195,6 +259,40 @@ public class SysCTRL {
 		pages.setPageSize(pg.getPageSize());
 		pages.setTotal(pg.getTotal());
 		return pages;
+	}
+	
+	/**
+	 * 获取角色
+	 * @return
+	 */
+	@RequestMapping(value="role/list",method = RequestMethod.POST)
+	public @ResponseBody List<Role> getRoleList(){
+		return roleSVC.queryRoles();
+	}
+	
+	/**
+	 * 跳转到选择权限页面
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="role/allot",method = RequestMethod.GET)
+	public String allotFunction(String id,Model model){
+		JSONArray jsonArray = permitSVC.queryByRoleId(id);
+		model.addAttribute("roleid", id);
+		model.addAttribute("zTreeCheked", jsonArray);
+		return "/sys/role/AllotPermit";
+	}
+	
+	/**
+	 * 保存权限，先删除旧的
+	 * @param roleid
+	 * @param permitIds
+	 * @return
+	 */
+	@RequestMapping(value="role/savePermit",method = RequestMethod.POST)
+	public @ResponseBody Result savePermit(String rid,String pids){
+		Result r = permitSVC.savePermit(rid, pids);
+		return r;
 	}
 	
 	/**==============================菜单目录================================**/
@@ -235,9 +333,46 @@ public class SysCTRL {
 	 */
 	@RequestMapping(value="perms/deltModule",method = RequestMethod.POST)
 	public @ResponseBody Result deltModule(String id){
-		Result r = moduleSVC.deleteModule(id);
+		Result r = moduleSVC.deltModule(id);
 		return r;
 	}
 	
+	/**==============================日志管理================================**/
+	
+	@RequestMapping(value="log/logIndex",method = RequestMethod.GET)
+	public String logIndex(){
+		return "/sys/log/LogIndex";
+	}
+	
+	/**
+	 * 查看列表
+	 * @param log
+	 * @param page
+	 * @param rows
+	 * @return
+	 */
+	@RequestMapping(value="log/list",method = RequestMethod.POST)
+	public @ResponseBody Page<Log> queryLog(Log log,int page,int rows){
+		com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page,rows);
+		List<Log> list = logSVC.queryLog(log);
+		
+		Page<Log> pages = new Page<Log>();
+		pages.setRows(list);
+		
+		pages.setPageNumber(page);
+		pages.setPageSize(pg.getPageSize());
+		pages.setTotal(pg.getTotal());  
+		return pages;
+	}
+	
+	/**
+	 * 删除
+	 * @param ids
+	 * @return
+	 */
+	@RequestMapping(value="log/delt",method = RequestMethod.POST)
+	public @ResponseBody Result deltLog(String ids){
+		return logSVC.deltLog(ids);
+	}
 	
 }

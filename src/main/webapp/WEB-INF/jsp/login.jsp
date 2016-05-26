@@ -47,14 +47,14 @@
 			data: params,
 			success:function(data){
 				if(data.code=='-1'){
-					$("#msg").html(data.msg);
+					$("#msg").html(data.error);
 				}else{
 					location.href="index.do";
 				}
 			},error:function(data){
 				$.messager.show({
 	               title: "系统提示",
-	               msg: "系统错误："+msg,
+	               msg: "系统错误："+data.error,
 	               showType: 'slide',
 	               timeout: 2000
 	        	});

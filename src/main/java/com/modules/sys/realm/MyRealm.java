@@ -2,6 +2,8 @@ package com.modules.sys.realm;
 
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -28,6 +30,9 @@ public class MyRealm extends AuthorizingRealm{
 	
 	public final static String SESSION_MODULE = "SESSION_MODULE";
 	
+	@Autowired
+	private HttpServletRequest request;
+	
 	public void setUserSVC(SubscriberSVC userSVC) {
 		this.userSVC = userSVC;
 	}
@@ -49,6 +54,7 @@ public class MyRealm extends AuthorizingRealm{
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 		String userName = (String)token.getPrincipal();
 		Subscriber sub = userSVC.getUserByName(userName);
+		sub.setLoginorg(getIpAddr(request));
 		SimpleAuthenticationInfo authcInfo = new SimpleAuthenticationInfo(sub.getUsername()
 				,sub.getPassword()
 				,ByteSource.Util.bytes(sub.getCredentialsSalt())
@@ -60,5 +66,32 @@ public class MyRealm extends AuthorizingRealm{
 		
 		return authcInfo;
 	}
+	
+	/**
+	 * ªÒ»°ipµÿ÷∑
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	private String getIpAddr(HttpServletRequest request) {
+	    String ip = request.getHeader("x-forwarded-for");
+	    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	        ip = request.getHeader("Proxy-Client-IP");
+	    }
+	    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	        ip = request.getHeader("WL-Proxy-Client-IP");
+	    }
+	    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	        ip = request.getHeader("HTTP_CLIENT_IP");
+	    }
+	    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	        ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+	    }
+	    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	        ip = request.getRemoteAddr();
+	    }
+	    return ip;
+	}
+
 
 }

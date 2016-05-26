@@ -13,7 +13,7 @@ $(function(){
 		height:$("#body").height()-$('#search_area').height()-5,
 		width:$("#body").width(),
 		idField:'id',
-		singleSelect:true, 
+		/* singleSelect:true, */
 		nowrap:true,
 		fitColumns:true,
 		rownumbers:true,
@@ -30,13 +30,16 @@ $(function(){
 			{field:'sex',title:'性别',width:50,align:'center',formatter:function(v,r,i){
 				return (v=="0"?"男":"女");
 			}},
-			{field:'lastlogintime',title:'最后登陆时间',width:120,align:'left'},
-			{field:'ifactivate',title:'是否激活',align:'center',formatter:function(v){
-				return v=='0'?'是':'否';
+			{field:'lastlogintime',title:'最后登陆时间',align:'center',width:80},
+			{field:'activity',title:'是否在线',width:35,align:'left',formatter:function(v,r,i){
+				return (v=='0'?'离线':'在线:<a href="javascript:void(0);" onclick="changeActivity(\''+r.id+'\')"><span style="color:red">【踢出】</span></a>');
 			}},
-			{field:'ifspeak',title:'是否禁言',align:'center',formatter:function(v){
-				return v=='0'?'否':'<span style="color:red">是<span>';
+			{field:'ifactivate',title:'是否激活',width:35,align:'center',formatter:function(v,r,i){
+				return v=='0'?'是:<a href="javascript:void(0);" onclick="editShutup(\''+r.id+'\',1,\''+r.ifspeak+'\')"><span style="color:red">【禁止】</span></a>':'否:<a href="javascript:void(0);" onclick="editShutup(\''+r.id+'\',0,\''+r.ifspeak+'\')">【激活】</a>';
 			}},
+			{field:'ifspeak',title:'是否禁言',width:35,align:'center',formatter:function(v,r,i){
+				return v=='0'?'否:<a href="javascript:void(0);" onclick="editShutup(\''+r.id+'\',\''+r.ifactivate+'\',1)"><span style="color:red">【禁言】</span></a>':'是:<a href="javascript:void(0);" onclick="editShutup(\''+r.id+'\',\''+r.ifactivate+'\',0)">【开启】</a>';
+			}}
 			/* {field:'cz',title:'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操作',width:150,align:'left',formatter:function(v,r,l){
                 var btn = '';
 				if(r.ifactivate=='0'){
@@ -65,7 +68,7 @@ $(function(){
 	
 	//新增弹出框
 	$("#add").on("click", function(){
-		show({uri:'<%=$root %>/sys/addUser.do',title:'新增用户',iconCls:'icon-view',width:600,height:400,options:{
+		show({uri:'<%=$root %>/sys/addUser.do',title:'新增用户',iconCls:'icon-add',width:450,height:600,options:{
 			success:function(){
 				$('#grid').datagrid('reload');
 			}
@@ -74,36 +77,101 @@ $(function(){
 	
 	//修改
 	$("#update").on("click", function(){
-		$parent.messager.alert("提示","update", "info");
+		var rows = $("#grid").datagrid('getSelections');
+		if(rows.length!="1"){
+			$.messager.alert("操作提示","只能选择一条！","error");
+			return false;
+		}
+		show({uri:'<%=$root %>/sys/addUser.do?id='+rows[0].id,title:'修改用户',iconCls:'icon-edit',width:450,height:600,options:{
+			success:function(){
+				$('#grid').datagrid('reload');
+			}
+		}});
 	});
+	
 	//删除
 	$("#delete").on("click", function(){
-		$parent.messager.alert("提示","delete", "info");
+		var rows = $("#grid").datagrid('getSelections');
+		if(rows.length < 0){
+			$.messager.alert("操作提示","只能选择一条！","error");
+			return false;
+		}
+		var gnl=confirm("确定要删除?"); if(gnl==false) return false;
+		//遍历id
+		var ids = new Array();
+		for(var i=0;i<rows.length;i++){
+			ids[i] = rows[i].id;
+		}
+		$.post("<%=$root %>/sys/user/delt.do",{"ids":JSON.stringify(ids)},function(r){
+			if(r.code<0) return $.messager.alert("操作提示", r.msg,"error");
+	        $.messager.show({
+               title: "操作提示",
+               msg: "删除成功！",
+               showType: 'slide',
+               timeout: 2000
+            });
+		    $('#grid').datagrid('reload');
+		});
+		
+	});
+	
+	//分配角色
+	$("#allotRole").on("click",function(){
+		var rows = $("#grid").datagrid('getSelections');
+		if(rows.length!="1"){
+			$.messager.alert("操作提示","只能选择一条！","error");
+			return false;
+		}
+		var id = rows[0].id;
+		show({uri:'<%=$root %>/sys/user/allotRole.do?id='+id,title:'用户【'+rows[0].username+'】分配角色',iconCls:'icon-code',width:500,height:400,options:{
+			success:function(){
+				$('#grid').datagrid('reload');
+			}
+		}});
+	});
+	
+	//重置密码
+	$("#refreshPass").on("click",function(){
+		var rows = $("#grid").datagrid('getSelections');
+		if(rows.length<'1'){
+			$.messager.alert("操作提示","请选择！","error");
+			return false;
+		}
+		var ids = new Array();
+		for(var i=0;i<rows.length;i++){
+			ids[i] = rows[i].id;
+		}
+		$.post("<%=$root %>/sys/user/resetPass.do",{"userids":JSON.stringify(ids)},function(r){
+			if(r.code<0) return $.messager.alert("操作提示", r.msg,"error");
+	        $.messager.show({
+               title: "操作提示",
+               msg: "初始化密码成功，密码为:12345",
+               showType: 'slide',
+               timeout: 2000
+            });
+		    $('#grid').datagrid('reload');
+		});
 	});
 	
 });
 
-//是否禁用或启用
-function editValid(id,type){
-	$.post("<%=$root %>/sys/editActivity.do", { "id": id,"ifactivate":type},function(r){
-	       if(r.code<0) return $.messager.alert("操作提示", r.msg,"error");
-	       
-	       $.messager.show({
-               title: "操作提示",
-               msg: "操作成功！",
-               showType: 'slide',
-               timeout: 2000
-           });
-		   $('#grid').datagrid('reload');
-	}, "json");
+//是否禁言
+function editShutup(id,ifactivate,ifspeak){
+	if(id!=null){
+		$.post("<%=$root %>/sys/editActivity.do",{"id":id,"ifactivate":ifactivate,"ifspeak":ifspeak},function(r){
+			if(r.code<0) return $.messager.alert("操作提示", r.msg,"error");
+		});
+		$('#grid').datagrid('reload');
+	}
 }
 
-//是否禁言
-function editShutup(id,privilege,type){
-	if(privilege=='0'){
-		$.post("<%=$root %>/sys/editActivity.do", { "id": id,"ifactivate":privilege,"ifspeak":type},function(r){
+//强制踢出
+function changeActivity(id){
+	if(id!=null){
+		$.post("<%=$root %>/sys/UserloginOut.do",{"id":id},function(r){
 			if(r.code<0) return $.messager.alert("操作提示", r.msg,"error");
-		}, "json");
+		});
+		$('#grid').datagrid('reload');
 	}
 }
 
@@ -123,6 +191,7 @@ function toClean(){
 	$('#form').form('clear');
 }
 
+//查看用户信息
 function viewDetail(id){
 	show({uri:'<%=$root %>/sys/viewUser.do?id='+id,title:'查看用户信息',iconCls:'icon-view',width:800,height:500,options:{
 		success:function(){
@@ -130,18 +199,6 @@ function viewDetail(id){
 		}
 	}});
 }
-
-//监听窗口大小变化
-/* window.onresize = function(){
-	setTimeout(domresize,300);
-}; */
-//改变表格宽高
-/* function domresize(){
-	$('#tt').datagrid('resize',{  
-		height:$("#body").height()-$('#search_area').height()-5,
-		width:$("#body").width()
-	});
-} */
 </script>
 </head>
 <body class="easyui-layout">
@@ -171,8 +228,16 @@ function viewDetail(id){
   <!-- 表格顶部工具按钮 -->
   <div id="tt_btn">
       <a href="javascript:void(0)"  id="add" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增</a>
-      <a href="javascript:void(0)"  id="update" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a> 
-      <a href="javascript:void(0)"  id="delete" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
+      <a href="javascript:void(0)"  id="update" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
+      <!-- 超级管理员才有删除功能 -->
+      <shiro:hasRole name="admin"><%-- <shiro:hasAnyRoles name="admin,employee"> --%>
+      	<a href="javascript:void(0)"  id="delete" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
+      </shiro:hasRole><%-- </shiro:hasAnyRoles> --%>
+      <a href="javascript:void(0)"  id="view" class="easyui-linkbutton" iconCls="icon-view" plain="true">查看</a>
+      <a href="javascript:void(0)"  id="allotRole" class="easyui-linkbutton" iconCls="icon-code" plain="true">分配角色</a>
+      <shiro:hasRole name="admin">
+      	<a href="javascript:void(0)"  id="refreshPass" class="easyui-linkbutton" iconCls="icon-pswd" plain="true">重置密码</a>
+      </shiro:hasRole>
    </div>
 </div>
 </body>

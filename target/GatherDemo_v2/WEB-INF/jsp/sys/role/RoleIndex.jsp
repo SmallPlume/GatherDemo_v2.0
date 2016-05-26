@@ -13,17 +13,18 @@ $(function(){
 		height:$("#body").height()-$('#search_area').height()-5,
 		width:$("#body").width(),
 		idField:'id',
-		singleSelect:true, 
+		singleSelect:true,
 		nowrap:true,
-		fitColumns:true,
+		/* fit:true,*/
+		fitColumns:true, 
 		rownumbers:true,
 		showPageList:false,
 		columns:[[
 		    {field:'id',title:'项目id',checkbox:true},
 	  		{field:'roleno',title:'角色代号',width:100,align:'center'},
 			{field:'rolename',title:'角色名称',width:100,align:'center'},
-			{field:'roleremark',title:'角色说明',width:200,align:'center'},
-		]],
+			{field:'roleremark',title:'角色说明',width:200,align:'center'}
+		]], 
 		toolbar:'#tt_btn',  
         pagination:true,
 		onDblClickRow:function(rowIndex, rowData){
@@ -50,13 +51,27 @@ $(function(){
 		$parent.messager.alert("提示","delete", "info");
 	});
 	
+	//分配权限
+	$("#allot").on("click",function(){
+		var rows = $("#grid").datagrid('getSelections');
+		if(rows.length!="1"){
+			$.messager.alert("操作提示","只能选择一条！","error");
+			return false;
+		}
+		var id = rows[0].id;
+		show({uri:'<%=$root %>/sys/role/allot.do?id='+id,title:'【'+rows[0].rolename+'】选择权限',iconCls:'icon-app',width:400,height:600,options:{
+			success:function(){
+				$('#grid').datagrid('reload');
+			}
+		}});
+	});
+	
 });
 
 //是否禁用或启用
 function editValid(id,type){
 	$.post("<%=$root %>/sys/editActivity.do", { "id": id,"ifactivate":type},function(r){
 	       if(r.code<0) return $.messager.alert("操作提示", r.msg,"error");
-	       
 	       $.messager.show({
                title: "操作提示",
                msg: "操作成功！",
@@ -115,13 +130,13 @@ function viewDetail(id){
           <td>&nbsp;部门:</td>
           <td><input class="textbox" name="department" id="department" /></td>
           <td>
-              <a href="javascript:void(0)" class="easyui-linkbutton my-search-button" iconCls="icon-search" plain="true">查询</a> 
+              <a href="javascript:void(0)" class="easyui-linkbutton my-search-button" iconCls="icon-search" plain="true">查询</a>
               <a href="javascript:void(0)" class="easyui-linkbutton my-search-button" iconCls="icon-reload" plain="true" >重置</a>
           </td>
         </tr>
       </table>
     </div>
-    <span id="openOrClose"></span> 
+    <span id="openOrClose"></span>
   </div>
   <!-- 数据表格区域 -->
   <table id="grid" style="table-layout:fixed;"></table>
