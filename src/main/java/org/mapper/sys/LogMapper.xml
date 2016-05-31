@@ -9,8 +9,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<selectKey resultType="java.lang.String" keyProperty="id" order="BEFORE">
 			select uuid()
 		</selectKey>
-		insert into s_log(id,userid,username,createdate,handle,url,method,parameter,ip) 
-		values(#{id},#{userid},#{username},#{createdate},#{handle},#{url},#{method},#{parameter},#{ip})
+		insert into s_log(id,username,createdate,handle,url,method,parameter,ip) 
+		values(#{id},#{username},#{createdate},#{handle},#{url},#{method},#{parameter},#{ip})
 	</insert>
 	
 	<!-- 批量删除 -->
@@ -20,13 +20,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</delete>
 	
 	<!-- 查看列表 -->
-	<select id="queryLog" parameterType="java.util.Map" resultType="com.modules.sys.orm.Log">
-		select id,userid,username,createdate,handle,url,method,parameter,ip from s_log
+	<select id="queryLog" parameterType="com.modules.sys.orm.Log" resultType="com.modules.sys.orm.Log">
+		select id,username,createdate,handle,url,method,parameter,ip from s_log
 		<where>
-			<if test="username != null">and username = #{username}</if> <!-- 账号 -->
-			<if test="beginDate!=null">and and DATE_FORMAT(createdate,'%Y-%m-%d') &gt;= DATE_FORMAT(#{beginDate},'%Y-%m-%d')</if> <!-- 开始时间 -->
-			<if test="endDate!=null">and DATE_FORMAT(createdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{endDate},'%Y-%m-%d')</if> <!-- 结束时间-->
-			<if test="method != null">and method = #{method}</if> <!-- 方法 -->
+			<if test="username != null">and username = #{username}</if>
+			<if test="beginDate != null">and DATE_FORMAT(createdate,'%Y-%m-%d') &gt;= DATE_FORMAT(#{beginDate},'%Y-%m-%d')</if>
+			<if test="endDate != null">and DATE_FORMAT(createdate,'%Y-%m-%d') &lt;= DATE_FORMAT(#{endDate},'%Y-%m-%d')</if>
+			<if test="method != null">and method like "%"#{method}"%"</if>
 		</where>
 		order by createdate desc
 	</select>

@@ -46,10 +46,13 @@
 			type: 'POST',
 			data: params,
 			success:function(data){
+				console.log(data);
 				if(data.code=='-1'){
-					$("#msg").html(data.error);
+					$("#msg").html(data.msg);
 				}else{
 					location.href="index.do";
+					//日志记录登录信息
+					$.post('<%=$root %>/setLogin.do');
 				}
 			},error:function(data){
 				$.messager.show({

@@ -1,7 +1,6 @@
 package com.modules.sys.svc;
 
 import java.util.List;
-import java.util.Map;
 
 import com.modules.base.orm.Result;
 import com.modules.sys.orm.Log;
@@ -24,7 +23,15 @@ public interface LogSVC {
 	 * 查询列表
 	 * @param map
 	 * @return
+	 * @throws Exception 
 	 */
 	public List<Log> queryLog(Log log);
+	
+	/**
+	 * 查看
+	 * @param id
+	 * @return
+	 */
+	public Log findOne(String id);
 	
 }

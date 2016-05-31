@@ -6,31 +6,44 @@
 <%@include file="../../../jsp/base/base.jsp"%>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>日志列表</title>
+<style type="text/css">
+.input{
+	height:20px;
+}
+</style>
 <script type="text/javascript">
 $(function(){
 	$('#grid').datagrid({
 		url:'<%=$root %>/sys/log/list.do',
 		height:$("#body").height()-$('#search_area').height()-5,
 		width:$("#body").width(),
-		idField:'id',
-		singleSelect:true,
+		pageSize:20,
+		pageList:[20,30,40,50],
+		loadmsg:'正在加载...',
+		singleSelect:false,
 		nowrap:true,
-		/* fit:true,*/
 		fitColumns:true, 
 		rownumbers:true,
 		showPageList:false,
 		columns:[[
 		    {field:'id',title:'id',checkbox:true},
-		    {field:'userid',title:'帐号ID',width:130,align:'left'},
-		    {field:'username',title:'帐号名',width:70,align:'left'},
+		    {field:'username',title:'帐号名',width:70,align:'center'},
 		    {field:'createdate',title:'创建时间',width:100,align:'center'},
-		    {field:'handle',title:'操作',width:100,align:'center'},
-		    {field:'url',title:'URL',width:130,align:'left'},
-		    {field:'method',title:'方法',width:70,align:'left'},
-		    {field:'ip',title:'IP地址',width:100,align:'center'},
-	  		{field:'parameter',title:'参数',width:200,align:'left'}
-		]], 
-		toolbar:'#tt_btn',  
+		    {field:'handle',title:'操作',width:80,align:'center'},
+		    {field:'url',title:'URL',width:130,align:'left',formatter:function(v,r,i){
+		    	return v==null?'空':v;
+		    }},
+		    {field:'method',title:'方法',width:70,align:'left',formatter:function(v,r,i){
+		    	return v==null?'空':v;
+		    }},
+		    {field:'ip',title:'IP地址',width:100,align:'center',formatter:function(v,r,i){
+		    	return v==null?'空':v;
+		    }},
+	  		{field:'parameter',title:'参数',width:300,align:'left',formatter:function(v,r,i){
+	  			return v==null?'空':v;
+	  		}}
+		]],
+		toolbar:'#tt_btn',
         pagination:true,
 		onDblClickRow:function(rowIndex, rowData){
 			viewDetail(rowData.id);
@@ -39,20 +52,51 @@ $(function(){
 	
 	//删除
 	$("#delete").on("click", function(){
-		$parent.messager.alert("提示","delete", "info");
+		var rows = $("#grid").datagrid('getSelections');
+		if(rows.length<0){
+			$.messager.alert("操作提示","选择要删除项！","error");
+			return false;
+		}
+		var ids = new Array();
+		for(var i=0; i<rows.length; i++){
+			ids[i] = rows[i].id;
+		}
+		$.post("<%=$root %>/sys/log/delt.do",{"ids":JSON.stringify(ids)},function(r){
+			if(r.code<0) return $.messager.alert("操作提示", r.msg,"error");
+	        $.messager.show({
+               title: "操作提示",
+               msg: "删除成功！",
+               showType: 'slide',
+               timeout: 2000
+            });
+		    $('#grid').datagrid('reload');
+		});
+	});
+	
+	//查看
+	$("#view").on("click",function(){
+		var rows = $("#grid").datagrid('getSelections');
+		if(rows.length!='1'){
+			$.messager.alert("操作提示","请选择一条要查看项！","error");
+			return false;
+		}
+		var id = rows[0].id;
+		viewDetail(id);
 	});
 	
 });
-
 
 //查询
 function toSearch(){
 	var params = $('#form').serializeArray();
 	var obj = new Object();
 	$.each(params,function(i,v){
-		obj[v.name] = v.value;
+		if(v.value==='' || v.value==null){
+			obj[v.name] = null;
+		}else{
+			obj[v.name] = v.value;
+		}
 	});
-	
 	$('#grid').datagrid('load',obj);
 }
 
@@ -62,9 +106,9 @@ function toClean(){
 }
 
 function viewDetail(id){
-	show({uri:'<%=$root %>/sys/viewUser.do?id='+id,title:'查看用户信息',iconCls:'icon-view',width:800,height:500,options:{
+	show({uri:'<%=$root %>/sys/log/view.do?id='+id,title:'查看日志详细',iconCls:'icon-view',width:800,height:500,options:{
 		success:function(){
-			$('#grid').datagrid('reload');
+			//$('#grid').datagrid('reload');
 		}
 	}});
 }
@@ -75,20 +119,25 @@ function viewDetail(id){
   <!-- 查询条件区域 -->
   <div id="search_area" >
     <div id="conditon">
+    <form id="form">
       <table border="0">
         <tr>
-          <td>用户名:</td>
-          <td ><input class="textbox" name="username" id="userName" /></td>
-          <td>&nbsp;性别:</td>
-          <td><input class="textbox" name="sex" id="sex" /></td>
-          <td>&nbsp;部门:</td>
-          <td><input class="textbox" name="department" id="department" /></td>
+          <td>帐号:</td>
+          <td ><input class="textbox" name="username" id="userName" style="height:18px;"/></td>
+          <td>&nbsp;方法:</td>
+          <td><input class="textbox" name="method" id="method" style="height:18px;"/></td>
+          <td>&nbsp;创建时间:</td>
           <td>
-              <a href="javascript:void(0)" class="easyui-linkbutton my-search-button" iconCls="icon-search" plain="true">查询</a>
-              <a href="javascript:void(0)" class="easyui-linkbutton my-search-button" iconCls="icon-reload" plain="true" >重置</a>
+          	<input class="easyui-datebox textbox" name="beginDate" id="beginDate" data-options="editable:false" />&nbsp;—
+          	<input class="easyui-datebox textbox" name="endDate" id="endDate" data-options="editable:false" />
+          </td>
+          <td style="padding-left:80px;">
+              <a href="javascript:void(0)" class="easyui-linkbutton my-search-button" onclick="toSearch()" data-options="editable:false" iconCls="icon-search" plain="true">查询</a>
+              <a href="javascript:void(0)" class="easyui-linkbutton my-search-button" onclick="toClean()" data-options="editable:false" iconCls="icon-reload" plain="true" >重置</a>
           </td>
         </tr>
       </table>
+      </form>
     </div>
     <span id="openOrClose"></span>
   </div>
@@ -96,7 +145,10 @@ function viewDetail(id){
   <table id="grid" style="table-layout:fixed;"></table>
   <!-- 表格顶部工具按钮 -->
   <div id="tt_btn">
+  	<shiro:hasRole name="admin">
       <a href="javascript:void(0)" id="delete" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
+    </shiro:hasRole>
+      <a href="javascript:void(0)" id="view" class="easyui-linkbutton" iconCls="icon-view" plain="true">查看</a>
    </div>
 </div>
 </body>

@@ -3,10 +3,12 @@ package com.modules.sys.ctrl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import net.sf.json.JSONArray;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,7 @@ import com.modules.base.orm.Page;
 import com.modules.base.orm.Result;
 import com.modules.base.orm.TreeNode;
 import com.modules.base.orm.User;
+import com.modules.base.svc.BaseSVC;
 import com.modules.sys.helper.ActivityUserHelper;
 import com.modules.sys.orm.Log;
 import com.modules.sys.orm.Module;
@@ -56,6 +59,9 @@ public class SysCTRL {
 	@Autowired
 	private LogSVC logSVC;
 	
+	@Autowired
+	private BaseSVC<Role> baseSVC;
+	
 	/**
 	 * 
 	 * @return
@@ -64,7 +70,6 @@ public class SysCTRL {
 	public String userIndex(){
 		//redis缓存
 		//redis.set("abc", "中国移动10086");
-		
 		return "/sys/user/UserIndex";
 	}
 	
@@ -115,11 +120,10 @@ public class SysCTRL {
 	/**
 	 * 保存用户信息
 	 * @param sub
-	 * @param user
 	 * @return
 	 */
 	@RequestMapping(value="saveUser",method = RequestMethod.POST)
-	public @ResponseBody Result saveUser(Subscriber sub,User user){
+	public @ResponseBody Result saveUser(Subscriber sub){
 		Result r = null;
 		if(sub.getId()==null || "".equals(sub.getId())){
 			r = userSVC.saveUser(sub);
@@ -175,11 +179,7 @@ public class SysCTRL {
 	public @ResponseBody Page<Subscriber> userList(Subscriber sub,int page,int rows){
 		
 		com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page,rows);
-		//List<Subscriber> list = userSVC.queryList(new Subscriber());
-		Map<String,String> map = new HashMap<String,String>();
-		map.put("username", "".equals(sub.getUsername())?null:sub.getUsername());
-		map.put("nickname", "".equals(sub.getNickname())?null:sub.getNickname());
-		List<Subscriber> list = userSVC.queryUserByXml(map);
+		List<Subscriber> list = userSVC.queryUserByXml(sub);
 		//是否在线
 		for (Subscriber subscriber : list) {
 			subscriber.setActivity(activity.getActivityUser(subscriber.getUsername()));
@@ -239,6 +239,57 @@ public class SysCTRL {
 	public String roleIndex(){
 		return "/sys/role/RoleIndex";
 	}
+	
+	/**
+	 * 跳转到新增、修改页面
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="role/addRole",method = RequestMethod.GET)
+	public String addRole(String id,Model model){
+		if(id!=null || !"".equals(id)){
+			Role role = roleSVC.findOne(id);
+			model.addAttribute("item", role);
+		}
+		return "/sys/role/AddRole";
+	}
+	
+	/**
+	 * 保存角色
+	 * @param role
+	 * @return
+	 */
+	@RequestMapping(value="role/saveRole",method = RequestMethod.POST)
+	public @ResponseBody Result saveRole(Role role){
+		if(role != null){
+			Result r = null;
+			if(role.getId()==null || "".equals(role.getId())){
+				//r = roleSVC.saveRole(role);
+				role.setId(UUID.randomUUID().toString());
+				r = baseSVC.saveBase(role);
+			}else{
+				r = roleSVC.editRole(role);
+			}
+			return r;
+		}
+		return null;
+	}
+
+	/**
+	 * 删除角色
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="role/deltRole",method = RequestMethod.POST)
+	public @ResponseBody Result deltRole(String id){
+		if(userSVC.getUserByRoleId(id)){
+			Result r = roleSVC.deltRole(id);
+			return r;
+		}
+		return Result.error("还有该角色的用户，不能删除！");
+	}
+	
 	
 	/**
 	 * 角色列表
@@ -350,9 +401,10 @@ public class SysCTRL {
 	 * @param page
 	 * @param rows
 	 * @return
+	 * @throws Exception 
 	 */
 	@RequestMapping(value="log/list",method = RequestMethod.POST)
-	public @ResponseBody Page<Log> queryLog(Log log,int page,int rows){
+	public @ResponseBody Page<Log> queryLog(Log log,int page,int rows) throws Exception{
 		com.github.pagehelper.Page<Object> pg = PageHelper.startPage(page,rows);
 		List<Log> list = logSVC.queryLog(log);
 		
@@ -370,9 +422,23 @@ public class SysCTRL {
 	 * @param ids
 	 * @return
 	 */
+	@RequiresRoles("admin")
 	@RequestMapping(value="log/delt",method = RequestMethod.POST)
 	public @ResponseBody Result deltLog(String ids){
 		return logSVC.deltLog(ids);
+	}
+	
+	/**
+	 * 查看
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/log/view",method = RequestMethod.GET)
+	public String viewLog(String id,Model model){
+		Log log = logSVC.findOne(id);
+		model.addAttribute("log", log);
+		return "/sys/log/ViewLog";
 	}
 	
 }

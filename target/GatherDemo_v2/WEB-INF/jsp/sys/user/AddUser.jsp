@@ -12,7 +12,8 @@ $(function(){
 		url:'<%=$root %>/sys/role/list.do',
 		valueField:'id',
 		textField:'rolename',
-		panelHeight:'auto'
+		panelHeight:'auto',
+		editable:false
 	});
 	if('${item.id}'!='') $('#username').textbox({readonly:true});
 	if('${item.sex}'==='') $('#sex').combobox('setValue','0');
@@ -20,6 +21,7 @@ $(function(){
 	
 });
 
+//保存
 function submitForm(){
 	var params = $('#form').serializeArray();
 	$.post('<%=$root %>/sys/saveUser.do', params,function(r){
@@ -27,6 +29,11 @@ function submitForm(){
 		top.$ok('${item.id}'===''?'保存成功！':'修改成功！');
 		return top.$window.close(window,1);
 	}, "json");
+}
+
+//清空
+function toClean(){
+	$('#form').form('clear');
 }
 </script>
 </head>
@@ -81,7 +88,7 @@ function submitForm(){
     </form>
     <div style="text-align:center;padding:5px">
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:60px; height:25px; margin-right: 20px;">保存</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:60px; height:25px;">清空</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="toClean()" style="width:60px; height:25px;">清空</a>
     </div>
 </body>
 </html>

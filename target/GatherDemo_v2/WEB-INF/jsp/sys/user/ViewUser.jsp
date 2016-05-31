@@ -8,52 +8,75 @@
 <title>查看用户信息</title>
 <style type="text/css">
 #tab{
-	border:1px red solid;
+	width:100%;
+}
+#tab tr th{
+	width:15%;
+	height:50px;
+	text-align:right;
+	border-bottom:1px #cccccc solid;
 }
 #tab tr td{
-	border:1px red solid;
+	text-align:left;
+	height:50px;
+	border-bottom:1px #cccccc solid;
 }
 </style>
+<script type="text/javascript">
+function FormatDate (strTime) {
+    var date = new Date(strTime);
+    var year = date.getFullYear();
+    var month = (date.getMonth()+ 1) < 10  ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1);
+    var day = (date.getDate())< 10 ? '0' + (date.getDate()) : (date.getDate());
+    var hours = (date.getHours())< 10 ? '0' + (date.getHours()) : (date.getHours());
+    var minutes = (date.getMinutes()) < 10 ? '0' + (date.getMinutes()) : (date.getMinutes());
+    var seconds = (date.getSeconds()) < 10 ? '0' + (date.getSeconds()) : (date.getSeconds());
+    return year+"-"+month+"-"+day+" "+hours+':'+minutes+':'+seconds; 
+}
+
+$(function(){
+	var time = FormatDate("${user.lastlogintime }");
+	$("#lastlogintime").html(time);
+});
+</script>
 </head>
 <body>
 	<table id="tab">
 		<tr>
-			<th>帐号</th>
+			<th>帐号:</th>
 			<td>${user.username }</td>
-			<%-- <th>密码</th>
-			<td><shiro:hasRole name="admin">${user.password }</shiro:hasRole></td> --%>
-			<th>昵称</th>
+			<th>昵称:</th>
 			<td>${user.nickname }</td>
 			<td rowspan="3">
-				<img alt="" src="" />
+				<img src="" />
 			</td>
 		</tr>
 		<tr>
-			<th>性别</th>
-			<td>${user.sex }</td>
-			<th>年龄</th>
+			<th>性别:</th>
+			<td>${user.sex=='0'?'男':'女' }</td>
+			<th>年龄:</th>
 			<td>${user.age }</td>
 		</tr>
 		<tr>
-			<th>手机号码</th>
+			<th>手机号码:</th>
 			<td>${user.phonenum }</td>
-			<th>邮箱</th>
+			<th>邮箱:</th>
 			<td>${user.email }</td>
 		</tr>
 		<tr>
-			<th>角色</th>
-			<td>${user.roleid }</td>
-			<th>是否激活</th>
-			<td>${user.ifactivate }</td>
-			<th>是否禁言</th>
-			<td>${user.ifspeak }</td>
+			<th>角色:</th>
+			<td>${user.roleName }</td>
+			<th>是否激活:</th>
+			<td>${user.ifactivate=='0'?'是':'否' }</td>
+			<th>是否禁言:</th>
+			<td>${user.ifspeak=='0'?'否':'是' }</td>
 		</tr>
 		<tr>
-			<th>最后登录时间</th>
-			<td>${user.lastlogintime }</td>
-			<th>登录设备</th>
+			<th>最后登录时间:</th>
+			<td id="lastlogintime"></td>
+			<th>登录设备:</th>
 			<td>${user.logindevice }</td>
-			<th>登录域名</th>
+			<th>登录域名:</th>
 			<td>${user.loginorg }</td>
 		</tr>
 	</table>

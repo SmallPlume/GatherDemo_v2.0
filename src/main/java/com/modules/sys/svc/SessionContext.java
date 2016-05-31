@@ -15,7 +15,7 @@ public class SessionContext implements Context {
 	public final static String SESSION_KEY = "SESSION_USER";
 
 	/** 线程用户 **/
-	private static ThreadLocal<User> threadUser = new ThreadLocal<User>();
+	//private static ThreadLocal<User> threadUser = new ThreadLocal<User>();
 	
 	/**
 	 * 登出
@@ -46,7 +46,7 @@ public class SessionContext implements Context {
 		return null;
 	}
 
-	@Override
+	/*@Override
 	public User getCurrentUser() {
 		return threadUser.get();
 	}
@@ -61,7 +61,7 @@ public class SessionContext implements Context {
 		if (user != null) {
 			threadUser.set(user);
 		}
-	}
+	}*/
 	
 	public User AutoFinesh(Subscriber subscriber){
 		User user = new User();
@@ -74,6 +74,7 @@ public class SessionContext implements Context {
 		user.setLastLoginTime(subscriber.getLastlogintime());
 		user.setSex(subscriber.getSex());
 		user.setEmail(subscriber.getEmail());
+		user.setLoginorg(subscriber.getLoginorg());
 		return user;
 	}
 

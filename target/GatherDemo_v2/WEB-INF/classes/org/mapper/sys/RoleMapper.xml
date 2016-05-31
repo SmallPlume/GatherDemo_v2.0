@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<selectKey resultType="java.lang.String" keyProperty="id" order="BEFORE">
 			select uuid()
 		</selectKey>
-		insert into s_role(id,roleno,rolename) values(#{id},#{roleno},#{rolename})
+		insert into s_role(id,roleno,rolename,roleremark) values(#{id},#{roleno},#{rolename},#{roleremark})
 	</insert>
 	
 	<!-- 更新 

@@ -3,16 +3,20 @@ package com.modules.sys.inter;
 import java.lang.reflect.Method;
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.modules.base.orm.User;
 import com.modules.sys.dao.LogDao;
 import com.modules.sys.orm.Log;
 import com.modules.sys.orm.Subscriber;
@@ -24,7 +28,22 @@ public class LogAspect {
 	@Autowired
 	private LogDao dao;
 	
+	@Autowired
+	private HttpServletRequest request;
+	
 	public final static String SESSION_KEY = "SESSION_USER";
+	
+	/**
+	 * 用户登录切入点
+	 */
+	@Pointcut("execution(* com.modules.sys.svc.impl.SubscriberSVCImpl.login(..))")
+	public void loginCell(){}
+	
+	/**
+	 * 用户登出切入点
+	 */
+	@Pointcut("execution(* com.modules.sys.svc.impl.SubscriberSVCImpl.logout(..))")
+	public void logoutCell(){}
 	
 	/**
 	 * 新增切入点
@@ -43,6 +62,26 @@ public class LogAspect {
 	 */
 	@Pointcut("execution(* com.modules..svc.impl.*.delt*(..))")
 	public void deltCell(){}
+	
+	/**
+	 * 用户登录切入点
+	 * @param joinPoint
+	 * @param rtv
+	 */
+	@AfterReturning(value="loginCell()",argNames="rtv", returning="rtv")
+	public void loginLog(JoinPoint joinPoint,Object rtv){
+		autoFinish(joinPoint,"登陆系统");
+	}
+	
+	/**
+	 * 退出登录切入点
+	 * @param joinPoint
+	 * @param rtv
+	 */
+	@Before(value="logoutCell()")
+	public void logoutLog(){
+		autoFinish(null,"退出系统");
+	}
 	
 	/**
 	 * 添加操作日志(后置通知)
@@ -130,25 +169,53 @@ public class LogAspect {
      * @return
      */
     private void autoFinish(JoinPoint joinPoint,String handle){
-    	Subject subject = SecurityUtils.getSubject();
+    	
+    	String username =  (String) SecurityUtils.getSubject().getPrincipal();
+    	
+    	/*Subject subject = SecurityUtils.getSubject();
 		Session session = subject.getSession();
-		Subscriber sub = (Subscriber) session.getAttribute(SESSION_KEY);
-		if(sub.getId()==null || "".equals(sub.getId())){
-			return ;
-		}
-		Log log = new Log();
-		log.setUserid(sub.getId());
-    	log.setUsername(sub.getUsername());
+		Subscriber user = (Subscriber) session.getAttribute(SESSION_KEY);*/
+    	
+    	Log log = new Log();
+    	log.setUsername(username==null?"失去帐号信息":username);
     	log.setCreatedate(new Date()); 
-    	log.setIp(sub.getLoginorg());
-    	log.setUrl(joinPoint.getSignature().toString());
-		//获取方法名   
-        String methodName = joinPoint.getSignature().getName();  
-        //获取操作内容  
-        String opContent = optionContent(joinPoint.getArgs(),methodName);
-		log.setMethod(methodName);
-		log.setParameter(opContent);
+    	log.setIp(getIpAddr(request));
+    	if(joinPoint!=null){
+    		log.setUrl(joinPoint.getSignature().toString());
+    		//获取方法名   
+            String methodName = joinPoint.getSignature().getName();  
+            //获取操作内容  
+            String opContent = optionContent(joinPoint.getArgs(),methodName);
+            log.setMethod(methodName);
+    		log.setParameter(opContent);
+    	}
 		log.setHandle(handle);
 		dao.insert(log);
     }
+    
+    /**
+	 * 获取ip地址
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	private String getIpAddr(HttpServletRequest request) {
+	    String ip = request.getHeader("x-forwarded-for");
+	    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	        ip = request.getHeader("Proxy-Client-IP");
+	    }
+	    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	        ip = request.getHeader("WL-Proxy-Client-IP");
+	    }
+	    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	        ip = request.getHeader("HTTP_CLIENT_IP");
+	    }
+	    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	        ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+	    }
+	    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+	        ip = request.getRemoteAddr();
+	    }
+	    return ip;
+	}
 }

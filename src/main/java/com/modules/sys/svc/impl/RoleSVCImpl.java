@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.entity.Example.Criteria;
 
+import com.modules.base.orm.Result;
 import com.modules.sys.dao.RoleDao;
 import com.modules.sys.orm.Role;
 import com.modules.sys.svc.RoleSVC;
@@ -26,7 +27,6 @@ public class RoleSVCImpl implements RoleSVC{
 	 */
 	@Override
 	public Role select(Role role){
-		
 		//查询条件
 		Example example = new Example(Role.class);
 		example.createCriteria()
@@ -45,15 +45,13 @@ public class RoleSVCImpl implements RoleSVC{
 	public List<Role> queryRole(Role role){
 		Example example = new Example(Role.class);
 		Criteria criteria = example.createCriteria();
-		if(role.getRoleno()!=null){
-			criteria.andEqualTo(role.getRoleno());
+		if(!"".equals(role.getRoleno())){
+			criteria.andEqualTo("roleno",role.getRoleno());
 		}
-		if(role.getRolename()!=null){
+		if(!"".equals(role.getRolename())){
 			criteria.andLike("rolename", role.getRolename());
 		}
-		
 		List<Role> list = dao.selectByExample(example);
-		
 		return list;
 	}
 	
@@ -63,11 +61,16 @@ public class RoleSVCImpl implements RoleSVC{
 	 * @param role
 	 */
 	@Override
-	public void saveRole(Role role){
+	public Result saveRole(Role role){
 		if(role != null){
-			//dao.insert(role);
-			dao.save(role);
+			try{
+				dao.save(role);
+				return Result.ok();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
+		return Result.error("新增角色失败！");
 	}
 	
 	/**
@@ -75,20 +78,40 @@ public class RoleSVCImpl implements RoleSVC{
 	 * @param role
 	 */
 	@Override
-	public void editRole(Role role){
+	public Result editRole(Role role){
 		if(role != null){
 			Role o_role = dao.selectByPrimaryKey(role.getId());
 			ReflectUtils.copy(o_role, role, true);
 			Example example = new Example(Role.class);
 			example.createCriteria().andEqualTo("id",role.getId());
-			
 			dao.updateByExample(o_role, example);
+			return Result.ok();
 		}
+		return Result.error("修改角色失败！");
 	}
 
 	@Override
 	public List<Role> queryRoles() {
 		return dao.selectAll();
+	}
+
+	@Override
+	public Role findOne(String id) {
+		if(id != null || !"".equals(id)){
+			return dao.selectByPrimaryKey(id);
+		}
+		return null;
+	}
+
+	@Override
+	public Result deltRole(String id) {
+		try{
+			dao.deleteByPrimaryKey(id);
+			return Result.ok();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return Result.error("删除失败！");
 	}
 	
 }

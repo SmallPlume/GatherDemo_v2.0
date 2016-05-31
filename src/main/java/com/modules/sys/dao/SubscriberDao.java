@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.sf.json.JSONArray;
-
 import com.modules.sys.orm.Subscriber;
 import com.modules.sys.util.NetStarDao;
 
@@ -48,7 +46,7 @@ public interface SubscriberDao extends NetStarDao<Subscriber>{
 	 * 根据id查找用户信息
 	 * @return
 	 */
-	/*public Subscriber findOne(String id);*/
+	public Subscriber findOne(String id);
 	
 	/**
 	 * 列出用户信息

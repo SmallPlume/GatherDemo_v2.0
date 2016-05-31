@@ -6,8 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+
 import net.sf.json.JSONArray;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +31,9 @@ public class SubscriberSVCImpl implements SubscriberSVC{
 	@Autowired
 	private SubscriberDao subDao;
 	
+	@Autowired
+	private HttpServletRequest request;
+	
 	/**
 	 * 根据用户名称查询
 	 * @param userName
@@ -39,7 +46,6 @@ public class SubscriberSVCImpl implements SubscriberSVC{
 			if(sub!=null){
 				return sub;
 			}
-			return null;
 		}
 		return null;
 	}
@@ -56,7 +62,6 @@ public class SubscriberSVCImpl implements SubscriberSVC{
 			if(roles.size()>0){
 				return roles;
 			}
-			return null;
 		}
 		return null;
 	}
@@ -73,7 +78,6 @@ public class SubscriberSVCImpl implements SubscriberSVC{
 			if(permissions.size()>0){
 				return permissions;
 			}
-			return null;
 		}
 		return null;
 	}
@@ -127,7 +131,7 @@ public class SubscriberSVCImpl implements SubscriberSVC{
 	@Override
 	public Subscriber findOne(String id){
 		if(id != null || !"".equals(id)){
-			Subscriber sub = subDao.selectByPrimaryKey(id);
+			Subscriber sub = subDao.findOne(id);
 			return sub;
 		}
 		return null;
@@ -161,7 +165,16 @@ public class SubscriberSVCImpl implements SubscriberSVC{
 	 * @return
 	 */
 	@Override
-	public List<Subscriber> queryUserByXml(Map<String,String> map){
+	public List<Subscriber> queryUserByXml(Subscriber sub){
+		Map map = new HashMap();
+		if(sub!=null){
+			if(!"".equals(sub.getUsername())){
+				map.put("username",sub.getUsername());
+			}
+			if(!"".equals(sub.getRoleid())){
+				map.put("roleid",sub.getRoleid());
+			}
+		}
 		List<Subscriber> subList = subDao.queryList(map);
 		return subList;
 	}
@@ -252,6 +265,33 @@ public class SubscriberSVCImpl implements SubscriberSVC{
 			e.printStackTrace();
 		}
 		return Result.error("删除失败！");
+	}
+
+	@Override
+	public void login(User user) {
+		//用户没有登录
+		if(user==null){
+			return;
+		}
+	}
+
+	@Override
+	public void logout() {
+		Subject subject=SecurityUtils.getSubject();
+		subject.logout();
+	}
+
+	@Override
+	public Boolean getUserByRoleId(String rid) {
+		if(rid != null || !"".equals(rid)){
+			Example example = new Example(Subscriber.class);
+			example.createCriteria().andEqualTo("roleid", rid);
+			int i = subDao.selectCountByExample(example);
+			if(i<=0){
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

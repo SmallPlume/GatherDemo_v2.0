@@ -9,6 +9,11 @@ import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheManager;
 
+/**
+ * √‹¬Îº”√‹
+ * @author Acer
+ *
+ */
 public class RetryLimitHashedCredentialsMatcher extends HashedCredentialsMatcher {
 
 	private Cache<String, AtomicInteger> passwordRetryCache;

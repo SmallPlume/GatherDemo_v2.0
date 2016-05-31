@@ -66,6 +66,14 @@ $(function(){
         }
 	});
 	
+	$('#roleid').combobox({
+		url:'<%=$root %>/sys/role/list.do',
+		valueField:'id',
+		textField:'rolename',
+		panelHeight:'auto',
+		editable:false
+	});
+	
 	//新增弹出框
 	$("#add").on("click", function(){
 		show({uri:'<%=$root %>/sys/addUser.do',title:'新增用户',iconCls:'icon-add',width:450,height:600,options:{
@@ -89,11 +97,21 @@ $(function(){
 		}});
 	});
 	
+	//查看
+	$("#view").on("click",function(){
+		var rows = $("#grid").datagrid('getSelections');
+		if(rows.length != '1'){
+			$.messager.alert("操作提示","选择一条！","error");
+			return false;
+		}
+		viewDetail(rows[0].id);
+	});
+	
 	//删除
 	$("#delete").on("click", function(){
 		var rows = $("#grid").datagrid('getSelections');
 		if(rows.length < 0){
-			$.messager.alert("操作提示","只能选择一条！","error");
+			$.messager.alert("操作提示","选择一条！","error");
 			return false;
 		}
 		var gnl=confirm("确定要删除?"); if(gnl==false) return false;
@@ -103,7 +121,7 @@ $(function(){
 			ids[i] = rows[i].id;
 		}
 		$.post("<%=$root %>/sys/user/delt.do",{"ids":JSON.stringify(ids)},function(r){
-			if(r.code<0) return $.messager.alert("操作提示", r.msg,"error");
+			if(r.code<0) return alert(r.msg);
 	        $.messager.show({
                title: "操作提示",
                msg: "删除成功！",
@@ -159,6 +177,7 @@ $(function(){
 function editShutup(id,ifactivate,ifspeak){
 	if(id!=null){
 		$.post("<%=$root %>/sys/editActivity.do",{"id":id,"ifactivate":ifactivate,"ifspeak":ifspeak},function(r){
+			console.log(r);
 			if(r.code<0) return $.messager.alert("操作提示", r.msg,"error");
 		});
 		$('#grid').datagrid('reload');
@@ -180,9 +199,12 @@ function toSearch(){
 	var params = $('#form').serializeArray();
 	var obj = new Object();
 	$.each(params,function(i,v){
-		obj[v.name] = v.value;
+		if(v.value==='' || v.value==null){
+			obj[v.name] = null;
+		}else{
+			obj[v.name] = v.value;
+		}
 	});
-	
 	$('#grid').datagrid('load',obj);
 }
 
@@ -206,20 +228,20 @@ function viewDetail(id){
   <!-- 查询条件区域 -->
   <div id="search_area" >
     <div id="conditon">
+    <form id="form">
       <table border="0">
         <tr>
           <td>用户名:</td>
-          <td ><input class="textbox" name="username" id="userName" /></td>
-          <td>&nbsp;性别:</td>
-          <td><input class="textbox" name="sex" id="sex" /></td>
-          <td>&nbsp;部门:</td>
-          <td><input class="textbox" name="department" id="department" /></td>
-          <td>
-              <a  href="javascript:void(0)" class="easyui-linkbutton my-search-button" iconCls="icon-search" plain="true">查询</a> 
-              <a  href="javascript:void(0)" class="easyui-linkbutton my-search-button" iconCls="icon-clean" plain="true" >重置</a>
+          <td ><input class="textbox" name="username" style="height:18px;" /></td>
+          <td>&nbsp;角色:</td>
+          <td><input class="easyui-combobox" type="text" name="roleid" id="roleid" style="height:18px;" /></td>
+          <td style="padding-left:80px;">
+              <a href="javascript:void(0)" class="easyui-linkbutton my-search-button" onclick="toSearch()" iconCls="icon-search" plain="true">查询</a> 
+              <a href="javascript:void(0)" class="easyui-linkbutton my-search-button" onclick="toClean()" iconCls="icon-reload" plain="true" >重置</a>
           </td>
         </tr>
       </table>
+      </form>
     </div>
     <span id="openOrClose"></span> 
   </div>

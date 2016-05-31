@@ -17,9 +17,6 @@ public class Log implements Serializable {
 	@GeneratedValue(generator = "UUID")
 	private String id;
 	
-	/*** 用户id */
-	private String userid;
-	
 	/*** 用户账号 */
 	private String username;
 	
@@ -43,11 +40,11 @@ public class Log implements Serializable {
 	
 	/*** 开始时间 */
 	@Transient
-	private Date beginDate;
+	private String beginDate;
 	
 	/*** 结束时间 */
 	@Transient
-	private Date endDate;
+	private String endDate;
 	
 
 	public String getId() {
@@ -56,14 +53,6 @@ public class Log implements Serializable {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getUserid() {
-		return userid;
-	}
-
-	public void setUserid(String userid) {
-		this.userid = userid;
 	}
 
 	public String getUsername() {
@@ -122,20 +111,20 @@ public class Log implements Serializable {
 		this.ip = ip;
 	}
 
-	public Date getBeginDate() {
+	public String getBeginDate() {
 		return beginDate;
 	}
 
-	public void setBeginDate(Date beginDate) {
+	public void setBeginDate(String beginDate) {
 		this.beginDate = beginDate;
 	}
 
-	public Date getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
-	
+
 }

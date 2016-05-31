@@ -33,6 +33,9 @@ public class User {
 	
 	/**最后登录时间**/
 	private Date lastLoginTime;
+	
+	/** 登录域名 **/
+	private String loginorg;
 
 	public String getId() {
 		return id;
@@ -113,7 +116,13 @@ public class User {
 	public void setLastLoginTime(Date lastLoginTime) {
 		this.lastLoginTime = lastLoginTime;
 	}
-	
-	
+
+	public String getLoginorg() {
+		return loginorg;
+	}
+
+	public void setLoginorg(String loginorg) {
+		this.loginorg = loginorg;
+	}
 	
 }

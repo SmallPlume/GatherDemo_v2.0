@@ -26,12 +26,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		and u.username=#{userName}
 	</select>
 	
+	<!-- 根据id查询 -->
+	<select id="findOne" parameterType="java.lang.String" resultType="com.modules.sys.orm.Subscriber">
+		select u.*,r.rolename as roleName from s_user u left join s_role r on u.roleid=r.id where u.id=#{id}
+	</select>
+	
 	<!-- 模糊查询 -->
 	<select id="queryList" parameterType="java.util.Map" resultType="com.modules.sys.orm.Subscriber">
 		select u.*,r.rolename as roleName from s_user u left join s_role r on u.roleid=r.id
 		<where>
-			<if test="username != null">and u.username = #{username}</if>
-			<if test="nickname != null">and u.nickname like "%"#{nickname}"%"</if>
+			<if test="username != null">and u.username like "%"#{username}"%"</if>
+			<if test="roleid != null">and u.roleid = #{roleid}</if>
 		</where>
 	</select>
 	
@@ -49,6 +54,4 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		delete from s_user where id in 
 		<foreach item="ids" collection="list" open="(" separator="," close=")">#{ids}</foreach>
 	</delete>
-	
-	
 </mapper> 

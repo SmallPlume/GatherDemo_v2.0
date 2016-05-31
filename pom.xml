@@ -14,7 +14,6 @@
   	<shiro.version>1.2.4</shiro.version>
   </properties>
   
-  
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -22,6 +21,18 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    
+    <!-- activiti 工作流 -->
+	<dependency>
+	    <groupId>org.activiti</groupId>
+	    <artifactId>activiti-engine</artifactId>
+	    <version>5.20.0</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.activiti</groupId>
+	    <artifactId>activiti-spring</artifactId>
+	    <version>5.20.0</version>
+	</dependency>
     
     <!-- 添加Servlet支持 -->
   	<dependency>
@@ -179,7 +190,7 @@
 	<dependency>
 	    <groupId>tk.mybatis</groupId>
 	    <artifactId>mapper</artifactId>
-	    <version>3.3.6</version>
+	    <version>3.3.8</version>
 	</dependency>
 	<dependency>
 		<groupId>javax.persistence</groupId>
@@ -290,6 +301,18 @@
 	
   </dependencies>
   <build>
+  	<plugins>
+		<!-- define the project compile level -->
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>2.3.2</version>
+			<configuration>
+				<source>1.7</source>
+				<target>1.7</target>
+			</configuration>
+		</plugin>
+	</plugins>
     <finalName>GatherDemo_v2</finalName>
     <resources>
         <resource>

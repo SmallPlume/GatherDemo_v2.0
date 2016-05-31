@@ -70,7 +70,7 @@
 	<!-- ========================================== 缓存、加密  ========================================== -->
 	<!-- 缓存管理器 使用Ehcache实现 -->
 	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
-		<property name="cacheManagerConfigFile" value="classpath:ehcache.xml" />
+		<property name="cacheManagerConfigFile" value="classpath:cache/ehcache.xml" />
 	</bean>
 	
 	<!-- 并发登录控制 -->
@@ -78,7 +78,6 @@
 		class="com.modules.sys.realm.KickoutSessionControlFilter">
 		<property name="cacheManager" ref="cacheManager"/>  
 	    <property name="sessionManager" ref="sessionManager"/>  
-	  
 	    <property name="kickoutAfter" value="false"/>  
 	    <property name="maxSession" value="1"/>  
 	    <property name="kickoutUrl" value="/login.do?kickout=1"/>

@@ -46,14 +46,14 @@ public interface Context {
 	 * 
 	 * @return User
 	 */
-	User getCurrentUser();
+	//User getCurrentUser();
 
 	/**
 	 * <p>
 	 * 释放线程用户
 	 * </p>
 	 */
-	void releaseCurrentUser();
+	//void releaseCurrentUser();
 
 	/**
 	 * <p>
@@ -62,6 +62,6 @@ public interface Context {
 	 * 
 	 * @param user
 	 */
-	void registCurrentUser(User user);
+	//void registCurrentUser(User user);
 
 }

@@ -10,6 +10,15 @@ import com.modules.sys.orm.Subscriber;
 
 public interface SubscriberSVC {
 	
+	/**
+	 * 日志记录用户登录
+	 * @param sub
+	 * @return
+	 */
+	public void login(User user);
+	
+	public void logout();
+	
 	public Subscriber getUserByName(String userName);
 	
 	public Set<String> getRoles(String userName);
@@ -24,11 +33,9 @@ public interface SubscriberSVC {
 	
 	public List<Subscriber> queryUser(Subscriber sub);
 	
-	public List<Subscriber> queryUserByXml(Map<String,String> map);
+	public List<Subscriber> queryUserByXml(Subscriber sub);
 	
 	public void deltUser(String id);
-	
-	/*public void update(Subscriber sub);*/
 	
 	public Result editActivity(String id,String ifactivate,String ifspeak);
 	
@@ -53,5 +60,12 @@ public interface SubscriberSVC {
 	 * @return
 	 */
 	public Result deltUsers(String ids,User user);
+	
+	/**
+	 * 判断是否存在该角色的用户
+	 * @param rid
+	 * @return
+	 */
+	public Boolean getUserByRoleId(String rid);
 	
 }

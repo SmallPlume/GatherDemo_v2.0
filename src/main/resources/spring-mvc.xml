@@ -37,21 +37,6 @@
 	<!-- 系统上下文 -->
 	<bean id="sessionContext" class="com.modules.sys.svc.SessionContext"></bean>
 
-	<!-- Web请求拦截器 -->
-	<!-- <mvc:interceptors>
-		<mvc:interceptor>
-			<mvc:mapping path="/**" />
-			<mvc:exclude-mapping path="/login.do" />
-			<mvc:exclude-mapping path="/register.do" />
-			<mvc:exclude-mapping path="/verifycode.do" />
-			<mvc:exclude-mapping path="/logout.do" />
-			<bean class="com.modules.sys.inter.WebInterceptor">
-				系统上下文
-				<property name="context" ref="sessionContext" />
-			</bean>
-		</mvc:interceptor>
-	</mvc:interceptors> -->
-
 	<!-- 后台返回json数据中包含时间的json格式，通过此解析 -->
 	<bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">
 		<property name="serializationInclusion">
@@ -63,13 +48,17 @@
 	</bean>
 
 	<!-- Spring拦截器 -->
-	<mvc:annotation-driven>
+	<mvc:annotation-driven conversion-service="conversionService">
+		<!-- 参数解析器，可通过实现HandlerMethodArgumentResolver接口实现，
+		该实现不会覆盖原有spring mvc内置解析对参数的解析，要自定义的内置支持参数解析可以考虑注册 -->
 		<mvc:argument-resolvers>
 			<bean class="com.modules.sys.inter.ArgumentResolver">
 				<!-- 系统上下文 -->
 				<property name="context" ref="sessionContext" />
 			</bean>
 		</mvc:argument-resolvers>
+		<!-- 主要是对 @RequestBody 参数和 @ResponseBody返回值的处理，
+			可选的，在这里注册的HttpMessageConverter默认情况下优先级是高于内置的转换器的 -->
 		<mvc:message-converters register-defaults="true">
 			<!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->
 			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
@@ -88,6 +77,15 @@
 			</bean>
 		</mvc:message-converters>
 	</mvc:annotation-driven>
+	
+	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="converters">
+			<list>
+				<!-- 时间类型的参数转换 -->
+				<bean class="com.modules.sys.helper.DateConverter"/>
+			</list>
+		</property>
+	</bean>
 
 	<!-- ==========================================视图解析器========================================== -->
 	<!-- 对模型视图名称的解析，在请求时模型视图名称添加前后缀 -->

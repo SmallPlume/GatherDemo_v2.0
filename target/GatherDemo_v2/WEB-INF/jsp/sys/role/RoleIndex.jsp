@@ -26,15 +26,12 @@ $(function(){
 			{field:'roleremark',title:'角色说明',width:200,align:'center'}
 		]], 
 		toolbar:'#tt_btn',  
-        pagination:true,
-		onDblClickRow:function(rowIndex, rowData){
-			viewDetail(rowData.id);
-		}
+        pagination:true
 	});
 	
 	//新增弹出框
 	$("#add").on("click", function(){
-		show({uri:'<%=$root %>/sys/addUser.do',title:'新增用户',iconCls:'icon-view',width:600,height:400,options:{
+		show({uri:'<%=$root %>/sys/role/addRole.do',title:'新增角色',iconCls:'icon-add',width:600,height:400,options:{
 			success:function(){
 				$('#grid').datagrid('reload');
 			}
@@ -43,12 +40,36 @@ $(function(){
 	
 	//修改
 	$("#update").on("click", function(){
-		$parent.messager.alert("提示","update", "info");
+		var rows = $("#grid").datagrid('getSelections');
+		if(rows.length!="1"){
+			$.messager.alert("操作提示","只能选择一条！","error");
+			return false;
+		}
+		show({uri:'<%=$root %>/sys/role/addRole.do?id='+rows[0].id,title:'修改角色',iconCls:'icon-edit',width:600,height:400,options:{
+			success:function(){
+				$('#grid').datagrid('reload');
+			}
+		}});
 	});
 	
 	//删除
 	$("#delete").on("click", function(){
-		$parent.messager.alert("提示","delete", "info");
+		var rows = $("#grid").datagrid('getSelections');
+		if(rows.length < 0){
+			$.messager.alert("操作提示","选择一条！","error");
+			return false;
+		}
+		var gnl=confirm("确定要删除?"); if(gnl==false) return false;
+		$.post('<%=$root %>/sys/role/deltRole.do',{'id':rows[0].id},function(r){
+			if(r.code<0) return alert(r.msg);
+	        $.messager.show({
+               title: "操作提示",
+               msg: "删除成功！",
+               showType: 'slide',
+               timeout: 2000
+            });
+		    $('#grid').datagrid('reload');
+		});
 	});
 	
 	//分配权限
@@ -65,54 +86,19 @@ $(function(){
 			}
 		}});
 	});
-	
 });
-
-//是否禁用或启用
-function editValid(id,type){
-	$.post("<%=$root %>/sys/editActivity.do", { "id": id,"ifactivate":type},function(r){
-	       if(r.code<0) return $.messager.alert("操作提示", r.msg,"error");
-	       $.messager.show({
-               title: "操作提示",
-               msg: "操作成功！",
-               showType: 'slide',
-               timeout: 2000
-           });
-		   $('#grid').datagrid('reload');
-	}, "json");
-}
-
-//是否禁言
-function editShutup(id,privilege,type){
-	if(privilege=='0'){
-		$.post("<%=$root %>/sys/editActivity.do", { "id": id,"ifactivate":privilege,"ifspeak":type},function(r){
-			if(r.code<0) return $.messager.alert("操作提示", r.msg,"error");
-		}, "json");
-	}
-}
 
 //查询
 function toSearch(){
-	var params = $('#form').serializeArray();
 	var obj = new Object();
-	$.each(params,function(i,v){
-		obj[v.name] = v.value;
-	});
-	
+	obj['roleno'] = $("#roleno").val()==''?null:$("#roleno").val();
+	obj['rolename'] = $("#rolename").val()==''?null:'%'+$("#rolename").val()+'%';
 	$('#grid').datagrid('load',obj);
 }
 
 //清空
 function toClean(){
 	$('#form').form('clear');
-}
-
-function viewDetail(id){
-	show({uri:'<%=$root %>/sys/viewUser.do?id='+id,title:'查看用户信息',iconCls:'icon-view',width:800,height:500,options:{
-		success:function(){
-			$('#grid').datagrid('reload');
-		}
-	}});
 }
 </script>
 </head>
@@ -121,20 +107,20 @@ function viewDetail(id){
   <!-- 查询条件区域 -->
   <div id="search_area" >
     <div id="conditon">
+    <form id="form">
       <table border="0">
         <tr>
-          <td>用户名:</td>
-          <td ><input class="textbox" name="username" id="userName" /></td>
-          <td>&nbsp;性别:</td>
-          <td><input class="textbox" name="sex" id="sex" /></td>
-          <td>&nbsp;部门:</td>
-          <td><input class="textbox" name="department" id="department" /></td>
-          <td>
-              <a href="javascript:void(0)" class="easyui-linkbutton my-search-button" iconCls="icon-search" plain="true">查询</a>
-              <a href="javascript:void(0)" class="easyui-linkbutton my-search-button" iconCls="icon-reload" plain="true" >重置</a>
+          <td>角色代码:</td>
+          <td ><input class="textbox" name="roleno" id="roleno" style="height:18px;" /></td>
+          <td>&nbsp;角色名称:</td>
+          <td><input class="textbox" name="rolename" id="rolename" style="height:18px;" /></td>
+          <td style="padding-left:80px;">
+              <a href="javascript:void(0)" class="easyui-linkbutton my-search-button" onclick="toSearch()" iconCls="icon-search" plain="true">查询</a>
+              <a href="javascript:void(0)" class="easyui-linkbutton my-search-button" onclick="toClean()" iconCls="icon-reload" plain="true" >重置</a>
           </td>
         </tr>
       </table>
+      </form>
     </div>
     <span id="openOrClose"></span>
   </div>

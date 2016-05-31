@@ -1,9 +1,7 @@
 package com.modules.sys.svc.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.sf.json.JSONArray;
 
@@ -34,7 +32,7 @@ public class LogSVCImpl implements LogSVC {
 			for(int i=0; i<logIds.size(); i++){
 				list.add(logIds.get(i).toString());
 			}
-			dao.deltLog(logIds);
+			dao.deltLog(list);
 			return Result.ok();
 		}catch(Exception e){
 			e.printStackTrace();
@@ -44,14 +42,31 @@ public class LogSVCImpl implements LogSVC {
 
 	@Override
 	public List<Log> queryLog(Log log) {
-		@SuppressWarnings("rawtypes")
-		Map map = new HashMap();
-		map.put("username", log.getUsername()==""?null:log.getUsername());
-		map.put("beginDate", log.getBeginDate());
-		map.put("endDate", log.getEndDate());
-		map.put("method", log.getMethod()==""?null:log.getMethod());
-		List<Log> list = dao.queryLog(map);
+		if("".equals(log.getUsername())){
+			log.setUsername(null);
+		}
+		if("".equals(log.getMethod())){
+			log.setMethod(null);
+		}
+		if("".equals(log.getBeginDate())){
+			log.setBeginDate(null);
+		}
+		if("".equals(log.getEndDate())){
+			log.setEndDate(null);
+		}
+		List<Log> list = dao.queryLog(log);
 		return list;
+	}
+
+	@Override
+	public Log findOne(String id) {
+		if(id!=null || !"".equals(id)){
+			Log log = dao.selectByPrimaryKey(id);
+			if(log != null){
+				return log;
+			}
+		}
+		return null;
 	}
 
 }

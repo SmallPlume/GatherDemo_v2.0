@@ -21,6 +21,7 @@ $(function(){
 	
 });
 
+//保存
 function submitForm(){
 	var params = $('#form').serializeArray();
 	$.post('<%=$root %>/sys/saveUser.do', params,function(r){
@@ -28,6 +29,11 @@ function submitForm(){
 		top.$ok('${item.id}'===''?'保存成功！':'修改成功！');
 		return top.$window.close(window,1);
 	}, "json");
+}
+
+//清空
+function toClean(){
+	$('#form').form('clear');
 }
 </script>
 </head>
@@ -58,7 +64,7 @@ function submitForm(){
 				<th>性别:</th>
 				<td style="width:100px;"><input class="easyui-combobox" name="sex" id="sex" style="width:60px;" value="${item.sex }" data-options="panelHeight:'auto',valueField:'label',textField: 'value',data: [{label: '0',value: '男'},{label: '1',value: '女'}]" /></td>
 				<th>年龄:</th>
-				<td><input class="easyui-numberbox" precision="0" max="200" min="1" size="8" maxlength="3" style="width:60px; text-align:right;" name="age" value="${item.age }==''?0:${item.age }" /></td>
+				<td><input class="easyui-numberbox" precision="0" max="200" min="1" size="8" maxlength="3" style="width:60px; text-align:right;" name="age" value="${item.age }" /></td>
 			</tr>
 			<tr>
                 <th>手机:</th>
@@ -82,7 +88,7 @@ function submitForm(){
     </form>
     <div style="text-align:center;padding:5px">
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:60px; height:25px; margin-right: 20px;">保存</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:60px; height:25px;">清空</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="toClean()" style="width:60px; height:25px;">清空</a>
     </div>
 </body>
 </html>

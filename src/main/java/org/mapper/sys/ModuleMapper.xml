@@ -6,7 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- 查询父节点 -->
 	<select id="getRoot" resultType="com.modules.sys.orm.Module">
-		select id,pid,name,url,ifopen,icon,dir,menu,valid,rank,permitno,permitmark from s_module where ISNULL(pid)
+		select id,pid,name,url,ifopen,icon,dir,menu,valid,rank,permitno,permitmark from s_module where ISNULL(pid) order by rank
 	</select>
 	
 	<!-- 根据父类id获取信息 -->

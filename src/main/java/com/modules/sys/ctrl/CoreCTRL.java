@@ -26,12 +26,16 @@ import com.modules.sys.orm.Role;
 import com.modules.sys.orm.Subscriber;
 import com.modules.sys.svc.PermissionSVC;
 import com.modules.sys.svc.RoleSVC;
+import com.modules.sys.svc.SubscriberSVC;
 
 @Controller
 public class CoreCTRL {
 
 	@Autowired
 	private RoleSVC roleSVC;
+	
+	@Autowired
+	private SubscriberSVC subSVC;
 	
 	@Autowired
 	private PermissionSVC permissionSVC;
@@ -58,7 +62,6 @@ public class CoreCTRL {
 			}else{
 				module = permissionSVC.queryPermit(subject.getPrincipal().toString(), ModuleType.menu.type);
 			}
-			//model.addAttribute("user", sub);
 			model.addAttribute("module", module.toString());
 			return "/index";
 		}
@@ -84,28 +87,21 @@ public class CoreCTRL {
 	@RequestMapping(value="/login",method=RequestMethod.POST)
 	public @ResponseBody Result login(Subscriber sub){
 		Subject subject=SecurityUtils.getSubject();
-		String error = null;
-		
-		//shiro的session
-		/*Collection<Session> sessions = sessionDAO.getActiveSessions();
-		for(Session session:sessions){
-			if(null != session && StringUtils.equals(String.valueOf(session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY)), sub.getUsername().trim().toString())){  
-				session.setTimeout(0);//设置session立即失效，即将其踢出系统
-            }  
-		}*/
-		
 		UsernamePasswordToken token=new UsernamePasswordToken(sub.getUsername().trim().toString(),sub.getPassword().trim().toString());
-		token.setRememberMe(true);
+		token.setRememberMe("on".equals(sub.getSubject())?true:false);
 		try{
 			subject.login(token);
 			return Result.ok("验证成功！");
-		}catch (IncorrectCredentialsException e) {  
-            error = "用户名/密码错误";
-            return Result.error(error);
-        }catch (AuthenticationException e) {  
-        	error = "用户名/密码错误";
-            return Result.error(error);
+		}catch (IncorrectCredentialsException e) {
+			return Result.error("用户名/密码错误");
+        }catch (AuthenticationException e) {
+        	return Result.error("用户名/密码错误");
         }
+	}
+	
+	@RequestMapping(value="/setLogin",method=RequestMethod.POST)
+	public void setLoginInfo(User user){
+		subSVC.login(user);
 	}
 	
 	/**
@@ -114,8 +110,7 @@ public class CoreCTRL {
 	 */
 	@RequestMapping(value="/loginout",method=RequestMethod.GET)
 	public String loginOut(){
-		Subject subject=SecurityUtils.getSubject();
-		subject.logout();
+		subSVC.logout();
 		return "redirect:/login.do";
 	}
 	

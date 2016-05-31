@@ -82,6 +82,10 @@ public class Subscriber implements Serializable {
 	@Transient
 	private String activity;
 	
+	/** µÇÂ¼ÊÇ·ñ¼Ç×¡ **/
+	@Transient
+	private String subject;
+	
 	public String getId() {
 		return id;
 	}
@@ -237,12 +241,20 @@ public class Subscriber implements Serializable {
 	public void setActivity(String activity) {
 		this.activity = activity;
 	}
+	
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
 
 	public Subscriber(String id, String username, String password, String salt,
 			String nickname, int sex, String age, String email,
 			String phonenum, String roleid, String icon, String ifactivate,
 			String ifspeak, Date lastlogintime, String logindevice,
-			String loginorg, String cookie, String roleName) {
+			String loginorg, String cookie, String roleName,String subject) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -262,6 +274,7 @@ public class Subscriber implements Serializable {
 		this.loginorg = loginorg;
 		this.cookie = cookie;
 		this.roleName = roleName;
+		this.subject = subject;
 	}
 
 	public Subscriber() {
