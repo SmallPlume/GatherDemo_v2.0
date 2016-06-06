@@ -1,9 +1,14 @@
 package test;
 
-public class test {
+import org.junit.Test;
 
-	public static void main(String[] args) {
+public class test {
+	
+	@Test
+	public void insert(){
+		
+		
 		
 	}
-
+	
 }

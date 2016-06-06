@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageHelper;
+import com.modules.activiti.svc.RegisterFlowSVC;
 import com.modules.base.orm.Page;
 import com.modules.base.orm.Result;
 import com.modules.base.orm.TreeNode;
@@ -61,6 +62,10 @@ public class SysCTRL {
 	
 	@Autowired
 	private BaseSVC<Role> baseSVC;
+	
+	//≤‚ ‘
+	@Autowired
+	private RegisterFlowSVC flowSVC;
 	
 	/**
 	 * 
@@ -107,11 +112,12 @@ public class SysCTRL {
 	 * @return
 	 */
 	@RequestMapping(value="viewUser",method = RequestMethod.GET)
-	public String viewUser(String id,Model model){
+	public String viewUser(String id,Model model,User user){
 		if(id==null) return null;
 		Subscriber sub = userSVC.findOne(id);
 		
 		//String abc = (String) redis.get("abc");
+		//flowSVC.findMyPersonalTask(user.getId());
 		
 		model.addAttribute("user", sub);
 		return "/sys/user/ViewUser";
@@ -127,6 +133,7 @@ public class SysCTRL {
 		Result r = null;
 		if(sub.getId()==null || "".equals(sub.getId())){
 			r = userSVC.saveUser(sub);
+			//flowSVC.startProcessInstance(sub.getId(), "Examine");
 		}else{
 			r = userSVC.editUser(sub);
 		}

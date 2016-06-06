@@ -1,0 +1,19 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+	
+	<!-- 工作流生成配置，可删的 -->
+	<bean id="processEngineConfiguration" class="org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration">
+		<!-- 连接数据的配置 -->
+		<property name="jdbcDriver" value="com.mysql.jdbc.Driver"></property>
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/gatherdemo?useUnicode=true&amp;characterEncoding=utf8"></property>
+		<property name="jdbcUsername" value="root"></property>
+		<property name="jdbcPassword" value="root"></property>
+		<!-- 没有表创建表 -->
+		<property name="databaseSchemaUpdate" value="true"></property>
+	</bean>
+
+</beans>

@@ -249,7 +249,7 @@ function toClean(){
 				</tr>
 				<tr>
 					<th>菜单No:</th>
-					<td colspan="3"><input type="text" class="form-text" name="permitno" id="permitno" style="width:80%; height:30px;" /></td>
+					<td colspan="3"><input type="text" class="easyui-validatebox form-text" name="permitno" id="permitno" style="width:80%; height:30px;" data-options="required:true"/></td>
 				</tr>
 				<tr>
 					<th>路径URL:</th>

@@ -53,8 +53,8 @@ $(function(){
 	//删除
 	$("#delete").on("click", function(){
 		var rows = $("#grid").datagrid('getSelections');
-		if(rows.length<0){
-			$.messager.alert("操作提示","选择要删除项！","error");
+		if(rows.length<1){
+			alert("选择要删除项！");
 			return false;
 		}
 		var ids = new Array();
@@ -62,7 +62,7 @@ $(function(){
 			ids[i] = rows[i].id;
 		}
 		$.post("<%=$root %>/sys/log/delt.do",{"ids":JSON.stringify(ids)},function(r){
-			if(r.code<0) return $.messager.alert("操作提示", r.msg,"error");
+			if(r.code<0) return alert(r.msg);
 	        $.messager.show({
                title: "操作提示",
                msg: "删除成功！",
@@ -77,7 +77,7 @@ $(function(){
 	$("#view").on("click",function(){
 		var rows = $("#grid").datagrid('getSelections');
 		if(rows.length!='1'){
-			$.messager.alert("操作提示","请选择一条要查看项！","error");
+			alert("请选择一条要查看项！");
 			return false;
 		}
 		var id = rows[0].id;

@@ -65,4 +65,11 @@ public interface SubscriberDao extends NetStarDao<Subscriber>{
 	 * @param ids
 	 */
 	public void deleteUser(List<String> ids);
+	
+	/**
+	 * 根据角色代号查询用户
+	 * @param roleNo
+	 * @return
+	 */
+	public List<Subscriber> queryByRoleNo(String roleno);
 }

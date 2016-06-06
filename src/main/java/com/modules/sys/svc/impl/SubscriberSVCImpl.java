@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -92,12 +93,12 @@ public class SubscriberSVCImpl implements SubscriberSVC{
 		PasswordHelper passwordHelper = new PasswordHelper();
 		try{
 			sub.setAge(sub.getAge()==""?"0":sub.getAge());
-			sub.setId(null);
+			sub.setId(UUID.randomUUID().toString());
 			sub.setPassword("12345");  //一开始时密码
 			passwordHelper.encryptPassword(sub);
 			sub.setIfactivate("0");  //默认激活
 			sub.setIfspeak("0");  //默认可以开言
-			subDao.insert(sub);
+			subDao.insertSelective(sub);
 			return Result.ok();
 		}catch(Exception e){
 			e.printStackTrace();

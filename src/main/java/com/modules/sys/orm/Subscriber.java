@@ -78,6 +78,10 @@ public class Subscriber implements Serializable {
 	@Transient
 	private String roleName;
 	
+	/** 角色代号 **/
+	@Transient
+	private String roleno;
+	
 	/** 是否在线 **/
 	@Transient
 	private String activity;
@@ -248,6 +252,14 @@ public class Subscriber implements Serializable {
 
 	public void setSubject(String subject) {
 		this.subject = subject;
+	}
+	
+	public String getRoleno() {
+		return roleno;
+	}
+
+	public void setRoleno(String roleno) {
+		this.roleno = roleno;
 	}
 
 	public Subscriber(String id, String username, String password, String salt,
