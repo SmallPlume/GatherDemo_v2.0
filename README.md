@@ -7,3 +7,4 @@
 - Mapper 4.1.0
 - MySQL 5.6
 - Maven 3.1.0
+- activiti 5.20.0
