@@ -12,6 +12,7 @@
   <properties>
   	<spring-version>4.1.7.RELEASE</spring-version>
   	<shiro.version>1.2.4</shiro.version>
+  	<activiti.version>5.20.0</activiti.version>
   </properties>
   
   <dependencies>
@@ -21,18 +22,6 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-    
-    <!-- activiti 工作流 -->
-	<dependency>
-	    <groupId>org.activiti</groupId>
-	    <artifactId>activiti-engine</artifactId>
-	    <version>5.20.0</version>
-	</dependency>
-	<dependency>
-	    <groupId>org.activiti</groupId>
-	    <artifactId>activiti-spring</artifactId>
-	    <version>5.20.0</version>
-	</dependency>
     
     <!-- 添加Servlet支持 -->
   	<dependency>
@@ -297,6 +286,18 @@
 		<groupId>org.springframework.data</groupId>
 		<artifactId>spring-data-redis</artifactId>
 		<version>1.7.1.RELEASE</version>
+	</dependency>
+	
+	<!-- activiti 工作流 -->
+	<dependency>
+	    <groupId>org.activiti</groupId>
+	    <artifactId>activiti-engine</artifactId>
+	    <version>${activiti.version}</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.activiti</groupId>
+	    <artifactId>activiti-spring</artifactId>
+	    <version>${activiti.version}</version>
 	</dependency>
 	
   </dependencies>
