@@ -1,7 +1,6 @@
 package com.modules.sys.helper;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.eis.SessionDAO;

@@ -1,21 +1,18 @@
 package com.modules.activiti.ctrl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.github.pagehelper.PageHelper;
 import com.modules.activiti.orm.Flow;
 import com.modules.activiti.svc.RegisterFlowSVC;
 import com.modules.base.orm.Page;
 import com.modules.base.orm.User;
 
 @Controller
-@RequestMapping("/flow/")
+@RequestMapping("/sys/flow/")
 public class FlowCTRL {
 
 	@Autowired

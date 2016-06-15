@@ -120,7 +120,7 @@
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<!-- Shiro的核心安全接口,这个属性是必须的 -->
 		<property name="securityManager" ref="securityManager" />
-		<!-- 身份认证失败，则跳转到登录页面的配置 -->
+		<!-- 登录页 -->
 		<property name="loginUrl" value="/login.do" />
 		<!-- 权限认证失败，则跳转到指定页面 -->
 		<property name="unauthorizedUrl" value="/unauthor.do" />
@@ -146,7 +146,9 @@
 				/js/**=anon
 				/ico/**=anon
 				/images/**=anon
+				/ueditor/**=anon
 				<!-- index不需要验证 -->
+				/=anon
 				/index=anon
 				/login = anon
                 /logout = logout

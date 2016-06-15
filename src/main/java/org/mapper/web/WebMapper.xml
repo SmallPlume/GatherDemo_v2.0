@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.modules.web.dao.ContextDao">
+	
+	<!-- 查询父节点 -->
+	<select id="queryList" resultType="com.modules.web.orm.Context">
+		select c.id,c.createtime,c.edittime,c.title,c.tag,c.context,c.ifspeak,u.nickname as username from w_context c left join s_user u on c.userid = u.id
+	</select>
+	
+</mapper>

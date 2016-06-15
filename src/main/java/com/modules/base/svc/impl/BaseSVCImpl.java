@@ -5,7 +5,6 @@ import java.lang.reflect.Type;
 
 import org.springframework.stereotype.Service;
 
-import com.modules.base.dao.BaseDao;
 import com.modules.base.orm.Result;
 import com.modules.base.svc.BaseSVC;
 import com.modules.sys.util.NetStarDao;

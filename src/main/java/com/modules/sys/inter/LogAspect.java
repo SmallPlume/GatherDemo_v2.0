@@ -6,8 +6,6 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,10 +14,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.modules.base.orm.User;
 import com.modules.sys.dao.LogDao;
 import com.modules.sys.orm.Log;
-import com.modules.sys.orm.Subscriber;
 
 @Service
 @Aspect
@@ -171,11 +167,6 @@ public class LogAspect {
     private void autoFinish(JoinPoint joinPoint,String handle){
     	
     	String username =  (String) SecurityUtils.getSubject().getPrincipal();
-    	
-    	/*Subject subject = SecurityUtils.getSubject();
-		Session session = subject.getSession();
-		Subscriber user = (Subscriber) session.getAttribute(SESSION_KEY);*/
-    	
     	Log log = new Log();
     	log.setUsername(username==null?" ß»•’ ∫≈–≈œ¢":username);
     	log.setCreatedate(new Date()); 

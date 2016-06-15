@@ -87,7 +87,7 @@ $(function(){
 	$("#update").on("click", function(){
 		var rows = $("#grid").datagrid('getSelections');
 		if(rows.length!="1"){
-			$.messager.alert("操作提示","只能选择一条！","error");
+			alert("请选择一条需要操作的记录！");
 			return false;
 		}
 		show({uri:'<%=$root %>/sys/addUser.do?id='+rows[0].id,title:'修改用户',iconCls:'icon-edit',width:450,height:600,options:{
@@ -101,7 +101,7 @@ $(function(){
 	$("#view").on("click",function(){
 		var rows = $("#grid").datagrid('getSelections');
 		if(rows.length != '1'){
-			$.messager.alert("操作提示","选择一条！","error");
+			alert("请选择一条需要操作的记录！");
 			return false;
 		}
 		viewDetail(rows[0].id);
@@ -111,7 +111,7 @@ $(function(){
 	$("#delete").on("click", function(){
 		var rows = $("#grid").datagrid('getSelections');
 		if(rows.length < 0){
-			$.messager.alert("操作提示","选择一条！","error");
+			alert("请选择需要操作的记录！");
 			return false;
 		}
 		var gnl=confirm("确定要删除?"); if(gnl==false) return false;
@@ -137,7 +137,7 @@ $(function(){
 	$("#allotRole").on("click",function(){
 		var rows = $("#grid").datagrid('getSelections');
 		if(rows.length!="1"){
-			$.messager.alert("操作提示","只能选择一条！","error");
+			alert("请选择一条需要操作的记录！");
 			return false;
 		}
 		var id = rows[0].id;
@@ -152,7 +152,7 @@ $(function(){
 	$("#refreshPass").on("click",function(){
 		var rows = $("#grid").datagrid('getSelections');
 		if(rows.length<'1'){
-			$.messager.alert("操作提示","请选择！","error");
+			alert("请选择一条需要操作的记录！");
 			return false;
 		}
 		var ids = new Array();

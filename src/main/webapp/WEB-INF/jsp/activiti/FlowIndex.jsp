@@ -9,7 +9,7 @@
 <script type="text/javascript">
 $(function(){
 	$('#grid').datagrid({
-		url:'<%=$root %>/flow/queryList.do',
+		url:'<%=$root %>/sys/flow/queryList.do',
 		height:$("#body").height()-$('#search_area').height()-5,
 		width:$("#body").width(),
 		idField:'id',

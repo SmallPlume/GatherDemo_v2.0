@@ -7,8 +7,10 @@ import java.util.UUID;
 
 import net.sf.json.JSONArray;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -73,8 +75,6 @@ public class SysCTRL {
 	 */
 	@RequestMapping(value = "userIndex", method = RequestMethod.GET)
 	public String userIndex(){
-		//redis缓存
-		//redis.set("abc", "中国移动10086");
 		return "/sys/user/UserIndex";
 	}
 	
@@ -115,10 +115,7 @@ public class SysCTRL {
 	public String viewUser(String id,Model model,User user){
 		if(id==null) return null;
 		Subscriber sub = userSVC.findOne(id);
-		
-		//String abc = (String) redis.get("abc");
 		//flowSVC.findMyPersonalTask(user.getId());
-		
 		model.addAttribute("user", sub);
 		return "/sys/user/ViewUser";
 	}
@@ -175,11 +172,13 @@ public class SysCTRL {
 	@RequestMapping(value="user/allotRole",method = RequestMethod.POST)
 	public @ResponseBody Result allotRole(String id, String roleid){
 		Result r = userSVC.editUserRole(id, roleid);
+		//清除redis
+		removeJedis();
 		return r;
 	}
 	
 	/**
-	 * 
+	 * 用户列表
 	 * @return
 	 */
 	@RequestMapping(value="userList",method = RequestMethod.POST)
@@ -350,6 +349,7 @@ public class SysCTRL {
 	@RequestMapping(value="role/savePermit",method = RequestMethod.POST)
 	public @ResponseBody Result savePermit(String rid,String pids){
 		Result r = permitSVC.savePermit(rid, pids);
+		removeJedis();
 		return r;
 	}
 	
@@ -446,6 +446,12 @@ public class SysCTRL {
 		Log log = logSVC.findOne(id);
 		model.addAttribute("log", log);
 		return "/sys/log/ViewLog";
+	}
+	
+	protected void removeJedis(){
+		Subject subject = SecurityUtils.getSubject();
+		//从redis删除相关菜单信息
+		redis.remove(subject.getSession().getId().toString());
 	}
 	
 }
