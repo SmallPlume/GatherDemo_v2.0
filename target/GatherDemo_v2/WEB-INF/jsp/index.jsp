@@ -1,158 +1,167 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@page import="java.text.SimpleDateFormat"%>  
+	pageEncoding="UTF-8"%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-<%@include file="../jsp/base/base.jsp"%>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="<%=$root %>/js/JQuery-zTree-v3.5.15/css/zTreeStyle/zTreeStyle.css">
-<script type="text/javascript" src="<%=$root %>/js/JQuery-zTree-v3.5.15/jquery.ztree.all-3.5.min.js"></script>
-<title>后台管理系统模板</title>
-<%-- <script type="text/javascript" src="<%=$root %>/js/index.js"></script> --%>
+<%@include file="../jsp/base/web.jsp"%>
+<title>黑 &amp; 白</title>
+<!-- meta -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body class="easyui-layout">
-<!-- 头部标题 -->
-<div data-options="region:'north',border:false" style="height:60px; padding:5px; background:#F3F3F3"> 
-	<a href="javascript:void(0)"><span class="northTitle">EasyUI框架</span></a>
-    <div class="loginInfo">
-		<span>登录用户:</span>
-		<a class="easyui-menubutton" data-options="menu:'#mm',iconCls:'icon-user'" href="javascript:void(0);"><shiro:principal/></a>
-		<a href="#" class="easyui-menubutton" data-options="menu:'#mm1',iconCls:'icon-help'" href="javascript:void(0);" onclick="addTabs('menu1','user.do','icon-save');">Help</a>
-		<a href="#" class="easyui-linkbutton" data-options="plain:true" onclick="ifExist();">安全退出</a>
+
+<body>
+	<div class="container">
+		<header id="site-header">
+			<div class="row">
+				<div class="col-md-4 col-sm-5 col-xs-8">
+					<div class="logo">
+						<h1>
+							<a href="index.html"><b>黑</b> &amp; 白</a>
+						</h1>
+					</div>
+				</div>
+				<!-- col-md-4 -->
+				<div class="col-md-8 col-sm-7 col-xs-4">
+					<nav class="main-nav" role="navigation">
+						<div class="navbar-header">
+							<button type="button" id="trigger-overlay" class="navbar-toggle">
+								<span class="ion-navicon"></span>
+							</button>
+						</div>
+
+						<div class="collapse navbar-collapse"
+							id="bs-example-navbar-collapse-1">
+							<ul class="nav navbar-nav navbar-right">
+								<li class="cl-effect-11"><a href="index.html"
+									data-hover="Home">Home</a></li>
+								<li class="cl-effect-11"><a href="full-width.html"
+									data-hover="Blog">Blog</a></li>
+								<li class="cl-effect-11"><a href="about.html"
+									data-hover="About">About</a></li>
+								<li class="cl-effect-11"><a href="<%=$root %>/contact.do"
+									data-hover="Publications">Publications</a></li>
+							</ul>
+						</div>
+						<!-- /.navbar-collapse -->
+					</nav>
+					<div id="header-search-box">
+						<a id="search-menu" href="#"><span id="search-icon"
+							class="ion-ios-search-strong"></span></a>
+						<div id="search-form" class="search-form">
+							<form role="search" method="get" id="searchform" action="#">
+								<input type="search" placeholder="Search" required>
+								<button type="submit">
+									<span class="ion-ios-search-strong"></span>
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+				<!-- col-md-8 -->
+			</div>
+		</header>
 	</div>
-	<div id="mm" style="width:100px;">
-        <div>编辑</div>
-        <div>修改密码</div>
-    </div>
-    <div id="mm1" style="width:100px;">
-        <div><a class="easyui-menubutton" data-options="iconCls:'icon-help'" href="javascript:void(0);" onclick="addTabs('menu1','user.do','icon-save');">Help</a></div>
-        <div>Update</div>
-        <div>About</div>
-    </div>
-</div>
+	<div class="copyrights">
+		Collect from <a href="http://www.cssmoban.com/">网页模板</a>
+	</div>
 
-<!-- 左侧导航 -->
-<div data-options="region:'west',split:true,title:'导航菜单', fit:false" style="width:200px;"> 
-  <ul id="menuTree" class="ztree">
-  </ul>
-</div>
+	<div class="content-body">
+		<div class="container">
+			<div class="row">
+				<main class="col-md-8">
+				<c:set var="end" value="..."></c:set>
+				<c:forEach var="blog" items="${blog }" varStatus="status">
+					<article class="post post-"+${status.index + 1}>
+						<header class="entry-header">
+						<h1 class="entry-title">
+							<a href="<%=$root %>/${blog.id}">${blog.title }</a>
+						</h1>
+						<div class="entry-meta">
+							<span class="post-category"><a href="#">${blog.username }</a></span>
+							<span class="post-date"><a href="#"><time class="entry-date" datetime="${blog.createtime }">${blog.createtime }</time></a></span>
+							<span class="post-author"><a href="#">${blog.groupname }</a></span>
+							<span class="comments-link"><a href="#">${blog.tag }</a></span>
+						</div>
+						<div class="entry-content clearfix">
+							<p>${fn:length(blog.context)<500?blog.context:fn:substring(blog.context,0,500)}</p>
+							<div class="read-more cl-effect-14">
+							<a href="#" class="more-link">Continue reading <span
+								class="meta-nav">→</span></a>
+						</div>
+						</div>
+					</article>
+				</c:forEach>
+				
+				<div class="read-more cl-effect-14" style="border:1px #cccccc solid; background-color:#cccccc;">
+					<a href="#" class="more-link">More<span class="meta-nav">→</span></a>
+				</div>
+				
+				</main>
+				<aside class="col-md-4">
+					<div class="widget widget-recent-posts">
+						<h3 class="widget-title">Recent Posts</h3>
+						<ul>
+							<li><a href="#">Adaptive Vs. Responsive Layouts And
+									Optimal Text Readability</a></li>
+							<li><a href="#">Web Design is 95% Typography</a></li>
+							<li><a href="#">Paper by FiftyThree</a></li>
+						</ul>
+					</div>
+					<div class="widget widget-archives">
+						<h3 class="widget-title">Archives</h3>
+						<ul>
+							<li><a href="#">November 2014</a></li>
+							<li><a href="#">September 2014</a></li>
+							<li><a href="#">January 2013</a></li>
+						</ul>
+					</div>
 
-<!-- 页脚信息 -->
-<div data-options="region:'south',border:false" style="height:20px; background:#F3F3F3; padding:2px; vertical-align:middle;">
-	<span id="sysVersion">系统版本：V1.0</span>
-    <span id="nowTime"></span>
-</div>
+					<div class="widget widget-category">
+						<h3 class="widget-title">Category</h3>
+						<ul>
+							<li><a href="#">Web Design</a></li>
+							<li><a href="#">Web Development</a></li>
+							<li><a href="#">SEO</a></li>
+						</ul>
+					</div>
+				</aside>
+			</div>
+		</div>
+	</div>
+	<footer id="site-footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<p class="copyright">
+						&copy; 2014 ThemeWagon.com -More Templates <a
+							href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a>
+						- Collect from <a href="http://www.cssmoban.com/" title="网页模板"
+							target="_blank">网页模板</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</footer>
 
-<!-- 内容tabs -->
-<div id="center" data-options="region:'center'">
-  <div id="tabs" class="easyui-tabs">
-    <div title="首页" style="padding:5px;display:block;" >
-      <p>模板说明：</p>
-        <ul>
-          <li>主界面使用 easyui1.3.5</li>
-          <li>导航树使用 JQuery-zTree-v3.5.15</li>
-        </ul>
-      <p>特性说明：</p>
-        <ul>
-          <li>所有弹出框均显示在顶级父窗口</li>
-          <li>修改easyui window拖动，移动时显示窗口而不显示虚线框，并限制拖动范围</li>
-        </ul>
-      <p>测试EhCache页面缓存</p>    
-      <%    
-	    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
-	    out.print(format.format(new Date()));    
-	    System.out.println(System.currentTimeMillis());    
-	  %>
-    </div>
-  </div>
-</div>
+	<!-- Mobile Menu -->
+	<div class="overlay overlay-hugeinc">
+		<button type="button" class="overlay-close">
+			<span class="ion-ios-close-empty"></span>
+		</button>
+		<nav>
+			<ul>
+				<li><a href="<%=$root %>/">首页</a></li>
+				<li><a href="full-width.html">博客</a></li>
+				<li><a href="about.html">关于</a></li>
+				<li><a href="<%=$root %>/contact.do">发布博客</a></li>
+			</ul>
+		</nav>
+	</div>
 
-<!-- 用于弹出框 -->
-<div id="parent_win"></div>
-<script type="text/javascript">
-//系统时间显示
-setInterval("document.getElementById('nowTime').innerHTML=new Date().toLocaleString()+' 星期'+'日一二三四五六'.charAt(new Date().getDay());",1000);
-var setting = {
-data: {
-	simpleData: {
-		enable: true
-	}
-},
-view: {
-	selectedMulti: false
-},
-callback: {
-	onClick:function(e, id, node){
-		var zTree = $.fn.zTree.getZTreeObj("menuTree");
-		if(node.isParent) {
-			zTree.expandNode();
-		} else {
-			addTabs(node.name, node.file);
-		}
-	}
-}
-};
-
-$(function() {
-	var zNodes = ${module};
-	$.fn.zTree.init($("#menuTree"), setting, zNodes);
-	var zTree = $.fn.zTree.getZTreeObj("menuTree");
-
-	//中间部分tab
-	$('#tabs').tabs({  
-		border:false,
-		fit:true,
-		onSelect: function(title, index){
-			var treeNode = zTree.getNodeByParam("name", title, null);
-			zTree.selectNode(treeNode);
-		}
-	}); 
-
-	$('.index_panel').panel({
-	    width:300,  
-	    height:200,  
-	    closable:true,
-	    minimizable:true,
-	    title:'My Panel'
-	});
-
-});
-
-//添加一个选项卡面板 
-function addTabs(title, url, icon){
-	if(!$('#tabs').tabs('exists', title)){
-		$('#tabs').tabs('add',{  
-			title:title,  
-			content:'<iframe src="'+url+'" frameBorder="0" border="0" scrolling="no" style="width: 100%; height: 100%;"/>',  
-			closable:true
-		});
-	} else {
-		$('#tabs').tabs('select', title);
-	}
-}
-
-function ifExist(){
-	 $.messager.confirm("操作提示", "您确定要执行操作吗？", function(data) {
-         if(data) {
-        	$.get("<%=$root %>/loginout.do",function(){
-        		location="<%=$root %>/login.do";
-        	});
-         }
-     });
-}
-
-function submitForm(){
-	var params = $('#form').serializeArray();
-	$.post("<%=$root %>/sys/saveUser.do", params,function(r){
-	}, "json");
-}
-
-function abc(id){
-	alert("id======"+id);
-}
-</script>
+	<script src="<%=$root %>/js/blog/script.js"></script>
 
 </body>
 </html>

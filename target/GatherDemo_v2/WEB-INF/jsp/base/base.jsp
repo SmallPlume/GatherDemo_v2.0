@@ -11,6 +11,8 @@
 <meta name="renderer" content="webkit">
 <script type="text/javascript">
 var $root = "<%=$root %>";
+var me = '<%=session.getAttribute("me")%>';
+var base = '${base}';
 </script>
 <!-- EasyUI Css -->
 <link rel="stylesheet" type="text/css" href="<%=$root %>/css/default.css"></link>

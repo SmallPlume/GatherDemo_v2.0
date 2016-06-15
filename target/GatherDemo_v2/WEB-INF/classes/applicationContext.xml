@@ -21,7 +21,7 @@
     </context:component-scan>
     
 	<!-- 获取数据库连接信息 -->
-	<context:property-placeholder location="classpath:database.properties" ignore-unresolvable="true"/>
+	<context:property-placeholder location="classpath:database/database.properties" ignore-unresolvable="true"/>
 
 	<!-- 定义数据源 -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -42,7 +42,7 @@
 			</list>
 		</property>
 		<!-- mybatis配置文件 -->
-		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+		<property name="configLocation" value="classpath:mybatis/mybatis-config.xml"></property>
 	</bean>
 
 	<!-- 通用mapper配置 -->
@@ -107,6 +107,36 @@
 		</property>
 	</bean>
 	
+	<!-- ======================================== activiti 工作流===================================== -->
+	<!-- 加载activiti引擎 -->
+	<bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+		<property name="processEngineConfiguration" ref="processEngineConfiguration" />
+	</bean>
+	<!-- dataSource为了自己已经定义好的数据源，transactionManager为自己已经定义好的事务管理器 -->
+	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+		<property name="dataSource" ref="dataSource" />
+		<property name="transactionManager" ref="transactionManager" />
+		<!-- 没有表创建表 -->
+		<property name="databaseSchemaUpdate" value="true"></property>
+		<property name="jobExecutorActivate" value="false" />
+	</bean>
+	<!-- activiti的各种服务接口 -->
+	<bean id="identityService" factory-bean="processEngine"
+		factory-method="getIdentityService" />
+	<bean id="formService" factory-bean="processEngine"
+		factory-method="getFormService" />
+	<bean id="repositoryService" factory-bean="processEngine"
+		factory-method="getRepositoryService" />
+	<bean id="runtimeService" factory-bean="processEngine"
+		factory-method="getRuntimeService" />
+	<bean id="taskService" factory-bean="processEngine"
+		factory-method="getTaskService" />
+	<bean id="historyService" factory-bean="processEngine"
+		factory-method="getHistoryService" />
+	<bean id="managementService" factory-bean="processEngine"
+		factory-method="getManagementService" />
+	
+	<!-- =====================================关联文件============================================= -->
 	<import resource="spring-shiro.xml"/>
 	<import resource="spring-redis.xml"/>
 </beans>

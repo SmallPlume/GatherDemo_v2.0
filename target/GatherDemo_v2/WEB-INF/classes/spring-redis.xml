@@ -13,7 +13,7 @@
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 	
 	<!-- 读取配置文件信息-->
-	<context:property-placeholder location="classpath:redis.properties" ignore-unresolvable="true"/>
+	<context:property-placeholder location="classpath:cache/redis.properties" ignore-unresolvable="true"/>
 	
 	<!-- 连接池的配置信息 -->
 	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">

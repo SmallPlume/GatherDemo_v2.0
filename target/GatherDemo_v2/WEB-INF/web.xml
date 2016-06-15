@@ -23,6 +23,9 @@
 		<filter-name>shiroFilter</filter-name>  
         <url-pattern>/*</url-pattern>  
 	</filter-mapping>
+	<session-config>
+	     <tracking-mode>COOKIE</tracking-mode>
+	</session-config>
 
 	<!-- Spring配置文件 -->
 	<context-param>
@@ -36,10 +39,6 @@
 		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
 	</listener>
 	
-	<listener>
-    	<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
-  	</listener>
-  	
   	<!-- 缓存、gzip压缩核心过滤器 -->
 	<filter>
 		<filter-name>PageEhCacheFilter</filter-name>
