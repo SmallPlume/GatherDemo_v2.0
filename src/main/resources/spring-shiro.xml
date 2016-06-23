@@ -117,7 +117,7 @@
 	
 	<!-- ==========================================web相关========================================== -->
 	<!-- Shiro过滤器 id要跟web.xml一致 -->
-	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+	<bean id="shiroFilter" class="com.modules.sys.realm.webcookie.MyShiroFilterFactoryBean">
 		<!-- Shiro的核心安全接口,这个属性是必须的 -->
 		<property name="securityManager" ref="securityManager" />
 		<!-- 登录页 -->
