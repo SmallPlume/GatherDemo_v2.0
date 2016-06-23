@@ -50,9 +50,10 @@
                             if (data.code == '-1') {
                                 $("#msg").html(data.msg);
                             } else {
+                            	//日志记录登录信息
+                                $.post('<%=$root %>/setLogin.do',function(v){});
+                              //跳转到首页
                                 location.href = "<%=$root %>/";
-                                //日志记录登录信息
-                                $.post('<%=$root %>/setLogin.do');
                             }
                         },
                         error: function(data) {

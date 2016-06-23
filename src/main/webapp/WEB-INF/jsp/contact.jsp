@@ -35,7 +35,7 @@
 						<div class="collapse navbar-collapse"
 							id="bs-example-navbar-collapse-1">
 							<ul class="nav navbar-nav navbar-right">
-								<li class="cl-effect-11"><a href="index.html"
+								<li class="cl-effect-11"><a href="<%=$root %>/"
 									data-hover="Home">Home</a></li>
 								<li class="cl-effect-11"><a href="full-width.html"
 									data-hover="Blog">Blog</a></li>

@@ -14,8 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageHelper;
+import com.modules.base.orm.Result;
 import com.modules.base.orm.User;
 import com.modules.sys.constant.ModuleType;
 import com.modules.sys.orm.Role;
@@ -57,7 +59,6 @@ public class CoreCTRL {
 	 */
 	@RequestMapping(value="/",method=RequestMethod.GET)
 	public String index(Model model){
-		
 		return "/index";
 	}
 	
@@ -115,37 +116,14 @@ public class CoreCTRL {
 	}
 	
 	/**
-	 * 登陆
+	 * 获取登录日志
 	 * @param user
-	 * @param request
 	 * @return
-	 * @throws IOException 
 	 */
-	/*@RequestMapping(value="/login",method=RequestMethod.POST)
-	public String login(Subscriber sub,HttpServletRequest request){
-		Subject subject=SecurityUtils.getSubject();
-		UsernamePasswordToken token=new UsernamePasswordToken(sub.getUsername().trim().toString(),sub.getPassword().trim().toString());
-		token.setRememberMe("on".equals(sub.getSubject())?true:false);
-		try{
-			subject.login(token);
-			return Result.ok("验证成功！");
-		}catch (IncorrectCredentialsException e) {
-			return Result.error("用户名/密码错误");
-        }catch (AuthenticationException e) {
-        	return Result.error("用户名/密码错误");
-        }
-		String url = WebUtils.getSavedRequest(request).getRequestUrl();
-		if(url==null || "".equals(url)){
-			return null;
-		}else{
-			return "redirect:"+url;
-		}
-		
-	}*/
-	
 	@RequestMapping(value="/setLogin",method=RequestMethod.POST)
-	public void setLoginInfo(User user){
+	public @ResponseBody Result setLoginInfo(User user){
 		subSVC.login(user);
+		return Result.ok();
 	}
 	
 	/**
