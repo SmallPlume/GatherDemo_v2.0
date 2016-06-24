@@ -8,3 +8,4 @@
 - MySQL 5.6
 - Maven 3.1.0
 - activiti 5.20.0
+- redis 2.8
