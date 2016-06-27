@@ -17,8 +17,6 @@ $(function(){
 	});
 	if('${item.id}'!='') $('#username').textbox({readonly:true});
 	if('${item.sex}'==='') $('#sex').combobox('setValue','0');
-	
-	
 });
 
 //保存

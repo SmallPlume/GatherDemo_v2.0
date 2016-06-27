@@ -122,6 +122,8 @@
 		<property name="securityManager" ref="securityManager" />
 		<!-- 登录页 -->
 		<property name="loginUrl" value="/login.do" />
+		<!-- 登录成功跳转页面 -->
+		<!-- <property name="successUrl" value="/sys/index.do" /> -->
 		<!-- 权限认证失败，则跳转到指定页面 -->
 		<property name="unauthorizedUrl" value="/unauthor.do" />
 		<!-- 自定义Roles Filter -->
@@ -147,6 +149,8 @@
 				/ico/**=anon
 				/images/**=anon
 				/ueditor/**=anon
+				/**/uploadfile/**=anon
+				/img/**=anon
 				<!-- index不需要验证 -->
 				/=anon
 				/index=anon
