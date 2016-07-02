@@ -27,6 +27,7 @@ import com.modules.sys.svc.RoleSVC;
 import com.modules.sys.svc.SubscriberSVC;
 import com.modules.sys.util.RedisUtil;
 import com.modules.web.svc.ContextSVC;
+import com.util.StringUtils;
 
 @Controller
 public class CoreCTRL {
@@ -52,6 +53,9 @@ public class CoreCTRL {
 	public final static String SESSION_KEY = "SESSION_USER";
 	
 	public final static String SESSION_MODULE = "SESSION_MODULE";
+	
+	//登录过期时间
+	public final long outTime = 3600;
 	
 	/**
 	 * 首页
@@ -91,14 +95,15 @@ public class CoreCTRL {
 		Subject subject = SecurityUtils.getSubject();
 		if(subject.isAuthenticated()==true){
 			//菜单
-			String menu = (String) redis.get(subject.getSession().getId().toString());
+			String key = subject.getSession().getId().toString()+"-menu";
+			String menu = (String) redis.get(key);
 			if(menu==null){
 				if("admin".equals(subject.getPrincipal().toString())){
 					menu = permissionSVC.queryPermit(null, ModuleType.menu.type).toString();
 				}else{
 					menu = permissionSVC.queryPermit(subject.getPrincipal().toString(), ModuleType.menu.type).toString();
 				}
-				redis.set(subject.getSession().getId().toString(), menu);
+				redis.set(key, menu, outTime);
 			}
 			model.addAttribute("module", menu);
 			return "/sys/index";

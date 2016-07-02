@@ -43,5 +43,23 @@
 		timeToIdleSeconds="900"
 		timeToLiveSeconds="1800"
 		memoryStoreEvictionPolicy="LFU" />
+		
+	<cache name="sessioncache"
+       maxElementsInMemory="10000"
+       overflowToDisk="true"
+       eternal="true"
+       timeToLiveSeconds="0"
+       timeToIdleSeconds="0"
+       diskPersistent="true"
+       diskExpiryThreadIntervalSeconds="600"/>
+       
+    <cache name="shirocache"
+       maxElementsInMemory="10000"
+       overflowToDisk="true"
+       eternal="true"
+       timeToLiveSeconds="0"
+       timeToIdleSeconds="0"
+       diskPersistent="true"
+       diskExpiryThreadIntervalSeconds="600"/>
         
 </ehcache>

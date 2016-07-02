@@ -13,46 +13,43 @@
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
 	<!-- ========================================== 会话管理 ========================================== -->
-	<!-- 会话ID生成器 -->
-	<bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator" />
-	
-	<!-- 会话DAO -->
-	<bean id="sessionDAO"
-		class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
-		<!-- 这个属性设置Session列表在Cache中的ID，对应这个ID就可以在cache中查找出所有的Session -->
-		<property name="activeSessionsCacheName" value="shiro-activeSessionCache" />
-		<property name="sessionIdGenerator" ref="sessionIdGenerator"></property>
+	<!-- 会话验证调度器 -->
+	<bean id="sessionValidationScheduler" class="org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler">
+		 <!-- 间隔多少时间检查，不配置是60分钟 -->
+	     <property name="interval" value="18000000"/>
+	     <property name="sessionManager" ref="sessionManager"/>
 	</bean>
 	
-	<!-- 会话验证调度器 -->
-	<bean id="sessionValidationScheduler"
-		class="org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler">
-		<property name="interval" value="1500000" />
-		<!-- 设置调度时间间隔，单位毫秒，默认就是1小时 -->
-		<property name="sessionManager" ref="sessionManager" />
+	<bean id="sessionDAO" class="com.modules.sys.realm.sessionDao.RedisSessionDao">
+		<property name="redis" ref="redisUtil" />
+        <property name="timeToLiveSeconds" value="1800"/>
 	</bean>
 	
 	<!-- Session 管理器 -->
-	<bean id="sessionManager"
-		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-		<!-- 设置全局会话超时时间，默认30分钟，即如果30分钟内没有访问会话将过期 -->
-		<property name="globalSessionTimeout" value="1200000" />
+	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<!-- 设置全局会话超时时间，默认20分钟，即如果20分钟内没有访问会话将过期 -->
+		<property name="globalSessionTimeout" value="1800000" />
+		<property name="sessionDAO" ref="sessionDAO" />
+		<!-- 间隔多少时间检查，不配置是60分钟 -->
+		<property name="sessionValidationScheduler" ref="sessionValidationScheduler"></property>
+		<!-- 是否开启 检测，默认开启 -->
+		<property name="sessionValidationSchedulerEnabled" value="true"/>
 		<!-- 删除失效的session -->
 		<property name="deleteInvalidSessions" value="true" />
-		<property name="sessionValidationSchedulerEnabled" value="true" />
-		<property name="sessionValidationScheduler" ref="sessionValidationScheduler" />
-		<property name="sessionIdCookieEnabled" value="true" />
-		<!-- <property name="sessionIdCookie" ref="sessionIdCookie" /> -->
-		<property name="sessionDAO" ref="sessionDAO" />
+		<!-- 会话Cookie模板 -->
+		<property name="sessionIdCookie" ref="sessionIdCookie"/>
 	</bean>
 	
-	<!-- 会话Cookie模板会话Cookie模板,sessionIdCookie:maxAge=-1表示浏览器关闭时失效此Cookie ; rememberMeCookie:即记住我的Cookie,保存时长30天 -->
+	<!-- 会话Cookie模板会话Cookie模板  -->
     <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+    	<!-- cookie的name -->
         <constructor-arg value="sid"/>
         <property name="httpOnly" value="true"/>
+        <!-- maxAge=-1表示浏览器关闭时失效此Cookie -->
         <property name="maxAge" value="-1"/>
     </bean>
     
+    <!-- 用户信息 记住我 -->
 	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
 		<constructor-arg value="rememberMe" />
 		<property name="httpOnly" value="true" />
@@ -62,8 +59,8 @@
 	
 	<!-- rememberMe管理器 -->
 	<bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
-		<property name="cipherKey"
-			value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}" />
+		<!-- rememberMe cookie加密的密钥 建议每个项目都不一样 默认AES算法 密钥长度（128 256 512 位）-->
+		<property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}" />
 		<property name="cookie" ref="rememberMeCookie" />
 	</bean>
 	

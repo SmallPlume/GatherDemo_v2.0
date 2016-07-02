@@ -36,7 +36,15 @@ function FormatDate (strTime) {
 
 $(function(){
 	var time = FormatDate("${user.lastlogintime }");
-	$("#lastlogintime").html(time);
+	$("#lastlogintime").html(time==null?'':time);
+	
+	//图片显示
+	var img = '${user.icon}';
+	if(img==null || img===''){
+		$('#headImg').attr('src','<%=$root %>/images/head.png');
+	}else{
+		$('#headImg').attr('src','<%=$root %>/file/icon/${user.icon}.do');
+	}
 });
 </script>
 </head>
@@ -48,7 +56,7 @@ $(function(){
 			<th>昵称:</th>
 			<td>${user.nickname }</td>
 			<td rowspan="3">
-				<img src="" />
+				<img id="headImg" style="width:150px; height:150px;"/>
 			</td>
 		</tr>
 		<tr>

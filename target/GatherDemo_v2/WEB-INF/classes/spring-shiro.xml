@@ -14,36 +14,50 @@
 
 	<!-- ========================================== 会话管理 ========================================== -->
 	<!-- 会话ID生成器 -->
-	<bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator" />
+	<!-- <bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator" /> -->
 	
 	<!-- 会话DAO -->
-	<bean id="sessionDAO"
+	<!-- <bean id="sessionDAO"
 		class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
-		<!-- 这个属性设置Session列表在Cache中的ID，对应这个ID就可以在cache中查找出所有的Session -->
+		这个属性设置Session列表在Cache中的ID，对应这个ID就可以在cache中查找出所有的Session
 		<property name="activeSessionsCacheName" value="shiro-activeSessionCache" />
 		<property name="sessionIdGenerator" ref="sessionIdGenerator"></property>
+	</bean> -->
+	<!-- 方法一 -->
+	<!-- <bean id="sessionDAO" class="com.modules.sys.realm.sessionDao.RedisSessionDao">
+		<constructor-arg ref="redisTemplate" />
+		<constructor-arg value="${redis.expireTime}" />
+	</bean> -->
+	
+	<!-- 方法二 -->
+	<bean id="sessionDAO" class="com.modules.sys.realm.sessionDao.RedisSessionDao">
+		<property name="redis" ref="redisUtil" />
+        <property name="timeToLiveSeconds" value="1800"/>
 	</bean>
 	
+	
 	<!-- 会话验证调度器 -->
-	<bean id="sessionValidationScheduler"
+	<!-- <bean id="sessionValidationScheduler"
 		class="org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler">
-		<property name="interval" value="1500000" />
-		<!-- 设置调度时间间隔，单位毫秒，默认就是1小时 -->
+		20分钟
+		<property name="interval" value="1200000" />
+		设置调度时间间隔，单位毫秒，默认就是1小时
 		<property name="sessionManager" ref="sessionManager" />
-	</bean>
+	</bean> -->
 	
 	<!-- Session 管理器 -->
 	<bean id="sessionManager"
 		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-		<!-- 设置全局会话超时时间，默认30分钟，即如果30分钟内没有访问会话将过期 -->
+		<!-- 设置全局会话超时时间，默认20分钟，即如果20分钟内没有访问会话将过期 -->
 		<property name="globalSessionTimeout" value="1200000" />
+		<property name="sessionDAO" ref="sessionDAO" />
 		<!-- 删除失效的session -->
 		<property name="deleteInvalidSessions" value="true" />
 		<property name="sessionValidationSchedulerEnabled" value="true" />
-		<property name="sessionValidationScheduler" ref="sessionValidationScheduler" />
+		<!-- <property name="sessionValidationScheduler" ref="sessionValidationScheduler" /> -->
 		<property name="sessionIdCookieEnabled" value="true" />
 		<!-- <property name="sessionIdCookie" ref="sessionIdCookie" /> -->
-		<property name="sessionDAO" ref="sessionDAO" />
+		
 	</bean>
 	
 	<!-- 会话Cookie模板会话Cookie模板,sessionIdCookie:maxAge=-1表示浏览器关闭时失效此Cookie ; rememberMeCookie:即记住我的Cookie,保存时长30天 -->
@@ -117,11 +131,13 @@
 	
 	<!-- ==========================================web相关========================================== -->
 	<!-- Shiro过滤器 id要跟web.xml一致 -->
-	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+	<bean id="shiroFilter" class="com.modules.sys.realm.webcookie.MyShiroFilterFactoryBean">
 		<!-- Shiro的核心安全接口,这个属性是必须的 -->
 		<property name="securityManager" ref="securityManager" />
 		<!-- 登录页 -->
 		<property name="loginUrl" value="/login.do" />
+		<!-- 登录成功跳转页面 -->
+		<!-- <property name="successUrl" value="/sys/index.do" /> -->
 		<!-- 权限认证失败，则跳转到指定页面 -->
 		<property name="unauthorizedUrl" value="/unauthor.do" />
 		<!-- 自定义Roles Filter -->
@@ -147,6 +163,8 @@
 				/ico/**=anon
 				/images/**=anon
 				/ueditor/**=anon
+				/**/uploadfile/**=anon
+				/img/**=anon
 				<!-- index不需要验证 -->
 				/=anon
 				/index=anon

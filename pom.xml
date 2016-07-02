@@ -11,7 +11,7 @@
   <!-- 版本号设置 -->
   <properties>
   	<spring-version>4.1.7.RELEASE</spring-version>
-  	<shiro.version>1.2.4</shiro.version>
+  	<shiro.version>1.2.5</shiro.version>
   	<activiti.version>5.20.0</activiti.version>
   </properties>
   

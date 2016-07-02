@@ -101,7 +101,9 @@
                             </tr>
                             <tr>
                                 <td>记住我</td>
-                                <td><input class="checkbox" type="checkbox" name="subject" style="width:40px;" /></td>
+                                <td>
+                                	<input class="checkbox" type="checkbox" name="rememberMe" style="width:40px;" value="true" />
+                                </td>
                             </tr>
                         </table>
                     </form>

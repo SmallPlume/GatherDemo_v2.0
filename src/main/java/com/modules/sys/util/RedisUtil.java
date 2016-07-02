@@ -108,6 +108,23 @@ public final class RedisUtil {
 		}
 		return result;
 	}
+	
+	/**
+	 * 发布信息
+	 * @param deleteChannel
+	 * @param session
+	 * @return
+	 */
+	public boolean publish(String deleteChannel,String session){
+		boolean result = false;
+		try {
+			redisTemplate.convertAndSend(deleteChannel,session);
+			result = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 
 	public void setRedisTemplate(
 			RedisTemplate<Serializable, Object> redisTemplate) {
