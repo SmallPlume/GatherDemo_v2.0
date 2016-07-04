@@ -24,7 +24,7 @@ public class RedisSessionDao extends CachingSessionDAO {
     private String deleteChannel = "shiro_redis_session:delete";
     
     //20分钟,单位是秒
-    private long timeToLiveSeconds = 1800; 
+    private long timeToLiveSeconds = 1200; 
     
 	private RedisUtil redis;
     

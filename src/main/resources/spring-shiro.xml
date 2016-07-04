@@ -22,12 +22,13 @@
 	
 	<bean id="sessionDAO" class="com.modules.sys.realm.sessionDao.RedisSessionDao">
 		<property name="redis" ref="redisUtil" />
+		<!-- 30分钟 -->
         <property name="timeToLiveSeconds" value="1800"/>
 	</bean>
 	
 	<!-- Session 管理器 -->
 	<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-		<!-- 设置全局会话超时时间，默认20分钟，即如果20分钟内没有访问会话将过期 -->
+		<!-- 设置ehcache全局会话超时时间，默认30分钟，即如果30分钟内没有访问会话将过期 -->
 		<property name="globalSessionTimeout" value="1800000" />
 		<property name="sessionDAO" ref="sessionDAO" />
 		<!-- 间隔多少时间检查，不配置是60分钟 -->
