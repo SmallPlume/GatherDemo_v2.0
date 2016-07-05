@@ -9,6 +9,7 @@
 		<welcome-file>index.do</welcome-file>
 	</welcome-file-list>
 	
+	<!-- 静态资源 -->
 	<servlet-mapping>
 		<servlet-name>default</servlet-name>
 		<url-pattern>*.jpg</url-pattern>
@@ -24,6 +25,14 @@
 	<servlet-mapping>
 		<servlet-name>default</servlet-name>
 		<url-pattern>*.css</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>default</servlet-name>
+	    <url-pattern>*.ttf</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>default</servlet-name>
+	    <url-pattern>*.woff</url-pattern>
 	</servlet-mapping>
 	
 	<!-- shiro过滤器定义 -->
@@ -53,7 +62,7 @@
 		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
 	</listener>
 	
-	<!-- 缓存、gzip压缩核心过滤器 -->
+	<!-- Ehcache缓存、gzip压缩核心过滤器 -->
 	<filter>
 		<filter-name>PageEhCacheFilter</filter-name>
 		<filter-class>com.modules.util.filter.PageEhCacheFilter</filter-class>

@@ -143,6 +143,7 @@
 			<value>
 				<!-- 静态资源 -->
 				/css/**=anon
+				/css/fonts/**=anon
 				/js/**=anon
 				/ico/**=anon
 				/images/**=anon

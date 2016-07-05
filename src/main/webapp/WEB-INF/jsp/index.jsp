@@ -160,8 +160,6 @@
 			</ul>
 		</nav>
 	</div>
-
 	<script src="<%=$root %>/js/blog/script.js"></script>
-
 </body>
 </html>

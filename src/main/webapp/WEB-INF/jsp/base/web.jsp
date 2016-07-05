@@ -26,3 +26,5 @@ var base = '${base}';
 <script src="<%=$root %>/js/blog/bootstrap.min.js"></script>
 <script src="<%=$root %>/js/blog/pace.min.js"></script>
 <script src="<%=$root %>/js/blog/modernizr.custom.js"></script>
+
+
