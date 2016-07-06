@@ -5,13 +5,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-<%@include file="../jsp/base/web.jsp"%>
 <title>Black &amp; White</title>
+<%@include file="../jsp/base/web.jsp"%>
 <!-- meta -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="<%=$root%>/css/font-awesome.css" />
+<link rel="stylesheet" type="text/css" href="<%=$root%>/css/simdtor/simditor.css" />
+<link rel="stylesheet" type="text/css" href="<%=$root%>/css/font-awesome.css" />
+<script type="text/javascript" src="<%=$root%>/js/simdtor/jquery.min.js"></script>
+<script type="text/javascript" src="<%=$root%>/js/simdtor/mobilecheck.js"></script>
 </head>
-
 <body id="page">
 	<div class="container">
 		<header id="site-header">
@@ -35,7 +39,7 @@
 						<div class="collapse navbar-collapse"
 							id="bs-example-navbar-collapse-1">
 							<ul class="nav navbar-nav navbar-right">
-								<li class="cl-effect-11"><a href="<%=$root %>/"
+								<li class="cl-effect-11"><a href="<%=$root%>/"
 									data-hover="Home">Home</a></li>
 								<li class="cl-effect-11"><a href="full-width.html"
 									data-hover="Blog">Blog</a></li>
@@ -74,14 +78,9 @@
 						<form action="#" method="post" class="contact-form">
 							<div class="row">
 								<div class="col-md-11 col-md-offset-1">
-									<input type="text" name="title" placeholder="标题" required>
+									<input type="text" name="title" placeholder="标题" required autofocus>
 									<input type="text" name="tag" placeholder="标签（可以使用','隔开）">
-									<input type="combobox" name="groupId" data-options="required:true" />
-									<select type="text" class="combobox">
-									  <option></option>
-									  <option value="PA">Pennsylvania</option>
-									</select>
-									<textarea name="context" rows="7" placeholder="Your Message" required></textarea>
+									<textarea id="editor" placeholder="这里输入内容" data-autosave="editor-content" required></textarea>
 									<button class="btn-send btn-5 btn-5b ion-ios-paperplane">
 										<span>Drop Me a Line</span>
 									</button>
@@ -119,7 +118,16 @@
 			</ul>
 		</nav>
 	</div>
-
-	<script src="<%=$root%>/js/blog/script.js"></script>
 </body>
+<script src="<%=$root%>/js/blog/script.js"></script>
+<script type="text/javascript" src="<%=$root%>/js/simdtor/module.js"></script>
+<script type="text/javascript" src="<%=$root%>/js/simdtor/uploader.js"></script>
+<script type="text/javascript" src="<%=$root%>/js/simdtor/hotkeys.js"></script>
+<script type="text/javascript" src="<%=$root%>/js/simdtor/simditor.js"></script>
+<script type="text/javascript" src="<%=$root%>/js/simdtor/page-demo.js"></script>
+<script type="text/javascript">
+	var editor = new Simditor({
+		textarea : $('#editor')
+	});
+</script>
 </html>

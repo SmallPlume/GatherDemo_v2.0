@@ -67,7 +67,7 @@ function loadTree(){
         },  
         success:function(data){ //请求成功后处理函数。    
             treeNodes = data;   //把后台封装好的简单Json格式赋给treeNodes  
-        }  
+        }
     });  
   
 	$.fn.zTree.init($("#tree"), setting, treeNodes);
@@ -186,6 +186,8 @@ function fillInfo(node,type){
 	//顶级节点没有上级目录
 	if(node.getParentNode()){
 		$("#pName").val(node.getParentNode().name);
+	}else{
+		$("#pName").val("无");
 	}
 	
 	$("#rank").val(node.attributes.rank);

@@ -138,8 +138,8 @@
 					<p class="copyright">
 						&copy; 2014 ThemeWagon.com -More Templates <a
 							href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a>
-						- Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a> - 
-						<shiro:user><a href="<%=$root %>/sys/index.do">后台管理</a></shiro:user>
+						- Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a>
+						<shiro:user><a href="<%=$root %>/sys/index.do"> - 后台管理</a></shiro:user>
 					</p>
 				</div>
 			</div>

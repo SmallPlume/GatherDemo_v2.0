@@ -49,9 +49,10 @@
 <div id="center" data-options="region:'center'">
   <div id="tabs" class="easyui-tabs">
     <div title="首页" style="padding:5px;display:block;" >
+      <p>EasyUI再熟悉不过，如果要换界面也方便些(网上搜索来的额)</p>
       <p>模板说明：</p>
         <ul>
-          <li>主界面使用 easyui1.3.5</li>
+          <li>主界面使用 easyui1.4.5</li>
           <li>导航树使用 JQuery-zTree-v3.5.15</li>
         </ul>
       <p>特性说明：</p>
@@ -59,12 +60,22 @@
           <li>所有弹出框均显示在顶级父窗口</li>
           <li>修改easyui window拖动，移动时显示窗口而不显示虚线框，并限制拖动范围</li>
         </ul>
-      <p>测试EhCache页面缓存</p>    
-      <%    
+      <p>主要应用到相关的技术:</p>
+      	<ul style="color:red;">
+      		<li>SpringMVC(基本的)</li>
+      		<li>MyBatis(<a href="http://git.oschina.net/free/Mapper" target="view_window" style="color:red;">使用了通用Mapper和MyBatis分页插件</a>)</li>
+      		<li>Redis(缓存用户的一些信息，如session，权限，菜单等)</li>
+      		<li>Ehcache(同样缓存用户session，session时间为30分钟，而Redis的为20分钟，系统在Redis找不到session可以再来Ehcache查找。同样可以缓存页面，在web.xml配置相关的url)</li>
+      		<li>Shiro(基本的权限管理，密码加密，会话管理，登陆登出等等)</li>
+      		<li>plupload(js上传插件，只简单写了图片上传而已)</li>
+      	</ul>
+      <p>测试EhCache页面缓存</p>
+      <span style="color:red"><%    
 	    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
 	    out.print(format.format(new Date()));    
 	    System.out.println(System.currentTimeMillis());    
-	  %>
+	  %></span>
+	  <p>(如果加了Ehcache，上面的时间刷新将不会改变，一般不会把这页面缓存。)</p>
     </div>
   </div>
 </div>

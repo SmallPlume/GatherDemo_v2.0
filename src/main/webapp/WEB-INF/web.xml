@@ -72,7 +72,8 @@
 		<filter-class>com.modules.util.filter.PageEhCacheFilter</filter-class>
 		<init-param>
 			<param-name>patterns</param-name>-->
-			<!-- 配置需要缓存的url -->
+			<!-- 配置需要缓存的url,最好还是缓存一些没有动态数据的页面 -->
+			<!--<param-value>/sys/index.do</param-value>-->
 			<param-value></param-value>
 		</init-param>
 	</filter>
