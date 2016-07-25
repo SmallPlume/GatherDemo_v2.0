@@ -10,6 +10,11 @@ import org.springframework.stereotype.Component;
 import com.modules.sys.dao.SubscriberDao;
 import com.modules.sys.orm.Subscriber;
 
+/**
+ * º‡Ã˝¿‡
+ * @author Acer
+ *
+ */
 @Component("taskListener")
 public class GetAdminsImpl implements TaskListener {
 

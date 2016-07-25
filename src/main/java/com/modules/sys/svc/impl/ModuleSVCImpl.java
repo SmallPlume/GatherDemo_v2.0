@@ -59,7 +59,7 @@ public class ModuleSVCImpl implements ModuleSVC {
 		mod.setPid("".equals(mod.getPid())?null:mod.getPid());
 		mod.setDir("on".equals(mod.getDir())?"1":"0");
 		mod.setMenu("on".equals(mod.getMenu())?"1":"0");
-		mod.setIfopen("on".equals(mod.getIfopen())?"1":null);
+		mod.setIfopen("on".equals(mod.getIfopen())?"1":"0");
 		mod.setValid("0");  //'0'表示有效的
 		return mod;
 	}

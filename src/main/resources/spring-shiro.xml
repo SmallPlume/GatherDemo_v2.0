@@ -13,9 +13,9 @@
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 
 	<!-- ========================================== 会话管理 ========================================== -->
-	<!-- 会话验证调度器 -->
+	<!-- 会话验证调度器，每隔一段时间清理失效的用户session -->
 	<bean id="sessionValidationScheduler" class="org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler">
-		 <!-- 间隔多少时间检查，不配置是60分钟 -->
+		 <!-- 间隔多少时间检查，不配置是60分钟，现在配置的是30分钟 -->
 	     <property name="interval" value="18000000"/>
 	     <property name="sessionManager" ref="sessionManager"/>
 	</bean>
@@ -50,7 +50,7 @@
         <property name="maxAge" value="-1"/>
     </bean>
     
-    <!-- 用户信息 记住我 -->
+    <!-- 用户信息 remenberME -->
 	<bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
 		<constructor-arg value="rememberMe" />
 		<property name="httpOnly" value="true" />

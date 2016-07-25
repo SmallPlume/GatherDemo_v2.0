@@ -4,5 +4,6 @@ encoding//src/main/webapp=UTF-8
 encoding//src/main/webapp/js=UTF-8
 encoding//src/main/webapp/js/index.js=UTF-8
 encoding//src/main/webapp/js/main=UTF-8
-encoding//src/main/webapp/js/plupload=UTF-8
+encoding//src/main/webapp/ueditor/third-party=UTF-8
+encoding//src/main/webapp/ueditor/third-party/highcharts/modules/map.js=UTF-8
 encoding/README.md=UTF-8

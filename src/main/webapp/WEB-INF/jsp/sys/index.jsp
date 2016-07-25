@@ -92,13 +92,18 @@ data: {
 	}
 },
 view: {
-	selectedMulti: false
+	selectedMulti: false,
+	dblClickExpand:false
 },
 callback: {
 	onClick:function(e, id, node){
 		var zTree = $.fn.zTree.getZTreeObj("menuTree");
 		if(node.isParent) {
-			zTree.expandNode();
+			if(!node.open) {
+				zTree.expandNode(node,true);
+			}else{
+				zTree.expandNode(node,false);
+			}
 		} else {
 			addTabs(node.name, node.file);
 		}

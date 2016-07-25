@@ -22,7 +22,7 @@
             <link rel="apple-touch-icon" sizes="120x120" href="<%=$root %>/images/ico/apple-touch-icon-120x120.png" />
             <link rel="apple-touch-icon" sizes="144x144" href="<%=$root %>/images/ico/apple-touch-icon-144x144.png" />
             <link rel="apple-touch-icon" sizes="152x152" href="<%=$root %>/images/ico/apple-touch-icon-152x152.png" />
-
+			<script type="text/javascript" src="<%=$root %>/js/jquery/MD5.js"></script>
             <style type="text/css">
                 .easyui-tabs {
                     position: absolute;
@@ -52,7 +52,7 @@
                             } else {
                             	//日志记录登录信息
                                 $.post('<%=$root %>/setLogin.do',function(v){});
-                              //跳转到首页
+                              	//跳转到首页
                                 location.href = "<%=$root %>/";
                             }
                         },
@@ -97,7 +97,7 @@
                             </tr>
                             <tr>
                                 <td>密码:</td>
-                                <td><input class="easyui-textbox" type="password" name="password" style="padding-left:10px; height:30px; width:90%;" value="12345" /></td>
+                                <td><input class="easyui-textbox" type="password" name="password" id="pass" style="padding-left:10px; height:30px; width:90%;" value="12345" /></td>
                             </tr>
                             <tr>
                                 <td>记住我</td>

@@ -1,14 +1,10 @@
 package com.modules.sys.ctrl;
 
-import java.io.IOException;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,13 +17,11 @@ import com.modules.base.orm.Result;
 import com.modules.base.orm.User;
 import com.modules.sys.constant.ModuleType;
 import com.modules.sys.orm.Role;
-import com.modules.sys.orm.Subscriber;
 import com.modules.sys.svc.PermissionSVC;
 import com.modules.sys.svc.RoleSVC;
 import com.modules.sys.svc.SubscriberSVC;
 import com.modules.sys.util.RedisUtil;
 import com.modules.web.svc.ContextSVC;
-import com.util.StringUtils;
 
 @Controller
 public class CoreCTRL {
@@ -137,6 +131,11 @@ public class CoreCTRL {
 	 */
 	@RequestMapping(value="/logout",method=RequestMethod.GET)
 	public String loginOut(){
+		//ÒÆ³ý²Ëµ¥
+		Subject subject = SecurityUtils.getSubject();
+		String key = subject.getSession().getId().toString()+"-menu";
+		if(key != null) redis.remove(key);
+		
 		subSVC.logout();
 		return "redirect:/login.do";
 	}

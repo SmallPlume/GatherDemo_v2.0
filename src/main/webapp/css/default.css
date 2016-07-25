@@ -215,3 +215,36 @@ div.toolbar {
 	background: #F4F4F4;
 	border-bottom: 1px solid #ddd;
 }
+/**-----------------菜单--------------------**/
+#menuTree{
+	background-color:#F3F3F3;
+}
+#menuTree>li{
+	/* border-bottom:1px #D3D3D3 solid; */
+}
+#menuTree>li>a{
+	width:88%;
+	text-indent:2px;
+	padding-top:5px;
+	padding-bottom:5px;
+	text-decoration:none;  /* 去掉下划线 */
+	border-top:1px #D3D3D3 dotted;
+	border-bottom:1px #D3D3D3 dotted;
+}
+#menuTree>li>a>span{
+	font-weight:bold;
+	font-size:14px;
+}
+#menuTree>li>a:hover {
+	color:#2932E1;
+	/* background-color:#FFFFFF; */
+}
+#menuTree>li>ul>li>a{
+	width:85%;
+	padding-top:2px;
+	padding-bottom:2px;
+	text-decoration:none;  /* 去掉下划线 */
+}
+#menuTree>li>ul>li>a:hover {
+	background-color:#FFFFFF;
+}

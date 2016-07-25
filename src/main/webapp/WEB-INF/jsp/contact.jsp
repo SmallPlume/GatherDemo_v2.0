@@ -124,7 +124,7 @@
 <script type="text/javascript" src="<%=$root%>/js/simdtor/uploader.js"></script>
 <script type="text/javascript" src="<%=$root%>/js/simdtor/hotkeys.js"></script>
 <script type="text/javascript" src="<%=$root%>/js/simdtor/simditor.js"></script>
-<script type="text/javascript" src="<%=$root%>/js/simdtor/page-demo.js"></script>
+<script type="text/javascript" src="<%=$root%>/js/simdtor/page-doc.js"></script>
 <script type="text/javascript">
 	var editor = new Simditor({
 		textarea : $('#editor')
